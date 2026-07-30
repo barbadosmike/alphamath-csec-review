@@ -1,0 +1,2153 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>CSEC Mathematics — Phase 1: Knowledge-Gap Self-Assessment</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root{
+  --purple:#140B2C;        /* Marion Sydney Classic Royal Purple — identity */
+  --purple-deep:#4B006E;   /* Deep Royal Purple — header bars */
+  --purple-imp:#602F6B;    /* Imperial Purple — table headers */
+  --purple-20:#452069;     /* pressed / hover */
+  --amethyst:#9B72CF;
+  --wisteria:#C9B6E4;
+  --lavender:#EDE7F6;
+  --gold:#C8A951;          /* Marion Gold */
+  --gold-metal:#D3AF37;
+  --gold-old:#8B6914;      /* gold text on light — legibility rule */
+  --white-gold:#FFFFF4;
+  --offwhite:#F7F5EF;
+  --slate:#334155;
+  --slate-blue:#3C5F76;
+  --silver:#C0C0C0;
+  --steel:#A9A9A9;
+  --graphite:#696B68;     /* darkened from #7D7F7C — small text on off-white now meets WCAG AA (≈5:1) */
+  --platinum:#E5E4E2;
+  --sans:"Lexend",ui-sans-serif,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --serif:"Lora","Latin Modern Roman",Georgia,"Times New Roman",serif;
+}
+*{box-sizing:border-box}
+/* MSE AlphaMath type pairing (CEO decision 2026-07-20): Lexend (variable, reading-optimised
+   for fluency — apt for 15–18 ESL learners) as the sans + Lora as the serif. Both SIL-OFL,
+   embedded as data URIs from the MSE font library (Assets/Fonts masters, Assets/Web Fonts
+   woff2) so every device renders identically offline. Supersedes Sono+Spectral. Peridot PE
+   stays licence-gated and is never bundled. Math stays KaTeX's own faces. KB-18 v1.8. */
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--offwhite);color:var(--slate);
+  font-family:var(--serif);font-size:16px;line-height:1.5}
+.wrap{max-width:980px;margin:0 auto;padding:0 22px 140px}
+
+/* ---------- masthead ---------- */
+.mast{background:var(--purple-deep);color:var(--white-gold);
+  padding:30px 22px 26px;margin-bottom:26px;
+  border-bottom:3px solid var(--gold-metal)}
+.mast .inner{max-width:980px;margin:0 auto}
+.mast h1{font-family:var(--sans);font-size:31px;font-weight:700;margin:0;letter-spacing:-.2px}
+.mast h2{font-family:var(--sans);font-size:17px;font-weight:400;margin:5px 0 0;color:var(--wisteria)}
+.mast .meta{font-family:var(--sans);font-size:12.5px;margin-top:12px;color:var(--silver)}
+.mast .phase{font-family:var(--sans);font-size:13.5px;margin-top:9px;color:var(--white-gold)}
+.mast .phase b{color:var(--gold-metal);text-transform:uppercase;letter-spacing:.8px;font-weight:700}
+.mast .phase i{color:var(--wisteria);font-style:italic}
+.mast .phase .yet{color:var(--gold-metal);font-weight:700;font-style:normal}
+.idbar{display:flex;gap:16px;flex-wrap:wrap;margin-top:20px}
+.idbar label{font-family:var(--sans);font-size:12px;text-transform:uppercase;
+  letter-spacing:.6px;color:var(--wisteria);display:block;margin-bottom:4px}
+.idbar input{font-family:var(--sans);font-size:14px;padding:7px 10px;border:0.9px solid var(--silver);
+  border-radius:2px;background:var(--white-gold);color:var(--slate);width:260px}
+.idbar .short input{width:150px}
+
+/* ---------- cards ---------- */
+.card{background:#fff;border:0.9px solid var(--platinum);border-radius:3px;
+  padding:18px 20px;margin:0 0 18px}
+.card.lav{background:var(--lavender);border-color:var(--wisteria)}
+.card.gold{background:#fff;border-color:var(--gold);border-left:3px solid var(--gold)}
+.card h3{font-family:var(--sans);font-size:15px;margin:0 0 9px;color:var(--purple)}
+.card.gold h3{color:var(--gold-old)}
+.card ol,.card ul{margin:0;padding-left:20px}
+.card li{margin-bottom:6px}
+.eg{font-size:14.5px;margin-top:8px;padding-left:12px;border-left:2px solid var(--wisteria)}
+.eg b{font-family:var(--sans);font-size:11.5px;text-transform:uppercase;letter-spacing:.6px}
+.eg .good b{color:var(--purple)} .eg .bad b{color:var(--graphite)}
+.eg p{margin:3px 0 7px;font-style:italic}
+
+/* ---------- module + topic ---------- */
+.mod{background:var(--purple-deep);color:var(--white-gold);padding:13px 18px;
+  border-radius:3px;margin:34px 0 4px}
+.mod h2{font-family:var(--sans);font-size:18px;margin:0;font-weight:700}
+.mod p{font-family:var(--sans);font-size:12px;margin:4px 0 0;color:var(--wisteria);line-height:1.45}
+.top{margin-top:26px}
+.top .hd{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+  border-bottom:1px solid var(--gold-metal);padding-bottom:5px}
+.top .hd h3{font-family:var(--sans);font-size:15.5px;color:var(--purple);margin:0}
+.top .hd .pn{font-family:var(--sans);font-size:11.5px;color:var(--slate-blue);white-space:nowrap}
+
+/* ---------- rows ---------- */
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start;padding:9px 0;
+  border-bottom:1px solid #EFEDE8}
+.row:last-child{border-bottom:0}
+.row:hover{background:var(--white-gold)}
+.row.on:hover{background:var(--lavender)}
+.row .code{font-family:var(--sans);font-size:11px;font-weight:700;color:var(--purple);
+  min-width:66px;text-align:right;padding-top:3px;letter-spacing:.2px}
+.row .txt{flex:1;font-size:15.5px}
+.row .txt b{font-weight:700;color:#1f2733}
+.row.on{background:var(--lavender)}
+.row.on .txt b{color:var(--purple)}
+.row-info{display:inline-block;vertical-align:super;margin-left:3px;border:0;padding:0;
+  background:transparent;color:var(--wisteria);line-height:0}
+.row-info:hover,.row-info:focus-visible{background:var(--purple-deep);color:var(--wisteria)}
+.row-info svg{display:block;width:16px;height:16px;fill:currentColor}
+.row-popover{flex:0 0 calc(100% - 78px);margin:0 0 2px 78px;padding:9px 11px;
+  background:var(--lavender);color:var(--slate);border:1px solid var(--amethyst);
+  border-radius:3px;box-shadow:0 4px 12px rgba(20,11,44,.2);
+  font-family:"Latin Modern Roman",serif;font-size:15px;line-height:1.4}
+.row-popover .ref-table{border-collapse:collapse;margin:4px 0 6px;width:100%}
+.row-popover .ref-table th,.row-popover .ref-table td{padding:4px 12px 4px 0;text-align:left;font-weight:400}
+.row-popover .ref-table th{font-weight:700;color:var(--purple);border-bottom:2px solid var(--amethyst)}
+.row-popover .ref-table td{border-bottom:1px dotted var(--wisteria)}
+.row-popover .ref-table tr:last-child td{border-bottom:0}
+.row-popover .formula-lines{margin:5px 0}
+.row-popover .formula-lines>.tex{display:block;margin:0;padding:7px 2px;
+  border-bottom:1px dotted var(--wisteria)}
+.row-popover .formula-lines>.tex:last-child{border-bottom:0}
+.row-popover .reference-lines{margin:5px 0}
+.row-popover .reference-lines>span{display:block;margin:0;padding:7px 2px;
+  border-bottom:1px dotted var(--wisteria)}
+.row-popover .reference-lines>span:last-child{border-bottom:0}
+.row-popover[hidden]{display:none}
+
+/* ---------- the checkbox (0.9px border, Royal Purple var(--purple)) ---------- */
+.cb{position:relative;flex:0 0 auto;margin-top:1px}
+.cb input{position:absolute;opacity:0;width:20px;height:20px;margin:0;cursor:pointer}
+.cb .bx{display:block;width:20px;height:20px;border:0.9px solid var(--purple);
+  border-radius:2px;background:var(--white-gold);transition:background .12s,border-color .12s}
+.cb input:hover+.bx{border-color:var(--purple-20);background:var(--lavender)}
+.cb input:focus-visible+.bx{outline:2px solid var(--gold-metal);outline-offset:2px}
+.cb input:checked+.bx{background:var(--purple);border-color:var(--purple)}
+.cb .bx::after{content:"";position:absolute;left:6.5px;top:2.5px;width:5px;height:10px;
+  border:solid var(--white-gold);border-width:0 2px 2px 0;transform:rotate(42deg) scale(0);
+  transition:transform .12s}
+.cb input:checked+.bx::after{transform:rotate(42deg) scale(1)}
+
+/* ---------- tally ---------- */
+.tally{font-family:var(--sans);font-size:11.5px;color:var(--graphite);
+  text-align:right;padding-top:7px}
+.tally b{color:var(--purple);font-size:13px}
+.tally.hot b{color:var(--gold-old)}
+
+/* ---------- nested progressive-disclosure (Module ▸ Topic) ---------- */
+.mod-d{margin:30px 0 8px;border-radius:3px;overflow:hidden;
+  border:0.9px solid var(--purple-deep)}
+.mod-d>summary{list-style:none;cursor:pointer;background:var(--purple-deep);
+  color:var(--white-gold);padding:13px 18px;display:flex;align-items:center;gap:14px}
+.mod-d>summary::-webkit-details-marker{display:none}
+.mod-d>summary .mod-h{font-family:var(--sans);font-size:18px;font-weight:700;flex:1}
+.mod-d>summary .mod-note{font-family:var(--sans);font-size:12px;color:var(--wisteria);
+  line-height:1.4;max-width:46%;text-align:right}
+.mod-d>summary .caret{font-family:var(--sans);font-size:13px;color:var(--gold-metal);
+  transition:transform .15s;flex:0 0 auto}
+.mod-d[open]>summary .caret{transform:rotate(90deg)}
+.mod-d>summary:focus-visible{outline:2px solid var(--gold-metal);outline-offset:-2px}
+.mbody{padding:6px 14px 12px;background:var(--offwhite)}
+
+.top-d{border:0.9px solid var(--platinum);border-radius:3px;margin:8px 0;background:#fff}
+.top-d>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;
+  padding:11px 14px}
+.top-d>summary::-webkit-details-marker{display:none}
+.top-d>summary:hover{background:var(--white-gold)}
+.top-d>summary:focus-visible{outline:2px solid var(--gold-metal);outline-offset:-2px}
+.top-d>summary .ts-h{font-family:var(--sans);font-size:15px;font-weight:700;
+  color:var(--purple);flex:1}
+.top-d>summary .ts-pn{font-family:var(--sans);font-size:11px;color:var(--slate-blue);
+  white-space:nowrap;display:none}
+@media(min-width:640px){.top-d>summary .ts-pn{display:inline}}
+.top-d>summary .tally{padding:0;font-size:11px;white-space:nowrap}
+.top-d>summary .caret{font-family:var(--sans);font-size:12px;color:var(--purple);
+  transition:transform .15s;flex:0 0 auto}
+.top-d[open]>summary .caret{transform:rotate(90deg)}
+.top-d[open]>summary{border-bottom:1px solid var(--gold-metal)}
+.tbody{padding:2px 14px 10px}
+.mod-tools{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 2px}
+.mod-tools button{font-family:var(--sans);font-size:11.5px;color:var(--purple);
+  background:#fff;border:0.9px solid var(--wisteria);border-radius:2px;padding:5px 10px;cursor:pointer}
+.mod-tools button:hover{background:var(--lavender);border-color:var(--purple)}
+
+/* ---------- maths ---------- */
+.m{font-family:var(--serif);white-space:nowrap}
+.m i{font-style:italic}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;
+  text-align:center;font-size:.82em;line-height:1.12;margin:0 .12em}
+.fr .nu{border-bottom:1px solid currentColor;padding:0 .22em}
+.fr .de{padding:0 .22em}
+.cv{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;
+  font-size:.85em;line-height:1.15;margin:0 .15em;padding:0 .28em;
+  border-left:1px solid currentColor;border-right:1px solid currentColor}
+.ovr{text-decoration:overline}
+.rad{border-top:1px solid currentColor;padding:0 .1em}
+
+/* ---------- struggle log ---------- */
+.log{margin-top:12px}
+.lrow{display:flex;gap:12px;align-items:flex-start;background:#fff;
+  border:0.9px solid var(--platinum);border-left:3px solid var(--wisteria);
+  border-radius:3px;padding:12px 14px;margin-bottom:10px}
+.lrow.filled{border-left-color:var(--purple)}
+.lrow .lc{flex:0 0 200px}
+.chip{display:inline-block;font-family:var(--sans);font-size:11.5px;font-weight:700;
+  color:var(--white-gold);background:var(--purple);padding:3px 8px;border-radius:2px;
+  letter-spacing:.3px}
+.lrow .lt{font-family:var(--sans);font-size:12px;color:var(--slate-blue);
+  margin-top:6px;line-height:1.35}
+.lrow .ld{flex:1}
+.lrow textarea{width:100%;min-height:58px;resize:vertical;font-family:var(--serif);
+  font-size:15px;line-height:1.45;padding:8px 10px;border:0.9px solid var(--silver);
+  border-radius:2px;background:var(--offwhite);color:var(--slate)}
+.lrow textarea:focus{outline:2px solid var(--gold-metal);outline-offset:1px;background:#fff}
+.lrow select{font-family:var(--sans);font-size:12.5px;padding:6px 8px;width:100%;
+  border:0.9px solid var(--silver);border-radius:2px;background:#fff;color:var(--slate)}
+.addrow{display:flex;align-items:center;gap:10px;margin-top:14px;flex-wrap:wrap;
+  background:var(--lavender);border:0.9px solid var(--wisteria);border-radius:6px;padding:10px 12px}
+.addrow label{font-family:var(--sans);font-size:12px;font-weight:700;color:var(--purple)}
+.picker{position:relative;flex:1;min-width:220px;font-family:var(--sans);font-size:12.5px}
+.picker>summary{list-style:none;cursor:pointer;padding:6px 30px 6px 8px;border:0.9px solid var(--silver);
+  border-radius:2px;background:#fff;color:var(--slate);position:relative}
+.picker>summary::-webkit-details-marker{display:none}
+.picker>summary::after{content:"\25BE";position:absolute;right:9px;color:var(--purple)}
+.picker>summary:focus-visible{outline:2px solid var(--gold-metal);outline-offset:1px}
+.pick-menu{position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:15;max-height:360px;
+  overflow:auto;background:#fff;border:0.9px solid var(--silver);border-radius:3px;
+  box-shadow:0 8px 22px rgba(20,11,44,.18)}
+.pick-group{padding:7px 10px 4px;font-size:10.5px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.45px;color:var(--purple);background:var(--lavender);position:sticky;top:0;z-index:1}
+.pick-item{display:flex;flex-wrap:wrap;align-items:center;border-bottom:1px solid var(--platinum)}
+.pick-item:last-child{border-bottom:0}
+.pick-add{flex:1;text-align:left;border:0;padding:8px 10px;background:#fff;color:var(--slate);
+  font-size:12px;font-weight:400;border-radius:0}
+.pick-add:hover,.pick-add:focus-visible{background:var(--white-gold);color:var(--purple)}
+.empty{color:var(--graphite);font-family:var(--sans);font-size:12px;font-style:normal}
+.lgroup{font-family:var(--sans);font-size:12px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.5px;color:var(--purple);margin:18px 0 6px;padding-bottom:3px;
+  border-bottom:1px solid var(--wisteria)}
+.lgroup:first-child{margin-top:0}
+.lrow .lchead{display:flex;align-items:center;gap:6px}
+.lrm{font-family:var(--sans);font-size:15px;line-height:1;color:var(--graphite);
+  background:transparent;border:0.9px solid var(--silver);border-radius:2px;
+  padding:0 7px 2px;cursor:pointer}
+.lrm:hover{color:var(--purple);border-color:var(--purple);background:var(--lavender)}
+
+/* ---------- questions ---------- */
+.q{background:#fff;border:0.9px solid var(--platinum);border-top:3px solid var(--purple);
+  border-radius:3px;padding:16px 18px;margin-bottom:14px}
+.q .qh{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}
+.q .qn{font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.7px;
+  text-transform:uppercase;color:var(--gold-old)}
+.q .qb{font-size:16px;margin:7px 0 12px}
+.q .qb .part{display:block;margin-left:16px;margin-top:4px}
+.q .qf{display:flex;gap:12px;align-items:center;flex-wrap:wrap;
+  border-top:1px solid var(--platinum);padding-top:11px}
+.q .qf label{font-family:var(--sans);font-size:13px;color:var(--slate);cursor:pointer}
+.q input[type=text]{flex:1;min-width:220px;font-family:var(--serif);font-size:14.5px;
+  padding:7px 10px;border:0.9px solid var(--silver);border-radius:2px;background:var(--offwhite)}
+.q.hard{background:var(--lavender);border-color:var(--wisteria);border-top-color:var(--purple)}
+.q .qf2{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:9px}
+.q .qf2 .tk{font-family:var(--sans);font-size:13px;color:var(--slate);cursor:pointer;
+  display:inline-flex;align-items:center;gap:6px}
+.q .qf2 .tf{flex:0 0 auto;width:140px;min-width:0;font-family:var(--sans);font-size:13.5px;
+  padding:6px 9px;border:0.9px solid var(--silver);border-radius:2px;background:var(--offwhite);color:var(--slate)}
+.q .qf2 .tf:disabled{opacity:.5;background:var(--platinum)}
+.q .qf2 .tf.bad{border-color:#B00020;background:#FFF3F3}
+.q .qf2 .hint{font-family:var(--sans);font-size:11.5px;color:var(--graphite)}
+
+/* ---------- footer bar ---------- */
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--purple-deep);
+  border-top:2px solid var(--gold-metal);z-index:20}
+.bar .inner{max-width:980px;margin:0 auto;padding:11px 22px;display:flex;
+  align-items:center;gap:16px;flex-wrap:wrap}
+.bar .st{font-family:var(--sans);font-size:13px;color:var(--white-gold);flex:1}
+.bar .st b{color:var(--gold-metal);font-size:16px}
+.bar .st span{color:var(--silver);font-size:12px}
+button{font-family:var(--sans);font-size:13px;font-weight:700;padding:8px 15px;
+  border-radius:2px;cursor:pointer;border:0.9px solid var(--silver);
+  background:transparent;color:var(--white-gold)}
+button:hover{background:var(--purple-20);border-color:var(--gold-metal)}
+button.pri{background:var(--purple);border-color:var(--gold-metal);color:var(--white-gold)}
+button.pri:hover{background:var(--amethyst)}
+button:focus-visible{outline:2px solid var(--gold-metal);outline-offset:2px}
+input:focus-visible,select:focus-visible{outline:2px solid var(--gold-metal);outline-offset:1px}
+input[type=email]:not(:placeholder-shown):invalid{border-color:#B00020;background:#FFF3F3}
+
+/* ---------- skip link (keyboard users) ---------- */
+.skip{position:absolute;left:-9999px;top:0;z-index:30;font-family:var(--sans);
+  font-size:13px;font-weight:700;background:var(--gold-metal);color:var(--purple-deep);
+  padding:8px 14px;border-radius:0 0 3px 0}
+.skip:focus{left:0}
+
+.note{font-family:var(--sans);font-size:12.5px;color:var(--graphite);margin:8px 0 0}
+.src{font-family:var(--sans);font-size:11px;color:var(--graphite);
+  border-top:1px solid var(--platinum);padding-top:14px;margin-top:34px}
+h2.sec{font-family:var(--sans);font-size:20px;color:var(--purple);
+  margin:44px 0 4px;padding-bottom:6px;border-bottom:2px solid var(--gold-metal)}
+p.lede{font-size:15.5px;margin:8px 0 16px}
+.saved{font-family:var(--sans);font-size:11.5px;color:var(--silver)}
+
+@media (max-width:680px){
+  .row .code{min-width:56px;font-size:10px}
+  .row-popover{flex-basis:calc(100% - 68px);margin-left:68px}
+  .lrow{flex-direction:column}
+  .lrow .lc{flex:none}
+  .idbar input{width:100%}
+}
+@media print{
+  .bar,.mast .idbar button{display:none}
+  body{background:#fff}
+  .wrap{padding-bottom:0}
+  .row,.q,.lrow,.card{break-inside:avoid}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* ── INK THEME #140B2C (CDR-0146) — CSEC Maths family ────────────────────────
+   ⚠️ INJECTED AT THE END OF THE STYLE BLOCK, not before it. This document has
+   no <head> element at all — it is a headless doctype+html+meta shell with one
+   inline <style> — so the usual "insert before <link rel="stylesheet" href="assets/css/alphamath.css">\n</head>" placement had nothing
+   to attach to and silently skipped the file. Appending inside the single
+   block puts the override last, which is what wins.                         */
+:root {
+  --purple:      #140B2C;
+  --purple-20:   #0C0619;
+  --purple-deep: #241348;
+  --amethyst:    #7E68C6;
+  --wisteria:    #BCB2DE;
+  --lavender:    #EAE6F5;
+  --paper:       #F6F2E8;
+  --sheet:       #FFFDF8;
+  --ink:         #252130;
+  --muted:       #5F6470;
+  --rule:        #DDD6C9;
+  --success:     #2D6A55;
+  --success-bg:  #E7F3EC;
+  --practice:    #8A5D16;
+  --practice-bg: #F8EED8;
+  --radius-lg:   16px;
+  --radius-md:   11px;
+  --shadow-card: 0 12px 30px rgba(36,19,72,.08);
+  --ease:        cubic-bezier(.2,.75,.25,1);
+}
+
+/* ── EXAM-PREP FIELD GUIDE ─────────────────────────────────────────────── */
+body{
+  background:
+    radial-gradient(circle at 8% 0%,rgba(200,169,81,.12),transparent 28rem),
+    linear-gradient(180deg,#FBF8F1 0,var(--paper) 42rem);
+  color:var(--ink);font-family:var(--sans);line-height:1.58
+}
+.wrap{max-width:1120px;padding:0 24px 150px}
+.mast{
+  position:relative;overflow:hidden;padding:24px 24px 22px;margin-bottom:22px;
+  background:linear-gradient(120deg,var(--purple-deep),#35205B 72%,#493063);
+  border-bottom:3px solid var(--gold-metal)
+}
+.mast::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.16;
+  background:repeating-linear-gradient(115deg,transparent 0 28px,rgba(255,255,255,.1) 29px 30px)}
+.mast .inner{position:relative;z-index:1;max-width:1120px}
+.mast h1{font-family:var(--serif);font-size:clamp(27px,3vw,38px);line-height:1.08}
+.mast h2{font-size:15px;margin-top:7px}
+.mast .meta{margin-top:8px}
+.mast .phase{display:inline-flex;gap:7px;align-items:center;margin-top:10px;padding:5px 9px;
+  border:1px solid rgba(211,175,55,.55);border-radius:999px;background:rgba(20,11,44,.35)}
+.idbar{display:grid;grid-template-columns:repeat(4,minmax(140px,1fr));gap:12px;margin-top:16px}
+.idbar+.idbar{grid-template-columns:repeat(3,minmax(180px,1fr));margin-top:10px}
+.idbar input,.idbar .short input{width:100%;min-height:44px;border-radius:7px;border-width:1px}
+
+.card{border:1px solid var(--rule);border-radius:var(--radius-md);padding:20px 22px;
+  background:var(--sheet);box-shadow:0 6px 20px rgba(36,19,72,.045)}
+.card.lav{background:linear-gradient(135deg,#F3F0F8,var(--sheet));border-color:#D7CFE8}
+.card.gold{background:var(--sheet);border-left:4px solid var(--gold)}
+.card h3{font-size:16px;letter-spacing:.01em}
+
+.progress-rail{position:sticky;top:12px;z-index:18;display:grid;grid-template-columns:220px 1fr;
+  gap:16px;align-items:center;margin:26px 0 30px;padding:14px 16px;
+  border:1px solid #D7CFE8;border-radius:var(--radius-lg);background:rgba(255,253,248,.96);
+  box-shadow:0 12px 34px rgba(36,19,72,.12);backdrop-filter:blur(12px)}
+.rail-kicker{display:block;color:var(--purple);font-size:10.5px;font-weight:800;
+  letter-spacing:.1em;text-transform:uppercase}
+.rail-overview strong{display:block;margin:2px 0 7px;font-size:15px;color:var(--ink)}
+.progress-track{height:7px;overflow:hidden;border-radius:99px;background:#E9E4DA}
+.progress-fill{display:block;width:0;height:100%;border-radius:inherit;
+  background:linear-gradient(90deg,var(--purple),var(--gold-metal));
+  transition:width .42s var(--ease)}
+.progress-fill.pulse{animation:progress-confirm .48s var(--ease)}
+.rail-summary{display:block;margin-top:5px;color:var(--muted);font-size:11.5px}
+.rail-items{display:grid;grid-template-columns:repeat(6,minmax(96px,1fr));gap:8px}
+.rail-item{--rail-accent:var(--purple);display:grid;grid-template-columns:7px 1fr;column-gap:8px;
+  min-height:54px;padding:8px 9px;color:var(--ink);text-decoration:none;border:1px solid var(--rule);
+  border-radius:9px;background:#fff;transition:transform .15s var(--ease),border-color .15s}
+.rail-item::before{content:"";grid-row:1/3;width:7px;border-radius:99px;background:var(--rail-accent);opacity:.75}
+.rail-item:hover,.rail-item:focus-visible{transform:translateY(-2px);border-color:var(--rail-accent)}
+.rail-item.is-complete{background:var(--success-bg);border-color:#B8D8C8}
+.rail-item b{font-size:11.5px;line-height:1.2}
+.rail-item small{color:var(--muted);font-size:10.5px;line-height:1.2}
+.completion-feedback{position:fixed;left:50%;bottom:92px;z-index:40;translate:-50% 12px;
+  padding:9px 14px;border-radius:999px;background:var(--purple-deep);color:var(--white-gold);
+  box-shadow:0 10px 30px rgba(20,11,44,.28);font-size:12.5px;font-weight:700;
+  opacity:0;pointer-events:none;transition:opacity .2s,translate .28s var(--ease)}
+.completion-feedback.show{opacity:1;translate:-50% 0}
+
+.mod-d{--section-accent:var(--amethyst);margin:30px 0 16px;border:1px solid var(--rule);
+  border-left:5px solid var(--section-accent);border-radius:var(--radius-lg);box-shadow:var(--shadow-card);
+  background:var(--sheet)}
+.mod-d>summary{padding:18px 20px;background:linear-gradient(100deg,var(--purple-deep),#35245A)}
+.mod-d>summary .mod-h{font-family:var(--serif);font-size:20px}
+.mod-d>summary .mod-note{max-width:42%;font-size:11.5px}
+.mod-progress{min-width:108px;text-align:right;font-size:11px;color:var(--white-gold)}
+.mod-progress b{display:block;color:var(--gold-metal);font-size:13px}
+.mbody{padding:10px 16px 18px;background:#FAF8F3}
+.mod-tools{justify-content:flex-end}
+.mod-tools button{min-height:36px;border-radius:7px}
+.top-d{overflow:hidden;margin:12px 0;border:1px solid var(--rule);border-radius:13px;
+  box-shadow:0 4px 12px rgba(36,19,72,.04)}
+.top-d>summary{min-height:58px;padding:13px 16px}
+.top-d>summary .ts-h{font-size:15.5px}
+.top-d[open]>summary{background:#FBF9F4;border-bottom:2px solid var(--section-accent)}
+.tbody{padding:8px 14px 14px;background:#fff}
+
+.row{display:grid;grid-template-columns:72px minmax(0,1fr) 44px;gap:8px 14px;
+  align-items:start;margin:8px 0;padding:13px 12px;border:1px solid #E8E2D8;border-radius:11px;
+  background:var(--sheet);transition:border-color .16s,box-shadow .16s,background .16s}
+.row:last-child{border-bottom:1px solid #E8E2D8}
+.row:hover{background:#FFFDF8;border-color:#CFC5B5;box-shadow:0 5px 16px rgba(36,19,72,.06)}
+.row .code{min-width:0;padding-top:4px;text-align:left}
+.row .code span{display:inline-block;padding:4px 7px;border-radius:999px;background:#EEE9F5;color:var(--purple)}
+.row .txt{font-family:var(--sans);font-size:15px;line-height:1.45}
+.row .txt b{display:block;margin-bottom:3px;font-size:15.5px}
+.row .desc{display:block;color:var(--muted);font-size:13.5px}
+.row.on{background:var(--practice-bg);border-color:#DDBF87;box-shadow:inset 4px 0 0 var(--practice)}
+.row.on:hover{background:var(--practice-bg)}
+.row.confident{background:var(--success-bg);border-color:#B8D8C8;box-shadow:inset 4px 0 0 var(--success)}
+.row.not-started{background:var(--sheet)}
+.row.next-focus{outline:3px solid #005FCC;outline-offset:3px;box-shadow:0 10px 26px rgba(0,95,204,.16)}
+.row-info{align-self:start;display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;
+  margin:0;border:1px solid #D8D0E7;border-radius:10px;background:#F5F1FA;color:var(--purple)}
+.row-info:hover,.row-info:focus-visible{background:var(--purple);color:#fff}
+.row-info svg{width:21px;height:21px}
+.status-group{grid-column:2/4;display:flex;gap:7px;flex-wrap:wrap}
+.status-btn{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:6px 10px;
+  border:1px solid var(--rule);border-radius:999px;background:#fff;color:var(--muted);
+  font-size:11.5px;font-weight:700}
+.status-btn::before{content:"";width:8px;height:8px;border-radius:50%;background:#A8A8A8}
+.status-btn[data-status="confident"]::before{background:var(--success)}
+.status-btn[data-status="practice"]::before{background:var(--practice)}
+.status-btn:hover{background:#F7F4ED;color:var(--ink);border-color:#BDB2A1}
+.status-btn.is-active[data-status="confident"]{background:var(--success);border-color:var(--success);color:#fff}
+.status-btn.is-active[data-status="practice"]{background:var(--practice);border-color:var(--practice);color:#fff}
+.status-btn.is-active[data-status="not-started"]{background:#5C6070;border-color:#5C6070;color:#fff}
+.status-btn.is-active::before{background:currentColor}
+.row-popover{grid-column:2/4;margin:2px 0 0;padding:0;border:1px solid #CFC4E2;
+  border-radius:12px;background:#FBF9FF;box-shadow:0 10px 24px rgba(36,19,72,.12);
+  font-family:var(--sans);font-size:14px;overflow:hidden}
+.formula-card-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;
+  padding:12px 14px;background:linear-gradient(100deg,#EEE8F7,#F8F4FC);border-bottom:1px solid #D8CDE8}
+.formula-card-kicker{display:block;margin-bottom:2px;color:var(--purple);font-size:10px;font-weight:800;
+  letter-spacing:.1em;text-transform:uppercase}
+.formula-card-head h4{margin:0;color:var(--ink);font-family:var(--serif);font-size:16px}
+.formula-card-close{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;
+  padding:0;border:1px solid #CFC4E2;border-radius:9px;background:#fff;color:var(--purple);font-size:20px}
+.formula-card-body{padding:13px 15px;overflow-x:auto}
+.row-popover .ref-table th,.row-popover .ref-table td{padding:7px 14px 7px 0}
+.row-popover .formula-lines>.tex,.row-popover .reference-lines>span{padding:9px 3px}
+
+.lrow{border-radius:11px;padding:15px 16px;border-left-width:4px}
+.lrow textarea{min-height:76px;border-radius:8px;font-family:var(--sans)}
+.empty-state{padding:18px;border:1px dashed #CABFAD;border-radius:11px;background:#FBF9F4;
+  color:var(--muted);text-align:center}
+.addrow{border-radius:11px}
+.picker>summary{min-height:42px;padding:9px 34px 9px 10px;border-radius:8px}
+.pick-add{min-height:44px}
+
+.question-stack{display:flex;flex-direction:column}
+.q{border-radius:13px;padding:18px 20px;border-top:4px solid var(--purple);box-shadow:0 5px 16px rgba(36,19,72,.05)}
+.q .qh{align-items:center}
+.qwhy{max-width:520px;padding:7px 10px;border-radius:8px;background:#F3EFE6;color:var(--muted);
+  font-size:11.5px;line-height:1.35}
+.qwhy.is-match{background:var(--practice-bg);color:#67430D}
+.q .qb{font-family:var(--serif);font-size:16.5px}
+
+.bar .inner{max-width:1120px;min-height:66px}
+.bar .st{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+.bar .st strong{color:var(--gold-metal);font-size:16px}
+.next-action{min-height:44px;background:var(--gold-metal);border-color:var(--gold-metal);color:var(--purple-deep)}
+.next-action:hover{background:#E0C35F;color:var(--purple-deep)}
+.share-actions{position:relative;font-family:var(--sans)}
+.share-actions>summary{list-style:none;min-height:44px;display:flex;align-items:center;padding:8px 14px;
+  border:1px solid var(--silver);border-radius:7px;color:var(--white-gold);cursor:pointer;font-size:12.5px;font-weight:700}
+.share-actions>summary::-webkit-details-marker{display:none}
+.share-actions>summary::after{content:"⋯";margin-left:8px;color:var(--gold-metal);font-size:17px}
+.share-menu{position:absolute;right:0;bottom:calc(100% + 10px);display:grid;gap:6px;min-width:210px;
+  padding:9px;border:1px solid #D7CFE8;border-radius:11px;background:var(--purple-deep);
+  box-shadow:0 12px 30px rgba(20,11,44,.28)}
+.share-menu button{width:100%;text-align:left;min-height:40px}
+button:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,
+.rail-item:focus-visible{outline:3px solid #005FCC!important;outline-offset:3px!important}
+.cb{width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;margin-top:0}
+.cb input{width:44px;height:44px}
+.cb .bx{width:24px;height:24px}
+.cb .bx::after{left:18px;top:13px}
+
+@keyframes progress-confirm{
+  0%{filter:brightness(1);transform:scaleY(1)}
+  45%{filter:brightness(1.35);transform:scaleY(1.7)}
+  100%{filter:brightness(1);transform:scaleY(1)}
+}
+
+@media(max-width:900px){
+  .progress-rail{position:relative;top:auto;grid-template-columns:1fr}
+  .rail-items{display:flex;overflow-x:auto;padding-bottom:3px;scroll-snap-type:x proximity}
+  .rail-item{min-width:132px;scroll-snap-align:start}
+  .idbar,.idbar+.idbar{grid-template-columns:repeat(2,minmax(140px,1fr))}
+  .mod-d>summary{align-items:flex-start;flex-wrap:wrap}
+  .mod-d>summary .mod-note{order:4;max-width:100%;text-align:left}
+}
+@media(max-width:680px){
+  .wrap{padding:0 14px 170px}
+  .mast{padding:20px 16px}
+  .mast .phase{display:flex;max-width:max-content;flex-wrap:wrap}
+  .mast .meta{line-height:1.5}
+  .idbar,.idbar+.idbar{grid-template-columns:1fr}
+  .progress-rail{margin:18px 0 22px;padding:12px;border-radius:12px}
+  .mod-tools{display:none}
+  .row{grid-template-columns:1fr 44px;padding:13px 11px;scroll-margin-top:16px}
+  .row .code{grid-column:1/2}
+  .row .txt{grid-column:1/2}
+  .row-info{grid-column:2;grid-row:1/3}
+  .status-group,.row-popover{grid-column:1/3}
+  .status-group{display:grid;grid-template-columns:repeat(3,1fr)}
+  .status-btn{justify-content:center;min-height:44px;padding:7px 5px;font-size:10.5px}
+  .row-popover{margin-left:0}
+  .mod-progress{width:100%;text-align:left}
+  .bar .inner{display:grid;grid-template-columns:1fr auto;gap:8px 10px;
+    padding:9px 14px calc(9px + env(safe-area-inset-bottom))}
+  .bar .st{grid-column:1/3;font-size:11.5px}
+  .next-action{grid-column:1}
+  .share-actions{grid-column:2}
+  .completion-feedback{bottom:128px;max-width:calc(100vw - 24px);text-align:center}
+}
+@media print{
+  @page{size:A4;margin:15mm}
+  .progress-rail,.completion-feedback,.bar,.mod-tools,.row-info,.formula-card-close{display:none!important}
+  .mod-d,.top-d{break-inside:auto;box-shadow:none}
+  .mod-d,.top-d,.row,.q,.lrow{background:#fff!important}
+  .mod-d>summary{background:#fff!important;color:#000;border-bottom:2px solid #000}
+  .mod-d>summary *{color:#000!important}
+  .status-btn:not(.is-active){display:none}
+  .status-btn.is-active{background:#fff!important;color:#000!important;border-color:#777!important}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .progress-fill,.completion-feedback,.rail-item{transition:none!important;animation:none!important}
+}
+
+/* Corrective navigation + progress-panel readability pass (2026-07-29). */
+.intake-suite-nav{
+  position:relative;z-index:20;border-bottom:1px solid #D8D0C3;
+  background:rgba(255,253,248,.97);box-shadow:0 4px 14px rgba(36,19,72,.05)
+}
+.intake-suite-nav .intake-nav-inner{
+  display:flex;align-items:center;gap:5px;width:min(1120px,calc(100% - 36px));
+  margin:0 auto;padding:8px 0;overflow-x:auto;scrollbar-width:thin
+}
+.intake-suite-nav a{
+  flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;
+  min-height:44px;padding:8px 13px;border-radius:9px;color:#5F6470;
+  text-decoration:none;font-family:var(--sans);font-size:13px;font-weight:750;
+  white-space:nowrap
+}
+.intake-suite-nav a:first-child{color:var(--purple);border:1px solid #D7CFE8;background:#F7F3FC}
+.intake-suite-nav a:hover,.intake-suite-nav a:focus-visible,
+.intake-suite-nav a[aria-current="page"]{color:var(--purple);background:#EAE6F5}
+.mast-back{
+  position:relative;z-index:2;display:inline-flex;align-items:center;min-height:44px;
+  margin:0 0 12px;padding:7px 11px;border:1px solid rgba(255,255,255,.35);
+  border-radius:9px;background:rgba(255,255,255,.1);color:#FFFDF8;
+  font-family:var(--sans);font-size:13px;font-weight:750;text-decoration:none
+}
+.mast-back:hover,.mast-back:focus-visible{background:#FFFDF8;color:var(--purple)}
+
+.progress-rail{grid-template-columns:minmax(230px,260px) minmax(0,1fr);gap:18px}
+.rail-items{grid-template-columns:repeat(5,minmax(132px,1fr));gap:10px}
+.rail-item{
+  grid-template-columns:8px minmax(0,1fr);column-gap:10px;min-height:70px;
+  padding:10px 11px
+}
+.rail-item::before{width:8px}
+.rail-item b{font-size:13.5px;line-height:1.28;overflow-wrap:anywhere}
+.rail-item small{font-size:12px;line-height:1.35;overflow-wrap:anywhere}
+@media(max-width:1040px){
+  .progress-rail{position:relative;top:auto;grid-template-columns:1fr}
+  .rail-items{display:flex;overflow-x:auto;padding:2px 0 8px;scroll-snap-type:x proximity}
+  .rail-item{flex:0 0 184px;min-width:184px;scroll-snap-align:start}
+}
+@media(max-width:680px){
+  .intake-suite-nav .intake-nav-inner{width:calc(100% - 20px)}
+  .intake-suite-nav a{padding-inline:11px;font-size:12.5px}
+  .rail-item{flex-basis:172px;min-width:172px;min-height:74px}
+  .rail-item b{font-size:13px}
+  .rail-item small{font-size:11.5px}
+}
+</style>
+
+<a class="skip" href="#modules">Skip to the checklist</a>
+
+<aside class="review-notice" role="note">
+  <strong>Sanitized reviewer demonstration</strong>
+  <span>No real student identity, submitted response, roster mapping, or reproduced CSEC past-paper question is included. Entries stay in this browser.</span>
+</aside>
+<div class="mast"><div class="inner">
+  <a class="mast-back" href="index.html">← Suite home</a>
+  <h1>CSEC Mathematics</h1>
+  <h2>Towards a Personalized Learning Plan</h2>
+  <div class="phase"><b>Phase 1</b> &middot; Knowledge-Gap Self-Assessment &mdash; <i>knowing what you don't know</i> &mdash; <span class="yet">yet</span></div>
+  <div class="meta">AlphaMath Program &nbsp;·&nbsp; Fifth Form &nbsp;·&nbsp; Sitting June 2027 &nbsp;·&nbsp; CXC 05/G/SYLL 16 · effective for examinations from 2027</div>
+  <div class="idbar">
+    <div><label for="sc">School</label><input id="sc" type="text" autocomplete="organization" placeholder="Your school"></div>
+    <div><label for="nm">Name</label><input id="nm" type="text" autocomplete="name"></div>
+    <div><label for="se">Your Email</label><input id="se" type="email" autocomplete="email" placeholder="you@example.com"></div>
+    <div class="short"><label for="dt">Date</label><input id="dt" type="date"></div>
+  </div>
+  <div class="idbar">
+    <div><label for="tn">Tutor</label><input id="tn" type="text" placeholder="Tutor's name"></div>
+    <div><label for="te">Tutor Email</label><input id="te" type="email" placeholder="tutor@example.com"></div>
+    <div class="short"><label for="tp">Tutor Phone</label><input id="tp" type="tel" placeholder="(xxx) xxx-xxxx"></div>
+  </div>
+</div></div>
+
+<nav class="intake-suite-nav" aria-label="AlphaMath suite">
+  <div class="intake-nav-inner">
+    <a href="index.html" aria-label="Return to AlphaMath suite home">← Suite home</a>
+    <a href="intake.html" aria-current="page">Intake</a>
+    <a href="learning-path.html">Learning path</a>
+    <a href="tutorial.html">Tutorial</a>
+    <a href="simulated-exam.html">Simulated exam</a>
+  </div>
+</nav>
+
+<main class="wrap" id="main">
+
+<div class="card lav">
+  <h3>How to fill this in</h3>
+  <ol>
+    <li>Review each sub-topic and choose <b>Confident</b>, <b>Needs practice</b>, or <b>Not started</b>.</li>
+    <li>This is not graded. Its purpose is to identify the most useful starting point for your personalized learning plan.</li>
+    <li>Anything marked <b>Needs practice</b> appears automatically in <b>Your Practice List</b>. Describe the first step where your confidence drops.</li>
+  </ol>
+  <div class="eg">
+    <div class="good"><b>Useful</b><p>"M1.1.5 — I can divide the numerator by the denominator, but I lose track of place value when I change the decimal into a percentage."</p></div>
+    <div class="bad"><b>Too broad</b><p>"Fractions are hard."</p></div>
+  </div>
+  <p class="note">Precise notes help the tutor choose a focused worked example instead of repeating an entire topic.</p>
+</div>
+
+<div class="card gold">
+  <h3>Read this before you tick a single box</h3>
+  <p style="margin:0 0 8px">A right answer with <b>no working</b> scores badly on Paper 2. A wrong answer with <b>clear, correct working</b> still earns method marks. So the test for "I can do this" is not <i>can I get the answer</i> — it is:</p>
+  <p style="margin:0 0 8px;padding-left:14px;border-left:2px solid var(--gold)">Can I write <b>Given that…</b> → <b>name the operation</b> before I do it → <b>one step per line</b>, equals signs aligned → a <b>Check</b> line → <b>∴</b> and a <b>boxed final answer with its units</b>?</p>
+  <p style="margin:0"><b>If you cannot do that yet, choose “Needs practice.”</b></p>
+</div>
+
+<nav class="progress-rail" aria-label="Assessment progress">
+  <div class="rail-overview">
+    <span class="rail-kicker">Field guide progress</span>
+    <strong><span id="reviewedCount">0</span> of 144 topics reviewed</strong>
+    <div class="progress-track" role="progressbar" aria-label="Topics reviewed" aria-valuemin="0" aria-valuemax="144" aria-valuenow="0">
+      <span class="progress-fill" id="progressFill"></span>
+    </div>
+    <span class="rail-summary" id="progressSummary" aria-live="polite">Choose a status to begin.</span>
+  </div>
+  <div class="rail-items" id="railItems"></div>
+</nav>
+<div class="completion-feedback" id="completionFeedback" role="status" aria-live="polite"></div>
+
+<div id="modules"></div>
+
+<h2 class="sec">Where the number spine shows up</h2>
+<p class="lede">Fractions, percentages, and ratio connect Number Theory, Consumer Arithmetic, probability, and later algebra. Repairing this spine protects marks across the course.</p>
+<div class="card"><ul id="cross"></ul></div>
+
+<h2 class="sec" id="practice-list">Your Practice List</h2>
+<p class="lede">Every topic marked <b>Needs practice</b> appears here, grouped by topic. Name the first step where your confidence drops. You can also add or remove topics here without scrolling back up.</p>
+<div class="log" id="log"></div>
+
+<h2 class="sec" id="practice-questions">Your Five Practice Questions</h2>
+<p class="lede" id="practiceIntro">These questions are ordered around the topics you identify. Each card explains why it appears in your practice set. Work on paper, show every step, and record where your method first becomes uncertain.</p>
+<div id="qs" class="question-stack"></div>
+
+<div class="src">
+  Source: CXC® CSEC® Mathematics Syllabus, CXC 05/G/SYLL 16, effective for examinations from 2027. Internal topic codes are preserved for export compatibility; current syllabus crosswalks are shown where verified.
+  <br>Palette: Marion Sydney Classic — Royal Purple var(--purple), Marion Gold #C8A951, Silver #C0C0C0.
+</div>
+</main>
+
+<div class="bar"><div class="inner">
+  <div class="st"><strong id="reviewedBar">0</strong> reviewed <span aria-hidden="true">·</span> <b id="cnt">0</b> topics identified <span id="sv" class="saved" role="status" aria-live="polite"></span></div>
+  <button type="button" class="next-action" id="nextFlagged" onclick="nextFlagged()">Next topic to practise</button>
+  <details class="share-actions">
+    <summary>Share / export</summary>
+    <div class="share-menu">
+      <button type="button" onclick="window.print()">Print field guide</button>
+      <button type="button" onclick="download()">Download my answers</button>
+    </div>
+  </details>
+</div></div>
+
+<script>
+const DATA = {
+"modules": [
+{
+"id": "M1",
+"name": "Module 1 — Fundamentals of Secondary Level Mathematics",
+"note": "Paper 1: 20 items. Paper 2: 30 marks (9 for Consumer Arithmetic and Number Theory; 12 for Graphs, Sets, Measurement and Algebra 1; 9 for the Investigation question).",
+"topics": [
+{
+"id": "M1.1",
+"name": "Number Theory and Computation",
+"note": "Paper 1: 4 items",
+"items": [
+{
+"code": "M1.1.1",
+"t": "Sets of numbers",
+"n": "Natural (<span class=\"m\">&#8469;</span>), Whole (<span class=\"m\">&#120142;</span>), Integers (<span class=\"m\">&#8484;</span>), Rational (<span class=\"m\">&#8474;</span>), Irrational, Real (<span class=\"m\">&#8477;</span>), and how they nest: <span class=\"m\">&#8469;&sub;&#120142;&sub;&#8484;&sub;&#8474;&sub;&#8477;</span>. A rational number can be written as a fraction; an irrational one (like <span class=\"m\">&pi;</span> or <span class=\"m\">&radic;<span class=\"rad\">2</span></span>) cannot."
+},
+{
+"code": "M1.1.2",
+"t": "Number properties",
+"n": "Factors, multiples, square numbers, prime and composite numbers, odd and even."
+},
+{
+"code": "M1.1.3",
+"t": "Powers and roots",
+"n": "Squares, square roots, cubes, cube roots; powers <span class=\"m\"><i>x</i><sup><i>a</i></sup></span> where <span class=\"m\"><i>a</i></span> is rational."
+},
+{
+"code": "M1.1.4",
+"t": "The four operations on real numbers",
+"n": "Adding, subtracting, multiplying and dividing whole numbers, fractions and decimals, plus the order of operations (brackets before indices before <span class=\"m\">&times;/&divide;</span> before <span class=\"m\">+/-</span>)."
+},
+{
+"code": "M1.1.5",
+"t": "Converting between fractions, decimals and percentages",
+"n": "Moving freely among the three forms of the same number."
+},
+{
+"code": "M1.1.6",
+"t": "H.C.F. and L.C.M.",
+"n": "The biggest number that divides into both; the smallest number both divide into."
+},
+{
+"code": "M1.1.7",
+"t": "Place value in other bases",
+"n": "Value and face value of a digit in base 2, 4, 8 and 10."
+},
+{
+"code": "M1.1.8",
+"t": "Converting units",
+"n": "Metric conversions, conversion scales, and the 12-hour vs 24-hour clock."
+},
+{
+"code": "M1.1.9",
+"t": "Significant figures and decimal places",
+"n": "Rounding to 1, 2 or 3 s.f. and to 0, 1, 2 or 3 d.p."
+},
+{
+"code": "M1.1.10",
+"t": "Properties of operations",
+"n": "Closure, commutativity, associativity, distributivity, identities and inverses."
+},
+{
+"code": "M1.1.11",
+"t": "Fraction or percentage of a quantity",
+"n": "And the harder reverse: finding the whole when you are given a part and its fraction/percentage."
+},
+{
+"code": "M1.1.12",
+"t": "Scientific notation",
+"n": "Writing numbers as <span class=\"m\"><i>a</i>&times; 10<sup><i>n</i></sup></span>, e.g. <span class=\"m\">759&thinsp;000 = 7.59&times;10<sup>5</sup></span> and <span class=\"m\">0.00759 = 7.59&times;10<sup>-3</sup></span>."
+},
+{
+"code": "M1.1.13",
+"t": "One quantity as a fraction or percentage of another",
+"n": "&ldquo;What percentage of 80 is 12?&rdquo;"
+},
+{
+"code": "M1.1.14",
+"t": "Ratio, proportion and rates",
+"n": "Comparing quantities; dividing a quantity in a given ratio of up to three parts."
+},
+{
+"code": "M1.1.15",
+"t": "Ordering real numbers",
+"n": "Putting a mixed list (fractions, surds, <span class=\"m\">&pi;</span>, decimals) in ascending or descending order."
+},
+{
+"code": "M1.1.16",
+"t": "Sequences",
+"n": "Finding terms from a given rule, and finding the rule from given terms."
+}
+]
+},
+{
+"id": "M1.2",
+"name": "Consumer Arithmetic",
+"note": "Paper 1: 4 items",
+"items": [
+{
+"code": "M1.2.1",
+"t": "Discount, sales tax, profit and loss",
+"n": "The four everyday money calculations."
+},
+{
+"code": "M1.2.2",
+"t": "Percentage profit and percentage loss",
+"n": "Always taken as a percentage of the cost price unless stated otherwise."
+},
+{
+"code": "M1.2.3",
+"t": "Expressing profit, loss, discount, mark-up or purchase tax as a percentage",
+"n": "&hellip; of some value."
+},
+{
+"code": "M1.2.4",
+"t": "Cost price, marked price, selling price",
+"n": "Working backwards and forwards between them."
+},
+{
+"code": "M1.2.5",
+"t": "Hire purchase and mortgages",
+"n": "Payments by instalments: deposit plus a number of monthly payments."
+},
+{
+"code": "M1.2.6",
+"t": "Simple interest",
+"n": "Principal, rate, time, amount."
+},
+{
+"code": "M1.2.7",
+"t": "Compound interest",
+"n": "Interest earning interest; the formula is allowed and the calculator is encouraged."
+},
+{
+"code": "M1.2.8",
+"t": "Appreciation and depreciation",
+"n": "Value going up (land) or down (a car) year by year."
+},
+{
+"code": "M1.2.9",
+"t": "Currency conversion",
+"n": "EC<span class=\"m\"> to US</span> and back, using a given rate."
+},
+{
+"code": "M1.2.10",
+"t": "Bills and earnings",
+"n": "Rates and taxes, utility bills, invoices and shopping bills, salaries and wages, insurance and investments."
+}
+]
+},
+{
+"id": "M1.3",
+"name": "Sets",
+"note": "Paper 1: 3 items",
+"items": [
+{
+"code": "M1.3.1",
+"t": "Set concepts",
+"n": "Membership, cardinality <span class=\"m\"><i>n</i>(<i>A</i>)</span>, finite and infinite sets, the universal set, the empty set, complements, subsets."
+},
+{
+"code": "M1.3.2",
+"t": "Representing a set",
+"n": "By description, by set-builder notation (<span class=\"m\"><i>A</i>={<i>x</i> : 0<<i>x</i><4, <i>x</i>&isin;&#8469;}</span>), or by listing (<span class=\"m\"><i>A</i>={1,2,3}</span>)."
+},
+{
+"code": "M1.3.3",
+"t": "Subsets",
+"n": "Listing them, and counting how many a set of <span class=\"m\"><i>n</i></span> elements has."
+},
+{
+"code": "M1.3.4",
+"t": "Union, intersection, complement",
+"n": "For up to three sets, and the result <span class=\"m\"><i>n</i>(<i>A</i>&cup; <i>B</i>)=<i>n</i>(<i>A</i>)+<i>n</i>(<i>B</i>)-<i>n</i>(<i>A</i>&cap; <i>B</i>)</span>."
+},
+{
+"code": "M1.3.5",
+"t": "Relationships between sets",
+"n": "Equal sets, equivalent sets, disjoint sets, subsets."
+},
+{
+"code": "M1.3.6",
+"t": "Venn diagrams",
+"n": "Drawing and reading them, for up to four sets including the universal set."
+},
+{
+"code": "M1.3.7",
+"t": "Problem-solving with sets",
+"n": "Typical &ldquo;how many students study both Maths and Physics&rdquo; questions."
+}
+]
+},
+{
+"id": "M1.4",
+"name": "Measurement",
+"note": "Paper 1: 4 items",
+"items": [
+{
+"code": "M1.4.1",
+"t": "Units",
+"n": "Converting length, mass, area, volume and capacity; choosing the correct SI unit; 24-hour time."
+},
+{
+"code": "M1.4.2",
+"t": "Perimeter",
+"n": "Of polygons, circles, and compound or irregular shapes."
+},
+{
+"code": "M1.4.3",
+"t": "Arc length and sector perimeter",
+"n": "Fractions of a circle: <span class=\"m\"><span class=\"fr\"><span class=\"nu\">&theta;</span><span class=\"de\">360</span></span>&times;</span> circumference."
+},
+{
+"code": "M1.4.4",
+"t": "Area",
+"n": "Estimating area; area of polygons and circles; area of a sector."
+},
+{
+"code": "M1.4.5",
+"t": "Surface area of solids",
+"n": "Prisms (including cubes), cylinders, right pyramids, cones and spheres (<span class=\"m\"><i>A</i>=4&pi; <i>r</i><sup>2</sup></span>)."
+},
+{
+"code": "M1.4.6",
+"t": "Volume of solids",
+"n": "Cube, cuboid, prism, cylinder, right pyramid, cone, sphere (<span class=\"m\"><i>V</i>=<span class=\"fr\"><span class=\"nu\">4</span><span class=\"de\">3</span></span>&pi; <i>r</i><sup>3</sup></span>)."
+},
+{
+"code": "M1.4.7",
+"t": "Speed, distance and time",
+"n": "Including average speed <span class=\"m\">=</span> total distance <span class=\"m\">&divide;</span> total time."
+},
+{
+"code": "M1.4.8",
+"t": "Margin of error",
+"n": "Sources of error; the maximum and minimum a measurement could really be."
+},
+{
+"code": "M1.4.9",
+"t": "Scales and scale drawings",
+"n": "Reading distances and areas off a map or plan."
+},
+{
+"code": "M1.4.10",
+"t": "Compound shapes and solids",
+"n": "Breaking an awkward shape into simple pieces."
+}
+]
+},
+{
+"id": "M1.5",
+"name": "Algebra 1",
+"note": "Paper 1: 3 items",
+"items": [
+{
+"code": "M1.5.1",
+"t": "Symbols and translation",
+"n": "Turning words into algebra and algebra back into words."
+},
+{
+"code": "M1.5.2",
+"t": "Directed numbers",
+"n": "Arithmetic with negatives."
+},
+{
+"code": "M1.5.3",
+"t": "Simplifying expressions",
+"n": "The four operations on algebraic terms; collecting like terms."
+},
+{
+"code": "M1.5.4",
+"t": "Binary operations",
+"n": "Operations defined by a rule (e.g. <span class=\"m\"><i>a</i>&lowast;<i>b</i> = 2a+<i>b</i></span>); testing whether they are commutative, associative or distributive."
+},
+{
+"code": "M1.5.5",
+"t": "Substitution",
+"n": "Putting numbers in for letters."
+},
+{
+"code": "M1.5.6",
+"t": "Distributive law",
+"n": "Expanding <span class=\"m\">(<i>a</i>+<i>b</i>)(<i>x</i>+<i>y</i>)</span> and factorising back again."
+},
+{
+"code": "M1.5.7",
+"t": "Algebraic fractions",
+"n": "Adding, subtracting, multiplying and dividing them (same rules as number fractions, so fix your fractions first)."
+},
+{
+"code": "M1.5.8",
+"t": "Laws of indices",
+"n": "<span class=\"m\"><i>x</i><sup><i>m</i></sup>&times; <i>x</i><sup><i>n</i></sup>=<i>x</i><sup><i>m</i>+<i>n</i></sup></span>, <span class=\"m\"><i>x</i><sup><i>m</i></sup>&divide; <i>x</i><sup><i>n</i></sup>=<i>x</i><sup><i>m</i>-<i>n</i></sup></span>, <span class=\"m\">(<i>x</i><sup><i>m</i></sup>)<sup><i>n</i></sup>=<i>x</i><sup>mn</sup></span>, <span class=\"m\"><i>x</i><sup>-<i>m</i></sup>=<span class=\"fr\"><span class=\"nu\">1</span><span class=\"de\"><i>x</i><sup><i>m</i></sup></span></span></span>."
+},
+{
+"code": "M1.5.9",
+"t": "Linear equations in one unknown",
+"n": "Solving for a single letter."
+},
+{
+"code": "M1.5.10",
+"t": "Linear inequalities in one unknown",
+"n": "With the solution written in set-builder notation."
+},
+{
+"code": "M1.5.11",
+"t": "Change of subject",
+"n": "Rearranging <span class=\"m\"><i>y</i>=mx+<i>c</i></span>, <span class=\"m\"><i>C</i>=2&pi; <i>r</i></span>, <span class=\"m\"><i>P</i>=<span class=\"fr\"><span class=\"nu\"><i>c</i></span><span class=\"de\">2x</span></span></span>."
+},
+{
+"code": "M1.5.12",
+"t": "Simple factorisation",
+"n": "Expressions like <span class=\"m\">ax+bx</span> and <span class=\"m\">ax<sup>2</sup>+<i>b</i></span>."
+},
+{
+"code": "M1.5.13",
+"t": "Worded problems",
+"n": "Turning a story into a linear equation or inequality."
+},
+{
+"code": "M1.5.14",
+"t": "Identities vs equations",
+"n": "Proving two expressions are identical (true for every value) rather than solving for one value."
+}
+]
+},
+{
+"id": "M1.6",
+"name": "Introduction to Graphs",
+"note": "Paper 1: 2 items",
+"items": [
+{
+"code": "M1.6.1",
+"t": "Drawing linear graphs",
+"n": "<span class=\"m\"><i>y</i>=<i>c</i></span> (horizontal), <span class=\"m\"><i>x</i>=<i>k</i></span> (vertical), <span class=\"m\"><i>y</i>=mx+<i>c</i></span> (slanted)."
+},
+{
+"code": "M1.6.2",
+"t": "Intercepts",
+"n": "Finding where a line crosses the axes, both from the graph and by algebra (<span class=\"m\"><i>x</i></span>-intercept: set <span class=\"m\"><i>y</i>=0</span>)."
+},
+{
+"code": "M1.6.3",
+"t": "Problems using linear graphs",
+"n": "Reading values off conversion graphs (e.g. EC<span class=\"m\"> to US</span>), travel graphs, cost graphs."
+}
+]
+}
+]
+},
+{
+"id": "M2",
+"name": "Module 2 — Intermediate Secondary Level Mathematics",
+"note": "Paper 1: 20 items. Paper 2: 30 marks (12 for Algebra 2 with Relations, Functions and Graphs 1; 9 for Geometry and Trigonometry 1; 6 for Statistics 1; 3 for Vectors and Matrices 1).",
+"topics": [
+{
+"id": "M2.1",
+"name": "Statistics 1",
+"note": "Paper 1: 4 items &nbsp;&middot;&nbsp; Paper 2: 6 marks",
+"items": [
+{
+"code": "M2.1.1",
+"t": "Sample vs population",
+"n": "A statistic describes a sample; a parameter describes the whole population."
+},
+{
+"code": "M2.1.2",
+"t": "Frequency tables",
+"n": "For discrete, ungrouped data."
+},
+{
+"code": "M2.1.3",
+"t": "Statistical diagrams",
+"n": "Pie charts and bar charts."
+},
+{
+"code": "M2.1.4",
+"t": "Averages for raw ungrouped data",
+"n": "Mean, median, mode."
+},
+{
+"code": "M2.1.5",
+"t": "Choosing the right average",
+"n": "Levels of measurement (nominal, ordinal, interval, ratio); why an extreme value ruins the mean but not the median."
+},
+{
+"code": "M2.1.6",
+"t": "Measures of spread",
+"n": "Range, interquartile range, semi-interquartile range."
+},
+{
+"code": "M2.1.7",
+"t": "Analysing diagrams",
+"n": "Pulling the mean, mode, median, quartiles, spread, trends and patterns out of a chart."
+},
+{
+"code": "M2.1.8",
+"t": "Standard deviation",
+"n": "Used only to compare two sets of data. You are never asked to calculate it."
+},
+{
+"code": "M2.1.9",
+"t": "Proportion above or below a value",
+"n": "What fraction or percentage of the sample scored more than (or less than) a given mark."
+},
+{
+"code": "M2.1.10",
+"t": "Sample space and simple probability",
+"n": "Coins, dice and playing cards."
+},
+{
+"code": "M2.1.11",
+"t": "Making inferences",
+"n": "What the data actually lets you conclude."
+}
+]
+},
+{
+"id": "M2.2",
+"name": "Algebra 2",
+"note": "Paper 1: 4 items &nbsp;&middot;&nbsp; Paper 2: 12 marks with RFG 1",
+"items": [
+{
+"code": "M2.2.1",
+"t": "Factorising",
+"n": "Difference of two squares <span class=\"m\"><i>a</i><sup>2</sup>-<i>b</i><sup>2</sup></span>; grouping <span class=\"m\">ax+bx+ay+by</span>; trinomials <span class=\"m\">ax<sup>2</sup>+bx+<i>c</i></span>."
+},
+{
+"code": "M2.2.2",
+"t": "Change of subject (harder)",
+"n": "Formulae with powers and roots: <span class=\"m\"><i>V</i>=<span class=\"fr\"><span class=\"nu\">4</span><span class=\"de\">3</span></span>&pi; <i>r</i><sup>3</sup></span>, <span class=\"m\"><i>T</i>=2&pi;&radic;<span class=\"rad\"><span class=\"fr\"><span class=\"nu\"><i>l</i></span><span class=\"de\"><i>g</i></span></span></span></span>, <span class=\"m\"><i>M</i>=&radic;<span class=\"rad\"><i>P</i>+2M</span></span>."
+},
+{
+"code": "M2.2.3",
+"t": "Simultaneous linear equations",
+"n": "Solved algebraically, by elimination or substitution."
+},
+{
+"code": "M2.2.4",
+"t": "Completing the square",
+"n": "Rewriting a quadratic as <span class=\"m\"><i>a</i>(<i>x</i>+<i>h</i>)<sup>2</sup>+<i>k</i></span>."
+},
+{
+"code": "M2.2.5",
+"t": "Solving quadratic equations",
+"n": "By factorisation, by completing the square, and by the formula."
+},
+{
+"code": "M2.2.6",
+"t": "Worded problems",
+"n": "Leading to simultaneous or quadratic equations (including demand and supply)."
+},
+{
+"code": "M2.2.7",
+"t": "One linear + one quadratic equation",
+"n": "Solving a pair where only one equation is non-linear."
+},
+{
+"code": "M2.2.8",
+"t": "Direct and inverse variation",
+"n": "<span class=\"m\"><i>y</i>&prop; <i>x</i> &rArr; <i>y</i>=kx</span>; <span class=\"m\"><i>y</i>&prop;<span class=\"fr\"><span class=\"nu\">1</span><span class=\"de\"><i>x</i></span></span>&rArr; <i>y</i>=<span class=\"fr\"><span class=\"nu\"><i>k</i></span><span class=\"de\"><i>x</i></span></span></span>. Find <span class=\"m\"><i>k</i></span> first, then answer."
+}
+]
+},
+{
+"id": "M2.3",
+"name": "Relations, Functions and Graphs 1",
+"note": "Paper 1: 4 items",
+"items": [
+{
+"code": "M2.3.1",
+"t": "Relations",
+"n": "Domain, range, image, co-domain."
+},
+{
+"code": "M2.3.2",
+"t": "Representing a relation",
+"n": "Ordered pairs, arrow diagrams, graphs, algebra."
+},
+{
+"code": "M2.3.3",
+"t": "Functions vs relations",
+"n": "A function gives exactly one output per input; the vertical line test on a graph."
+},
+{
+"code": "M2.3.4",
+"t": "Function notation",
+"n": "<span class=\"m\"><i>f</i>(<i>x</i>)</span>, the inverse <span class=\"m\"><i>f</i><sup>-1</sup>(<i>x</i>)</span>, the composite <span class=\"m\">fg(<i>x</i>)=<i>f</i>[<i>g</i>(<i>x</i>)]</span>."
+},
+{
+"code": "M2.3.5",
+"t": "Gradient of a straight line",
+"n": "Rise over run."
+},
+{
+"code": "M2.3.6",
+"t": "Equation of a straight line",
+"n": "From the graph; from two points; from a gradient and one point; from a point plus a relationship (parallel or perpendicular) to another line."
+},
+{
+"code": "M2.3.7",
+"t": "Parallel and perpendicular gradients",
+"n": "Parallel: equal gradients. Perpendicular: gradients multiply to <span class=\"m\">-1</span>."
+},
+{
+"code": "M2.3.8",
+"t": "Length and midpoint of a line segment",
+"n": "From its endpoints' coordinates."
+},
+{
+"code": "M2.3.9",
+"t": "Simultaneous equations solved graphically",
+"n": "The solution is where the two lines cross."
+},
+{
+"code": "M2.3.10",
+"t": "Composite functions",
+"n": "Note <span class=\"m\">fg &ne; gf</span> in general; order matters."
+},
+{
+"code": "M2.3.11",
+"t": "Inverse functions",
+"n": "Deriving <span class=\"m\"><i>f</i><sup>-1</sup></span>; the fact that <span class=\"m\"><i>f</i></span> and <span class=\"m\"><i>f</i><sup>-1</sup></span> undo each other and give back <span class=\"m\"><i>x</i></span>."
+},
+{
+"code": "M2.3.12",
+"t": "Evaluating functions",
+"n": "<span class=\"m\"><i>f</i>(<i>a</i>)</span>, <span class=\"m\"><i>f</i><sup>-1</sup>(<i>a</i>)</span>, <span class=\"m\">fg(<i>a</i>)</span>."
+},
+{
+"code": "M2.3.13",
+"t": "Quadratic graphs",
+"n": "Drawing them, then reading off roots, the axis of symmetry, the maximum or minimum, the turning point, intercepts, and estimating the gradient at a point using a tangent."
+},
+{
+"code": "M2.3.14",
+"t": "Sketching <span class=\"m\"><i>y</i>=<i>a</i>(<i>x</i>+<i>h</i>)<sup>2</sup>+<i>k</i></span>",
+"n": "Getting the axis of symmetry and the max/min straight from the completed square, and deciding how many roots there are."
+},
+{
+"code": "M2.3.15",
+"t": "Problems with linear and non-linear graphs",
+"n": "Combining the two on one set of axes."
+}
+]
+},
+{
+"id": "M2.4",
+"name": "Geometry and Trigonometry 1",
+"note": "Paper 1: 4 items &nbsp;&middot;&nbsp; Paper 2: 9 marks",
+"items": [
+{
+"code": "M2.4.1",
+"t": "Geometry vocabulary",
+"n": "Points, lines, rays, segments, planes, parallel/intersecting/perpendicular lines; types of angles; faces, edges and vertices."
+},
+{
+"code": "M2.4.2",
+"t": "Drawing and measuring",
+"n": "Angles and line segments, accurately, with the right instruments."
+},
+{
+"code": "M2.4.3",
+"t": "Constructions",
+"n": "Parallel and perpendicular lines, bisecting lines and angles, and building <span class=\"m\">30&deg;</span>, <span class=\"m\">45&deg;</span>, <span class=\"m\">60&deg;</span>, <span class=\"m\">90&deg;</span>, <span class=\"m\">120&deg;</span> angles, triangles, quadrilaterals and polygons."
+},
+{
+"code": "M2.4.4",
+"t": "Symmetry",
+"n": "Lines of symmetry; rotational symmetry and its order."
+},
+{
+"code": "M2.4.5",
+"t": "Angle facts",
+"n": "Adjacent angles, angles at a point, supplementary, complementary, vertically opposite; and with parallel lines cut by a transversal: alternate, corresponding, co-interior angles."
+},
+{
+"code": "M2.4.6",
+"t": "Properties of shapes",
+"n": "Triangle types; quadrilaterals (square, rectangle, rhombus, kite, parallelogram, trapezium); other polygons; congruent triangles (the cases) and similar figures; classes of solids."
+},
+{
+"code": "M2.4.7",
+"t": "Pythagoras' theorem",
+"n": "<span class=\"m\"><i>a</i><sup>2</sup>+<i>b</i><sup>2</sup>=<i>c</i><sup>2</sup></span> in a right-angled triangle."
+},
+{
+"code": "M2.4.8",
+"t": "Trigonometric ratios",
+"n": "<span class=\"m\">sin&theta;=<span class=\"fr\"><span class=\"nu\"><i>O</i></span><span class=\"de\"><i>H</i></span></span></span>, <span class=\"m\">cos&theta;=<span class=\"fr\"><span class=\"nu\"><i>A</i></span><span class=\"de\"><i>H</i></span></span></span>, <span class=\"m\">tan&theta;=<span class=\"fr\"><span class=\"nu\"><i>O</i></span><span class=\"de\"><i>A</i></span></span></span> (SOH-CAH-TOA)."
+},
+{
+"code": "M2.4.9",
+"t": "Real-world geometry",
+"n": "Angle of elevation, angle of depression, bearings."
+},
+{
+"code": "M2.4.10",
+"t": "Applying trigonometry",
+"n": "Heights, distances, and scale drawings."
+}
+]
+},
+{
+"id": "M2.5",
+"name": "Vectors and Matrices 1",
+"note": "Paper 1: 4 items &nbsp;&middot;&nbsp; Paper 2: 3 marks",
+"items": [
+{
+"code": "M2.5.1",
+"t": "Vector concepts",
+"n": "Magnitude, direction, unit vector, scalar; equal vectors, parallel vectors, inverse vectors, scalar multiples."
+},
+{
+"code": "M2.5.2",
+"t": "Vector algebra and geometry",
+"n": "Adding, subtracting and scaling vectors; the triangle law and parallelogram law."
+},
+{
+"code": "M2.5.3",
+"t": "Matrix concepts",
+"n": "Rows, columns, square and rectangular matrices, the identity matrix, and the order of a matrix (<span class=\"m\"><i>m</i>&times; <i>n</i></span>)."
+},
+{
+"code": "M2.5.4",
+"t": "Matrix operations",
+"n": "Addition, subtraction, scalar multiplication, and multiplication of conformable matrices. Beware: <span class=\"m\">AB&ne; BA</span> in general."
+},
+{
+"code": "M2.5.5",
+"t": "Using matrices",
+"n": "Data matrices and matrix equality to solve simple arithmetic and algebra problems."
+}
+]
+}
+]
+},
+{
+"id": "M3",
+"name": "Module 3 — Higher Concepts in Secondary Level Mathematics",
+"note": "Paper 1: 20 items. Paper 2: 30 marks (9 for Vectors and Matrices 2; 9 for Geometry and Trigonometry 2; 6 for Relations, Functions and Graphs 2; 6 for Statistics 2).",
+"topics": [
+{
+"id": "M3.1",
+"name": "Statistics 2",
+"note": "Paper 1: 4 items &nbsp;&middot;&nbsp; Paper 2: 6 marks",
+"items": [
+{
+"code": "M3.1.1",
+"t": "Frequency tables for grouped data",
+"n": "Discrete and continuous variables."
+},
+{
+"code": "M3.1.2",
+"t": "Class features",
+"n": "Class interval, class limits, class boundaries, class midpoint, class width. (Limits are what's written; boundaries are where one class really ends and the next begins.)"
+},
+{
+"code": "M3.1.3",
+"t": "Statistical diagrams",
+"n": "Line graphs, histograms with equal-width bars, frequency polygons."
+},
+{
+"code": "M3.1.4",
+"t": "Averages for grouped data",
+"n": "Modal class, median class, and an estimate of the mean using class midpoints."
+},
+{
+"code": "M3.1.5",
+"t": "Spread for grouped data",
+"n": "Estimating range, interquartile range and semi-interquartile range."
+},
+{
+"code": "M3.1.6",
+"t": "Standard deviation",
+"n": "Again, used only to compare data sets; no calculation required."
+},
+{
+"code": "M3.1.7",
+"t": "Cumulative frequency curve (ogive)",
+"n": "Plotted against class boundaries; used to read off the median and quartiles."
+},
+{
+"code": "M3.1.8",
+"t": "Analysing diagrams",
+"n": "Median, quartiles, IQR, semi-IQR, trends."
+},
+{
+"code": "M3.1.9",
+"t": "Proportion above or below a value",
+"n": "From raw data, a table, or the ogive."
+},
+{
+"code": "M3.1.10",
+"t": "Probability",
+"n": "Experimental and theoretical; contingency tables; add for mutually exclusive events, multiply for independent events."
+},
+{
+"code": "M3.1.11",
+"t": "Making inferences",
+"n": "What the data actually lets you conclude."
+}
+]
+},
+{
+"id": "M3.2",
+"name": "Relations, Functions and Graphs 2",
+"note": "Paper 1: 6 items &nbsp;&middot;&nbsp; Paper 2: 6 marks",
+"items": [
+{
+"code": "M3.2.1",
+"t": "Graphing a linear inequality in two variables",
+"n": "Draw the boundary line, then shade."
+},
+{
+"code": "M3.2.2",
+"t": "Solutions of linear inequalities in one variable",
+"n": "Shown on a number line and on a graph."
+},
+{
+"code": "M3.2.3",
+"t": "Linear programming",
+"n": "Writing the constraints, shading the feasible region, and testing the corner points against the objective function to find the maximum or minimum."
+},
+{
+"code": "M3.2.4",
+"t": "Non-linear graphs",
+"n": "<span class=\"m\"><i>y</i>=ax<sup><i>n</i></sup></span> for <span class=\"m\"><i>n</i>=-1,&thinsp;-2,&thinsp;+3</span>; plus distance-time and speed-time graphs."
+},
+{
+"code": "M3.2.5",
+"t": "Interpreting graphs",
+"n": "On a distance-time graph the gradient is speed; on a speed-time graph the gradient is acceleration and the area under the graph is distance."
+},
+{
+"code": "M3.2.6",
+"t": "Problems combining linear and non-linear graphs",
+"n": "Including finding where two graphs meet."
+}
+]
+},
+{
+"id": "M3.3",
+"name": "Geometry and Trigonometry 2",
+"note": "Paper 1: 6 items &nbsp;&middot;&nbsp; Paper 2: 9 marks",
+"items": [
+{
+"code": "M3.3.1",
+"t": "Circle theorems",
+"n": "Angle at the centre is twice the angle at the circumference on the same arc; angles in the same segment are equal; the angle in a semicircle is <span class=\"m\">90&deg;</span>; opposite angles of a cyclic quadrilateral are supplementary; the exterior angle of a cyclic quadrilateral equals the interior opposite angle; the alternate segment theorem; a tangent is perpendicular to the radius at the point of contact; two tangents from an external point are equal; the line from the centre to the midpoint of a chord is perpendicular to the chord. <strong>Always name the theorem you used &mdash; that is where the marks are.</strong>"
+},
+{
+"code": "M3.3.2",
+"t": "Translations as vectors",
+"n": "Column notation <span class=\"m\"><span class=\"cv\"><span class=\"nu\"><i>x</i></span><span class=\"de\"><i>y</i></span></span></span>."
+},
+{
+"code": "M3.3.3",
+"t": "Transformations",
+"n": "Translation, reflection, rotation and enlargement; finding the image from the object, and the object from the image."
+},
+{
+"code": "M3.3.4",
+"t": "Object and image relationships",
+"n": "Orientation, similarity, congruency."
+},
+{
+"code": "M3.3.5",
+"t": "Describing a transformation fully",
+"n": "Translation: the vector. Reflection: the mirror line. Rotation: centre, angle and direction. Enlargement: centre and scale factor <span class=\"m\"><i>k</i></span>."
+},
+{
+"code": "M3.3.6",
+"t": "Combined transformations",
+"n": "Any two of enlargement, translation, rotation and reflection, and the single transformation equivalent to them."
+},
+{
+"code": "M3.3.7",
+"t": "Sine rule and cosine rule",
+"n": "For triangles that are not right-angled."
+},
+{
+"code": "M3.3.8",
+"t": "Area of a triangle",
+"n": "Given two sides and the angle between them."
+},
+{
+"code": "M3.3.9",
+"t": "Area of a segment of a circle",
+"n": "Sector area minus triangle area."
+},
+{
+"code": "M3.3.10",
+"t": "Bearings",
+"n": "Always written with three digits, e.g. <span class=\"m\">060&deg;</span>, measured clockwise from North."
+}
+]
+},
+{
+"id": "M3.4",
+"name": "Vectors and Matrices 2",
+"note": "Paper 1: 4 items &nbsp;&middot;&nbsp; Paper 2: 9 marks",
+"items": [
+{
+"code": "M3.4.1",
+"t": "Position vectors",
+"n": "For a point <span class=\"m\"><i>P</i>(<i>a</i>,<i>b</i>)</span>, <span class=\"m\"><span class=\"ovr\">OP</span>=<span class=\"cv\"><span class=\"nu\"><i>a</i></span><span class=\"de\"><i>b</i></span></span></span>; and displacement vectors between two points."
+},
+{
+"code": "M3.4.2",
+"t": "Magnitude of a vector",
+"n": "Its length, by Pythagoras; and unit vectors."
+},
+{
+"code": "M3.4.3",
+"t": "Direction of a vector",
+"n": "The angle it makes, using <span class=\"m\">tan</span>."
+},
+{
+"code": "M3.4.4",
+"t": "Vectors in geometry",
+"n": "Proving points are collinear (in a straight line) or lines are parallel; modelling displacement, velocity and weight."
+},
+{
+"code": "M3.4.5",
+"t": "Determinant of a <span class=\"m\">2&times;2</span> matrix",
+"n": "<span class=\"m\">&#124;<i>A</i>&#124; = ad-bc</span>."
+},
+{
+"code": "M3.4.6",
+"t": "Inverse of a matrix",
+"n": "The identity matrix; singular (<span class=\"m\">&#124;<i>A</i>&#124;=0</span>, no inverse) vs non-singular; finding the inverse of a <span class=\"m\">2&times;2</span> matrix using the determinant and the adjoint."
+},
+{
+"code": "M3.4.7",
+"t": "Transformation matrices",
+"n": "The <span class=\"m\">2&times;2</span> matrix for a reflection in the <span class=\"m\"><i>x</i></span>-axis, <span class=\"m\"><i>y</i></span>-axis, <span class=\"m\"><i>y</i>=<i>x</i></span> or <span class=\"m\"><i>y</i>=-<i>x</i></span>; a rotation about the origin; an enlargement centred at the origin; and the matrix for two transformations combined."
+},
+{
+"code": "M3.4.8",
+"t": "Using matrices to solve simultaneous equations",
+"n": "Two equations, two unknowns, via the inverse matrix."
+}
+]
+}
+]
+}
+],
+"cross": [
+{
+"t": "Number Theory",
+"n": "The four operations on fractions; converting fractions, decimals and percentages; fraction/percentage of a quantity; expressing one quantity as a fraction of another."
+},
+{
+"t": "Consumer Arithmetic",
+"n": "Every single sub-topic. Discount, tax, profit, loss, interest, depreciation are all percentage calculations."
+},
+{
+"t": "Ratio and proportion",
+"n": "Dividing a quantity in a ratio is fraction work in disguise: each share is <span class=\"m\"><span class=\"fr\"><span class=\"nu\">part</span><span class=\"de\">total parts</span></span></span> of the whole."
+},
+{
+"t": "Measurement",
+"n": "Arc length and sector area are <span class=\"m\"><span class=\"fr\"><span class=\"nu\">&theta;</span><span class=\"de\">360</span></span></span> of a circle."
+},
+{
+"t": "Algebra 1",
+"n": "Algebraic fractions follow the exact same rules as number fractions."
+},
+{
+"t": "Statistics",
+"n": "Probability is a fraction. &ldquo;Proportion above a value&rdquo; is a fraction. Estimating a grouped mean is a weighted fraction."
+},
+{
+"t": "Relations and Graphs",
+"n": "Gradient is a fraction: <span class=\"m\"><span class=\"fr\"><span class=\"nu\">rise</span><span class=\"de\">run</span></span></span>."
+},
+{
+"t": "Trigonometry",
+"n": "Every trig ratio is a fraction of two sides."
+}
+]
+};
+
+const REFERENCES = {
+  "M1.1.4":"Four operations on whole numbers, fractions, and decimals; follow the order of operations.",
+  "M1.1.5":"2027 syllabus crosswalk: Module 1, SO 1.4. Fraction → decimal: divide the numerator by the denominator. Decimal → percentage: multiply by 100.",
+  "M1.1.11":"2027 syllabus SO 1.11. Find a fraction or percentage of a quantity; or recover the whole from a known part.",
+  "M1.1.13":"2027 syllabus SO 1.13. Compare two quantities by writing one as a fraction or percentage of the other.",
+  "M1.1.14":"2027 syllabus SO 1.14, 1.18 and 1.19. Use ratio, proportion, rates, and division in a ratio."
+};
+
+function renderPopoverMath(root) {
+  if (!window.katex) return;
+  root.querySelectorAll('.tex').forEach(el => {
+    katex.render(el.textContent, el, {throwOnError:false, strict:false, displayMode:false});
+  });
+}
+
+const QUESTIONS = [
+  {id:"Q1", tag:"Fractions · order of operations", body:
+    'Calculate the exact value of <span class="m">(<span class="fr"><span class="nu">2</span><span class="de">3</span></span> + <span class="fr"><span class="nu">1</span><span class="de">4</span></span>) &divide; <span class="fr"><span class="nu">5</span><span class="de">6</span></span></span>, giving your answer as a fraction in its lowest terms.'},
+  {id:"Q2", tag:"Percentage · forwards and backwards", body:
+    'A shirt is sold for $153 after a discount of 15%.<span class="part">(a) Calculate the discount, in dollars.</span><span class="part">(b) Calculate the marked price of the shirt before the discount.</span>'},
+  {id:"Q3", tag:"Ratio · three parts", body:
+    'An amount of $450 is shared among Anya, Brent and Carla in the ratio <span class="m">2 : 3 : 4</span>. Calculate each share, and show that the three shares add back to $450.'},
+  {id:"Q4", tag:"Fraction → decimal → percentage", body:
+    'Without using a calculator, express <span class="m"><span class="fr"><span class="nu">5</span><span class="de">8</span></span></span> as <span class="part">(a) a decimal,</span><span class="part">(b) a percentage.</span>'},
+  {id:"Q5", tag:"Consumer arithmetic · percentage profit", body:
+    'A vendor buys 120 mangoes for $180. She sells them at $2.25 each, but 15 of them spoil and cannot be sold. Calculate her percentage profit or loss.'}
+];
+
+const QUESTION_MATCHES = {
+  Q1:["M1.1.4"],
+  Q2:["M1.1.11","M1.1.13"],
+  Q3:["M1.1.14"],
+  Q4:["M1.1.5"],
+  Q5:["M1.1.11","M1.1.13"]
+};
+const SECTION_ACCENTS = ["#7E68C6","#3D7180","#A8792C","#8A5870"];
+
+const FLAT = [];
+DATA.modules.forEach(m => m.topics.forEach(t => t.items.forEach(i =>
+  FLAT.push({code:i.code, title:i.t.replace(/<[^>]+>/g,''), description:i.n,
+    topic:t.name, topicId:t.id, moduleId:m.id}))));
+
+const S = {school:"", name:"", date:"", email:"", tutorName:"", tutorEmail:"", tutorPhone:"",
+  ticked:new Set(), statuses:{}, notes:{}, q:{}};
+const IDF = { sc:"school", nm:"name", dt:"date", se:"email", tn:"tutorName", te:"tutorEmail", tp:"tutorPhone" };
+QUESTIONS.forEach(q => S.q[q.id] = {hard:false, note:"", timed:false, time:""});
+
+/* ---------- build the checklist ---------- */
+const mods = document.getElementById('modules');
+DATA.modules.forEach((m, mi) => {
+  const md = document.createElement('details');
+  md.className = 'mod-d'; md.id = 'mod-' + m.id; md.open = true;
+  md.style.setProperty('--section-accent', SECTION_ACCENTS[mi]);
+  let h = '<summary class="mod">'
+        + '<span class="mod-h">' + m.name + '</span>'
+        + '<span class="mod-note">' + m.note + '</span>'
+        + '<span class="mod-progress" id="modprog-' + m.id + '"></span>'
+        + '<span class="caret" aria-hidden="true">&#9656;</span></summary>'
+        + '<div class="mbody">'
+        + '<div class="mod-tools">'
+        + '<button type="button" data-expand>Expand all topics</button>'
+        + '<button type="button" data-collapse>Collapse all</button></div>';
+  m.topics.forEach((t, ti) => {
+    h += '<details class="top-d" id="topd-' + t.id + '">'
+       + '<summary>'
+       + '<span class="ts-h">' + (ti+1) + '. ' + t.name + '</span>'
+       + '<span class="ts-pn">' + t.note + '</span>'
+       + '<span class="tally" id="tal-' + t.id + '"></span>'
+       + '<span class="caret" aria-hidden="true">&#9656;</span></summary>'
+       + '<div class="tbody">';
+    t.items.forEach(it => {
+      const reference = REFERENCES[it.code] || it.n;
+      h += '<div class="row not-started" id="row-' + it.code + '">'
+         + '<div class="code"><span>' + it.code + '</span></div>'
+         + '<div class="txt"><b>' + it.t + '</b><span class="desc">' + it.n + '</span></div>'
+         + '<button type="button" class="row-info" data-row-info aria-expanded="false" aria-controls="row-info-' + it.code + '" aria-label="More information about ' + it.code + '">'
+         + '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M0 0h24v24H0z" fill="none"/><path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg></button>'
+         + '<div class="status-group" role="group" aria-label="Learning status for ' + it.code + '">'
+         + '<button type="button" class="status-btn is-active" data-code-status="' + it.code + '" data-status="not-started" aria-pressed="true">Not started</button>'
+         + '<button type="button" class="status-btn" data-code-status="' + it.code + '" data-status="confident" aria-pressed="false">Confident</button>'
+         + '<button type="button" class="status-btn" data-code-status="' + it.code + '" data-status="practice" aria-pressed="false">Needs practice</button>'
+         + '</div>'
+         + '<div class="row-popover" id="row-info-' + it.code + '" role="region" aria-labelledby="row-info-title-' + it.code + '" hidden>'
+         + '<div class="formula-card-head"><div><span class="formula-card-kicker">Formula &amp; concept card</span>'
+         + '<h4 id="row-info-title-' + it.code + '">' + it.code + ' — ' + it.t + '</h4></div>'
+         + '<button type="button" class="formula-card-close" data-close-reference aria-label="Close reference card for ' + it.code + '">&times;</button></div>'
+         + '<div class="formula-card-body">' + reference + '</div></div>'
+         + '</div>';
+    });
+    h += '</div></details>';
+  });
+  h += '</div>';
+  md.innerHTML = h;
+  // per-module expand / collapse all
+  md.querySelector('[data-expand]').addEventListener('click',
+    () => md.querySelectorAll('.top-d').forEach(d => d.open = true));
+  md.querySelector('[data-collapse]').addEventListener('click',
+    () => md.querySelectorAll('.top-d').forEach(d => d.open = false));
+  md.querySelectorAll('.top-d').forEach(topicCard => topicCard.addEventListener('toggle', () => {
+    if (!topicCard.open || !window.matchMedia('(max-width:680px)').matches) return;
+    document.querySelectorAll('.top-d').forEach(other => {
+      if (other !== topicCard) other.open = false;
+    });
+  }));
+  mods.appendChild(md);
+});
+renderPopoverMath(mods);
+
+document.getElementById('railItems').innerHTML =
+  DATA.modules.map((m, i) =>
+    '<a class="rail-item" data-rail-module="' + m.id + '" href="#mod-' + m.id
+    + '" style="--rail-accent:' + SECTION_ACCENTS[i] + '"><b>Section ' + (i + 1)
+    + '</b><small>0 reviewed</small></a>').join('')
+  + '<a class="rail-item" data-rail-practice href="#practice-list" style="--rail-accent:#A8792C"><b>Practice list</b><small>0 identified</small></a>'
+  + '<a class="rail-item" data-rail-questions href="#practice-questions" style="--rail-accent:#8A5870"><b>Questions</b><small>Baseline order</small></a>';
+
+document.getElementById('cross').innerHTML =
+  DATA.cross.map(c => '<li><b>' + c.t + '</b> — ' + c.n + '</li>').join('');
+
+/* ---------- questions ---------- */
+document.getElementById('qs').innerHTML = QUESTIONS.map(q =>
+  '<div class="q" id="q-' + q.id + '" data-question-card="' + q.id + '">'
+  + '<div class="qh"><div class="qn">' + q.tag + '</div>'
+  + '<div class="qwhy" id="qwhy-' + q.id + '">Included as a core syllabus checkpoint.</div></div>'
+  + '<div class="qb">' + q.body + '</div>'
+  + '<div class="qf">'
+  + '<label class="cb"><input type="checkbox" id="qh-' + q.id + '" data-q="' + q.id
+  + '" aria-label="I found ' + q.id + ' difficult"><span class="bx"></span></label>'
+  + '<label for="qh-' + q.id + '">I found this difficult</label>'
+  + '<input type="text" id="qn-' + q.id + '" data-qn="' + q.id
+  + '" aria-label="Where ' + q.id + ' broke down'
+  + '" placeholder="Where exactly did it break?">'
+  + '</div>'
+  + '<div class="qf2">'
+  + '<label class="tk"><input type="checkbox" data-qt="' + q.id + '"> I timed this</label>'
+  + '<input type="text" class="tf" id="qt-' + q.id + '" data-qtime="' + q.id
+  + '" placeholder="e.g. 3 mins" aria-label="Time taken for ' + q.id + '" disabled>'
+  + '<span class="hint">units: s · secs · m · mins · h · hrs</span>'
+  + '</div>'
+  + '</div>').join('');
+
+/* ---------- events ---------- */
+const STATUS_LABELS = {confident:"Confident", practice:"Needs practice", "not-started":"Not started"};
+
+function closeReferences(exceptButton) {
+  document.querySelectorAll('[data-row-info]').forEach(other => {
+    if (other === exceptButton) return;
+    other.setAttribute('aria-expanded', 'false');
+    document.getElementById(other.getAttribute('aria-controls')).hidden = true;
+  });
+}
+
+function updateRowStatus(code) {
+  const status = S.statuses[code] || "not-started";
+  const row = document.getElementById('row-' + code);
+  if (!row) return;
+  row.classList.toggle('on', status === 'practice');
+  row.classList.toggle('confident', status === 'confident');
+  row.classList.toggle('not-started', status === 'not-started');
+  row.querySelectorAll('[data-code-status]').forEach(button => {
+    const active = button.dataset.status === status;
+    button.classList.toggle('is-active', active);
+    button.setAttribute('aria-pressed', String(active));
+  });
+}
+
+function setStatus(code, status, announce) {
+  if (status === 'not-started') delete S.statuses[code];
+  else S.statuses[code] = status;
+  if (status === 'practice') S.ticked.add(code);
+  else S.ticked.delete(code);
+  updateRowStatus(code);
+  refresh(Boolean(announce), code, status);
+}
+
+document.addEventListener('click', e => {
+  const statusButton = e.target.closest('[data-code-status]');
+  if (statusButton) {
+    setStatus(statusButton.dataset.codeStatus, statusButton.dataset.status, true);
+    return;
+  }
+
+  const closeButton = e.target.closest('[data-close-reference]');
+  if (closeButton) {
+    const popover = closeButton.closest('.row-popover');
+    const trigger = document.querySelector('[aria-controls="' + popover.id + '"]');
+    popover.hidden = true;
+    if (trigger) { trigger.setAttribute('aria-expanded', 'false'); trigger.focus(); }
+    return;
+  }
+
+  const infoButton = e.target.closest('[data-row-info]');
+  if (infoButton) {
+    const popover = document.getElementById(infoButton.getAttribute('aria-controls'));
+    const opening = popover.hidden;
+    closeReferences(infoButton);
+    popover.hidden = !opening;
+    infoButton.setAttribute('aria-expanded', String(opening));
+    return;
+  }
+
+  if (!e.target.closest('.row-popover')) closeReferences();
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  const openButton = document.querySelector('[data-row-info][aria-expanded="true"]');
+  if (openButton) {
+    closeReferences();
+    openButton.focus();
+  }
+});
+
+document.addEventListener('change', e => {
+  const cb = e.target;
+  if (cb.dataset.q) {
+    S.q[cb.dataset.q].hard = cb.checked;
+    document.getElementById('q-' + cb.dataset.q).classList.toggle('hard', cb.checked);
+    save();
+  } else if (cb.dataset.qt) {
+    const id = cb.dataset.qt; S.q[id].timed = cb.checked;
+    const tf = document.getElementById('qt-' + id);
+    if (tf) { tf.disabled = !cb.checked; if (!cb.checked) tf.classList.remove('bad'); }
+    save();
+  } else if (IDF[cb.id]) {
+    S[IDF[cb.id]] = cb.value;
+    save();
+  }
+});
+
+document.addEventListener('input', e => {
+  const t = e.target;
+  if (t.dataset.note) { S.notes[t.dataset.note] = t.value; save(); }
+  else if (t.dataset.qn) { S.q[t.dataset.qn].note = t.value; save(); }
+  else if (t.dataset.qtime) {
+    const id = t.dataset.qtime; S.q[id].time = t.value;
+    t.classList.toggle('bad', t.value.trim() !== '' && !validTime(t.value));
+    save();
+  }
+  else if (IDF[t.id]) { S[IDF[t.id]] = t.value; save(); }
+});
+
+function validTime(v) { return /^\s*\d+(?:\.\d+)?\s*(s|secs?|m|mins?|h|hrs?)\s*$/i.test(v); }
+
+function buildPickerItems() {
+  const order = [], gmap = {};
+  FLAT.filter(f => !S.ticked.has(f.code)).forEach(f => {
+    if (!gmap[f.topic]) { gmap[f.topic] = []; order.push(f.topic); }
+    gmap[f.topic].push(f);
+  });
+  return order.map(topic => '<div class="pick-group">' + topic + '</div>'
+    + gmap[topic].map(f => '<div class="pick-item">'
+      + '<button type="button" class="pick-add" data-add-code="' + f.code + '">' + f.code + ' — ' + f.title + '</button>'
+      + '</div>').join('')).join('');
+}
+function addCode(code) {
+  setStatus(code, 'practice', true);
+}
+function removeCode(code) {
+  setStatus(code, 'confident', true);
+}
+
+/* ---------- "where you get stuck": grows with the ticks, grouped by topic ---------- */
+function drawLog() {
+  const box = document.getElementById('log');
+  const flagged = FLAT.filter(f => S.ticked.has(f.code));
+  const order = [], gmap = {};
+  flagged.forEach(f => {
+    if (!gmap[f.topic]) { gmap[f.topic] = []; order.push(f.topic); }
+    gmap[f.topic].push(f);
+  });
+  let h = '';
+  if (!flagged.length) {
+    h += '<div class="empty-state"><b>No practice topics identified yet.</b><br>'
+       + 'As you review the field guide, anything marked “Needs practice” will appear here.</div>';
+  }
+  order.forEach(topic => {
+    h += '<div class="lgroup">' + topic + '</div>';
+    gmap[topic].forEach(f => {
+      h += '<div class="lrow"><div class="lc">'
+         + '<div class="lchead"><span class="chip">' + f.code + '</span>'
+         + '<button type="button" class="lrm" data-remove="' + f.code + '" title="Remove ' + f.code + '" aria-label="Remove ' + f.code + '">&times;</button></div>'
+         + '<div class="lt">' + f.title + '</div></div>'
+         + '<div class="ld"><textarea data-note="' + f.code
+         + '" aria-label="Where confidence drops in ' + f.code
+         + '" placeholder="Where does your confidence drop? Name the first uncertain step."></textarea></div></div>';
+    });
+  });
+  const items = buildPickerItems();
+  h += '<div class="addrow"><label id="addpick-label">Add one without scrolling back up</label>'
+     + '<details class="picker" data-picker><summary aria-labelledby="addpick-label">Choose a sub-topic...</summary>'
+     + '<div class="pick-menu">' + items + '</div></details></div>';
+  box.innerHTML = h;
+  box.querySelectorAll('[data-note]').forEach(tx => { tx.value = S.notes[tx.dataset.note] || ''; });
+  box.querySelectorAll('[data-add-code]').forEach(btn => btn.addEventListener('click', () => addCode(btn.dataset.addCode)));
+  box.querySelectorAll('[data-remove]').forEach(btn => btn.addEventListener('click', () => removeCode(btn.dataset.remove)));
+}
+
+let feedbackTimer = null;
+let nextTopicIndex = -1;
+
+function personalizeQuestions() {
+  const practiceCodes = [...S.ticked];
+  let matchedQuestions = 0;
+  const ranked = QUESTIONS.map((q, originalOrder) => {
+    const prefixes = QUESTION_MATCHES[q.id] || [];
+    const hits = practiceCodes.filter(code => prefixes.some(prefix => code.startsWith(prefix)));
+    if (hits.length) matchedQuestions++;
+    return {q, originalOrder, hits};
+  }).sort((a, b) => b.hits.length - a.hits.length || a.originalOrder - b.originalOrder);
+
+  ranked.forEach((entry, order) => {
+    const card = document.getElementById('q-' + entry.q.id);
+    const reason = document.getElementById('qwhy-' + entry.q.id);
+    card.style.order = order;
+    reason.classList.toggle('is-match', entry.hits.length > 0);
+    if (entry.hits.length) {
+      reason.textContent = 'Prioritized because it checks ' + entry.hits.slice(0, 3).join(', ')
+        + (entry.hits.length > 3 ? ' and ' + (entry.hits.length - 3) + ' more' : '')
+        + ' from your practice list.';
+    } else if (practiceCodes.length) {
+      reason.textContent = 'Included for broad syllabus coverage alongside your selected topics.';
+    } else {
+      reason.textContent = 'Baseline checkpoint until you identify topics to practise.';
+    }
+  });
+
+  const intro = document.getElementById('practiceIntro');
+  intro.textContent = practiceCodes.length
+    ? matchedQuestions + ' of the five questions directly match your current practice list and appear first. The remaining questions preserve broad syllabus coverage.'
+    : 'These five questions provide a broad baseline. As you identify topics to practise, matching questions will move to the front and explain why.';
+  const rail = document.querySelector('[data-rail-questions] small');
+  if (rail) rail.textContent = matchedQuestions ? matchedQuestions + ' matched first' : 'Baseline order';
+}
+
+function showCompletionFeedback(code, status, reviewed) {
+  const box = document.getElementById('completionFeedback');
+  const label = STATUS_LABELS[status] || status;
+  box.textContent = code + ' marked ' + label + ' · ' + reviewed + ' of 144 reviewed';
+  box.classList.remove('show');
+  void box.offsetWidth;
+  box.classList.add('show');
+  clearTimeout(feedbackTimer);
+  feedbackTimer = setTimeout(() => box.classList.remove('show'), 1900);
+
+  const fill = document.getElementById('progressFill');
+  fill.classList.remove('pulse');
+  void fill.offsetWidth;
+  fill.classList.add('pulse');
+}
+
+function refresh(animate, changedCode, changedStatus) {
+  FLAT.forEach(f => updateRowStatus(f.code));
+  const reviewed = FLAT.filter(f => Boolean(S.statuses[f.code])).length;
+
+  DATA.modules.forEach(m => {
+    let moduleReviewed = 0;
+    let modulePractice = 0;
+    let moduleTotal = 0;
+    m.topics.forEach(t => {
+      const topicReviewed = t.items.filter(i => Boolean(S.statuses[i.code])).length;
+      const topicPractice = t.items.filter(i => S.ticked.has(i.code)).length;
+      moduleReviewed += topicReviewed;
+      modulePractice += topicPractice;
+      moduleTotal += t.items.length;
+      const el = document.getElementById('tal-' + t.id);
+      el.innerHTML = '<b>' + topicReviewed + '/' + t.items.length + '</b> reviewed · '
+        + topicPractice + ' practice';
+      el.classList.toggle('hot', topicPractice > 0);
+    });
+
+    const moduleProgress = document.getElementById('modprog-' + m.id);
+    moduleProgress.innerHTML = '<b>' + moduleReviewed + '/' + moduleTotal + ' reviewed</b>'
+      + modulePractice + ' topics identified';
+    const railItem = document.querySelector('[data-rail-module="' + m.id + '"]');
+    railItem.classList.toggle('is-complete', moduleReviewed === moduleTotal);
+    railItem.querySelector('small').textContent = moduleReviewed + '/' + moduleTotal
+      + ' · ' + modulePractice + ' practice';
+  });
+
+  document.getElementById('reviewedCount').textContent = reviewed;
+  document.getElementById('reviewedBar').textContent = reviewed;
+  document.getElementById('cnt').textContent = S.ticked.size;
+  document.getElementById('progressFill').style.width = ((reviewed / FLAT.length) * 100) + '%';
+  const track = document.querySelector('.progress-track');
+  track.setAttribute('aria-valuenow', String(reviewed));
+  document.getElementById('progressSummary').textContent = reviewed === FLAT.length
+    ? (S.ticked.size ? 'Review complete · ' + S.ticked.size + ' topics ready for practice.'
+      : 'Review complete · no practice topics identified.')
+    : (reviewed + ' reviewed · ' + S.ticked.size + ' topics identified · '
+      + (FLAT.length - reviewed) + ' not started');
+
+  const practiceRail = document.querySelector('[data-rail-practice]');
+  practiceRail.querySelector('small').textContent = S.ticked.size + ' identified';
+  const notesComplete = [...S.ticked].every(code => (S.notes[code] || '').trim());
+  practiceRail.classList.toggle('is-complete', S.ticked.size > 0 && notesComplete);
+
+  const nextButton = document.getElementById('nextFlagged');
+  nextButton.textContent = S.ticked.size ? 'Next topic to practise'
+    : (reviewed < FLAT.length ? 'Resume next topic' : 'Review practice questions');
+
+  drawLog();
+  personalizeQuestions();
+  if (animate && changedCode) showCompletionFeedback(changedCode, changedStatus, reviewed);
+  save();
+}
+
+function nextFlagged() {
+  const candidates = S.ticked.size
+    ? FLAT.filter(f => S.ticked.has(f.code))
+    : FLAT.filter(f => !S.statuses[f.code]);
+  if (!candidates.length) {
+    document.getElementById('practice-questions').scrollIntoView({block:'start'});
+    return;
+  }
+  nextTopicIndex = (nextTopicIndex + 1) % candidates.length;
+  const target = candidates[nextTopicIndex];
+  const module = document.getElementById('mod-' + target.moduleId);
+  const topic = document.getElementById('topd-' + target.topicId);
+  if (module) module.open = true;
+  if (topic) topic.open = true;
+  const row = document.getElementById('row-' + target.code);
+  row.scrollIntoView({block:'center'});
+  row.classList.add('next-focus');
+  const focusTarget = row.querySelector('[data-status="' + (S.ticked.has(target.code) ? 'practice' : 'not-started') + '"]');
+  if (focusTarget) focusTarget.focus({preventScroll:true});
+  setTimeout(() => row.classList.remove('next-focus'), 1500);
+}
+
+function jump(){ document.getElementById('practice-list').scrollIntoView({block:'start'}); }
+
+/* ---------- save / restore (silently skipped where unavailable) ---------- */
+/* Prefers the host runtime's window.storage; falls back to localStorage so
+   autosave also works when the file is opened directly in a browser.
+   All storage is on-device — nothing leaves the machine. */
+const store = (typeof window.storage !== 'undefined') ? window.storage : (() => {
+  try {
+    localStorage.setItem('csec-gapform-probe', '1');
+    localStorage.removeItem('csec-gapform-probe');
+    return {
+      get: async k => ({ value: localStorage.getItem(k) }),
+      set: async (k, v) => { localStorage.setItem(k, v); }
+    };
+  } catch (err) { return undefined; }   /* private-mode quota etc. — degrade silently */
+})();
+
+let timer = null, canSave = true;
+function save() {
+  if (!canSave || !store) return;
+  clearTimeout(timer);
+  timer = setTimeout(async () => {
+    try {
+      await store.set('csec-gapform', JSON.stringify({
+        school:S.school, name:S.name, date:S.date, email:S.email,
+        tutorName:S.tutorName, tutorEmail:S.tutorEmail, tutorPhone:S.tutorPhone,
+        ticked:[...S.ticked], statuses:S.statuses, notes:S.notes, q:S.q
+      }));
+      const el = document.getElementById('sv');
+      el.textContent = 'saved';
+      setTimeout(() => el.textContent = '', 1600);
+    } catch (err) { canSave = false; }
+  }, 600);
+}
+
+async function restore() {
+  if (!store) return;
+  try {
+    const r = await store.get('csec-gapform');
+    if (!r || !r.value) return;
+    const d = JSON.parse(r.value);
+    S.school = d.school || ''; S.name = d.name || ''; S.date = d.date || '';
+    S.email = d.email || ''; S.tutorName = d.tutorName || ''; S.tutorEmail = d.tutorEmail || ''; S.tutorPhone = d.tutorPhone || '';
+    document.getElementById('se').value = S.email;
+    document.getElementById('tn').value = S.tutorName;
+    document.getElementById('te').value = S.tutorEmail;
+    document.getElementById('tp').value = S.tutorPhone;
+    document.getElementById('sc').value = S.school;
+    document.getElementById('nm').value = S.name;
+    document.getElementById('dt').value = S.date;
+    S.statuses = Object.assign({}, d.statuses || {});
+    (d.ticked || []).forEach(c => {
+      S.ticked.add(c);
+      if (!S.statuses[c]) S.statuses[c] = 'practice';
+    });
+    Object.keys(S.statuses).forEach(code => {
+      if (S.statuses[code] === 'practice') S.ticked.add(code);
+      else S.ticked.delete(code);
+      if (!['practice','confident'].includes(S.statuses[code])) delete S.statuses[code];
+    });
+    S.notes = d.notes || {};
+    Object.keys(d.q || {}).forEach(k => {
+      if (!S.q[k]) return;
+      S.q[k] = Object.assign({hard:false, note:"", timed:false, time:""}, d.q[k]);
+      const cb = document.querySelector('[data-q="' + k + '"]');
+      if (cb && S.q[k].hard) { cb.checked = true; document.getElementById('q-' + k).classList.add('hard'); }
+      const tx = document.getElementById('qn-' + k);
+      if (tx) tx.value = S.q[k].note || '';
+      const tcb = document.querySelector('[data-qt="' + k + '"]');
+      if (tcb && S.q[k].timed) tcb.checked = true;
+      const tf = document.getElementById('qt-' + k);
+      if (tf) {
+        tf.disabled = !S.q[k].timed;
+        tf.value = S.q[k].time || '';
+        if (tf.value.trim() && !validTime(tf.value)) tf.classList.add('bad');
+      }
+    });
+  } catch (err) { /* nothing saved yet */ }
+}
+
+/* ---------- export ---------- */
+/* buildExport() is the single source of the .txt format — the SSMT persona and
+   the Mastery Tracker parsers consume it verbatim. Do not alter the layout. */
+function buildExport() {
+  const flagged = FLAT.filter(f => S.ticked.has(f.code));
+  const L = [];
+  L.push('CSEC MATHEMATICS — KNOWLEDGE-GAP SELF-ASSESSMENT');
+  L.push('AlphaMath Program · Fifth Form · Sitting June 2027');
+  L.push('');
+  L.push('School: ' + (S.school || '(not given)'));
+  L.push('Name: ' + (S.name || '(not given)'));
+  L.push('Student email: ' + (S.email || '(not given)'));
+  L.push('Date: ' + (S.date || '(not given)'));
+  L.push('Tutor: ' + (S.tutorName || '(not given)'));
+  L.push('Tutor email: ' + (S.tutorEmail || '(not given)'));
+  L.push('Tutor phone: ' + (S.tutorPhone || '(not given)'));
+  L.push('Flagged: ' + S.ticked.size + ' of 144 sub-topics');
+  L.push('');
+  L.push('--- FLAGGED SUB-TOPICS ---');
+  if (!flagged.length) L.push('(none)');
+  flagged.forEach(f => {
+    L.push('');
+    L.push('[' + f.code + '] ' + f.title + '  (' + f.topic + ')');
+    L.push('   ' + (S.notes[f.code] ? S.notes[f.code].trim() : '(no description written)'));
+  });
+  L.push('');
+  L.push('--- THE FIVE QUESTIONS ---');
+  QUESTIONS.forEach(q => {
+    const a = S.q[q.id];
+    L.push('');
+    L.push(q.id + ' (' + q.tag + '): ' + (a.hard ? 'FOUND DIFFICULT' : 'ok'));
+    if (a.note) L.push('   ' + a.note.trim());
+    if (a.timed && a.time && validTime(a.time)) L.push('   Time: ' + a.time.trim());
+  });
+  L.push('');
+  return L.join('\n');
+}
+
+function download() {
+  const stamp = (S.name || 'student').replace(/[^a-z0-9]+/gi, '-').toLowerCase();
+  const blob = new Blob([buildExport()], {type:'text/plain'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'csec-maths-intake.txt';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+restore().then(() => {
+  refresh(false);
+  /* Open any topic that already has identified practice topics, so a returning
+     student sees their own plan without hunting for it. */
+  DATA.modules.forEach(m => m.topics.forEach(t => {
+    if (t.items.some(i => S.ticked.has(i.code))) {
+      const d = document.getElementById('topd-' + t.id);
+      if (d) d.open = true;
+    }
+  }));
+});
+</script>
