@@ -147,9 +147,13 @@ headings. A comma links a descriptor to its abbreviation or mathematical
 symbol; a colon introduces a natural-language result. Repetitive leading
 descriptors are removed. Concept-only topics do not display a formula icon.
 
-KaTeX, MathLive 0.110.0, the 20 required MathLive WOFF2 files, Lexend, and
-Lora are bundled locally. The student-facing experience does not depend on a
-CDN.
+KaTeX, MathLive 0.110.0, the 20 required MathLive WOFF2 files, Lexend, Lora,
+and STIX Two Math v2.13 are bundled locally. Tutorial and simulated-exam
+question expressions use semantic `.math-expression` markup and the STIX
+font, while surrounding directions remain in Lexend. True superscript glyphs
+replace baseline digits that could be mistaken for exponents. The official
+STIX SIL Open Font License is retained beside the font. The student-facing
+experience does not depend on a CDN.
 
 ## Mastery and evidence alignment
 
@@ -298,6 +302,7 @@ node tools/qa-static.mjs
 The static QA checks the seven-page navigation, local assets, four sections,
 12 topic groups, 85 unique codes, 73 formula guides, 20 tutorial questions,
 10 exam questions, the pinned MathLive dependency and 20 local font files,
+the official STIX Two Math checksum and license, semantic prompt markup,
 mastery configuration, YAML frontmatter, and prohibited private-data residues.
 
 Browser QA should additionally confirm:
@@ -308,6 +313,8 @@ Browser QA should additionally confirm:
 - the next-flagged-topic action moves focus correctly;
 - the tutorial displays all six sessions;
 - the exam starts with ten question-navigation controls and a 45-minute timer;
+- tutorial and exam expressions use STIX Two Math, including the Q1 expression
+  `x² − 8x + 19`;
 - no horizontal page overflow occurs at approximately 390 × 844 pixels; and
 - the dashboard clearly explains API configuration when no server is
   connected.

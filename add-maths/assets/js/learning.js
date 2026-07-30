@@ -144,7 +144,7 @@
         <div><code>${AlphaMath.escapeHTML(block.dividend)} ÷ ${AlphaMath.escapeHTML(block.divisor)} = ${AlphaMath.escapeHTML(quotient)}</code></div></div>`;
     }
     if(block.t === "answer"){
-      return `<div class="answer-box"><span class="fine">Answer</span><br>${AlphaMath.fractionMarkup(block.html || "")}
+      return `<div class="answer-box"><span class="fine">Answer</span><br><span class="answer-math">${AlphaMath.fractionMarkup(block.html || "")}</span>
         ${block.mcq ? `<span> ${AlphaMath.escapeHTML(block.mcq)}</span>` : ""}</div>`;
     }
     return "";

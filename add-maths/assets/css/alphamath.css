@@ -18,6 +18,13 @@
   font-style:normal;
   font-display:swap;
 }
+@font-face{
+  font-family:"STIX Two Math";
+  src:url("../fonts/STIXTwoMath-Regular.woff2") format("woff2");
+  font-weight:400;
+  font-style:normal;
+  font-display:swap;
+}
 
 :root{
   color-scheme:light;
@@ -46,6 +53,7 @@
   --radius-small:11px;
   --sans:"Lexend",ui-sans-serif,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   --serif:"Lora",Georgia,"Times New Roman",serif;
+  --math:"STIX Two Math","Cambria Math","Latin Modern Math",serif;
   --mono:"SFMono-Regular",Consolas,"Liberation Mono",monospace;
   --ease:cubic-bezier(.2,.8,.2,1);
 }
@@ -521,6 +529,19 @@ p{margin:0 0 13px}
 .q-meta{color:var(--muted);font-size:11px}
 .question-body{padding:20px}
 .question-prompt{margin:0 0 18px;font-size:17px}
+.math-expression,.answer-math{
+  font-family:var(--math);
+  font-style:normal;
+  font-weight:400;
+  font-synthesis:none;
+  font-variant-numeric:lining-nums;
+  letter-spacing:normal;
+}
+.question-prompt .math-expression{
+  color:var(--ink);
+  font-size:1.16em;
+  line-height:1.35;
+}
 .answer-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:end}
 .answer-row label{display:block;margin-bottom:5px;font-size:12px;font-weight:800}
 .answer-input,math-field{

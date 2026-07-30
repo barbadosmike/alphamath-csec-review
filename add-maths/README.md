@@ -52,6 +52,12 @@ suppressed.
 
 KaTeX and its fonts are bundled under `assets/vendor/katex/`, so formulas render without a CDN. Concept-only topics do not display a formula panel, and topics for which the syllabus requires comparison rather than calculation state that boundary explicitly.
 
+Tutorial and simulated-exam question expressions use the locally bundled
+STIX Two Math v2.13 webfont. Mathematical expressions remain selectable text,
+use true superscript glyphs where appropriate, and are separated from the
+Lexend instructional prose with semantic `.math-expression` markup. The
+official SIL Open Font License is included at `assets/fonts/STIX-OFL.txt`.
+
 ## Local database and API
 
 Prerequisites: Node 20+ and PostgreSQL.
