@@ -183,7 +183,8 @@ body{margin:0;background:var(--offwhite);color:var(--slate);
   font-size:.85em;line-height:1.15;margin:0 .15em;padding:0 .28em;
   border-left:1px solid currentColor;border-right:1px solid currentColor}
 .ovr{text-decoration:overline}
-.rad{border-top:1px solid currentColor;padding:0 .1em}
+math.inline-math{display:inline-block;margin:0 .04em;vertical-align:-.18em;
+  font-family:"STIX Two Math","Cambria Math","Times New Roman",serif;font-size:1em}
 
 /* ---------- struggle log ---------- */
 .log{margin-top:12px}
@@ -445,12 +446,11 @@ body{
   font-family:var(--sans);font-size:14px;overflow:hidden}
 .formula-card-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;
   padding:12px 14px;background:linear-gradient(100deg,#EEE8F7,#F8F4FC);border-bottom:1px solid #D8CDE8}
-.formula-card-kicker{display:block;margin-bottom:2px;color:var(--purple);font-size:10px;font-weight:800;
-  letter-spacing:.1em;text-transform:uppercase}
-.formula-card-head h4{margin:0;color:var(--ink);font-family:var(--serif);font-size:16px}
+.formula-card-head h4{align-self:center;margin:0;color:var(--ink);font-family:var(--serif);font-size:16px}
 .formula-card-close{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;
   padding:0;border:1px solid #CFC4E2;border-radius:9px;background:#fff;color:var(--purple);font-size:20px}
 .formula-card-body{padding:13px 15px;overflow-x:auto}
+.row-popover.is-title-only .formula-card-head{border-bottom:0}
 .row-popover .ref-table th,.row-popover .ref-table td{padding:7px 14px 7px 0}
 .row-popover .formula-lines>.tex,.row-popover .reference-lines>span{padding:9px 3px}
 
@@ -712,7 +712,7 @@ const DATA = {
 {
 "code": "M1.1.1",
 "t": "Sets of numbers",
-"n": "Natural (<span class=\"m\">&#8469;</span>), Whole (<span class=\"m\">&#120142;</span>), Integers (<span class=\"m\">&#8484;</span>), Rational (<span class=\"m\">&#8474;</span>), Irrational, Real (<span class=\"m\">&#8477;</span>), and how they nest: <span class=\"m\">&#8469;&sub;&#120142;&sub;&#8484;&sub;&#8474;&sub;&#8477;</span>. A rational number can be written as a fraction; an irrational one (like <span class=\"m\">&pi;</span> or <span class=\"m\">&radic;<span class=\"rad\">2</span></span>) cannot."
+"n": "Natural (<span class=\"m\">&#8469;</span>), Whole (<span class=\"m\">&#120142;</span>), Integers (<span class=\"m\">&#8484;</span>), Rational (<span class=\"m\">&#8474;</span>), Irrational, Real (<span class=\"m\">&#8477;</span>), and how they nest: <span class=\"m\">&#8469;&sub;&#120142;&sub;&#8484;&sub;&#8474;&sub;&#8477;</span>. A rational number can be written as a fraction; an irrational one (like <span class=\"m\">&pi;</span> or <span class=\"m\"><math class=\"inline-math\" aria-label=\"square root of 2\"><msqrt><mn>2</mn></msqrt></math></span>) cannot."
 },
 {
 "code": "M1.1.2",
@@ -1128,7 +1128,7 @@ const DATA = {
 {
 "code": "M2.2.2",
 "t": "Change of subject (harder)",
-"n": "Formulae with powers and roots: <span class=\"m\"><i>V</i>=<span class=\"fr\"><span class=\"nu\">4</span><span class=\"de\">3</span></span>&pi; <i>r</i><sup>3</sup></span>, <span class=\"m\"><i>T</i>=2&pi;&radic;<span class=\"rad\"><span class=\"fr\"><span class=\"nu\"><i>l</i></span><span class=\"de\"><i>g</i></span></span></span></span>, <span class=\"m\"><i>M</i>=&radic;<span class=\"rad\"><i>P</i>+2M</span></span>."
+"n": "Formulae with powers and roots: <span class=\"m\"><i>V</i>=<span class=\"fr\"><span class=\"nu\">4</span><span class=\"de\">3</span></span>&pi; <i>r</i><sup>3</sup></span>, <span class=\"m\"><i>T</i>=2&pi;<math class=\"inline-math\" aria-label=\"square root of l divided by g\"><msqrt><mfrac><mi>l</mi><mi>g</mi></mfrac></msqrt></math></span>, <span class=\"m\"><i>M</i>=<math class=\"inline-math\" aria-label=\"square root of P plus 2 M\"><msqrt><mrow><mi>P</mi><mo>+</mo><mn>2</mn><mi>M</mi></mrow></msqrt></math></span>."
 },
 {
 "code": "M2.2.3",
@@ -1583,7 +1583,6 @@ const DATA = {
 };
 
 const REFERENCES = {
-  "M1.1.4":"Four operations on whole numbers, fractions, and decimals; follow the order of operations.",
   "M1.1.5":"2027 syllabus crosswalk: Module 1, SO 1.4. Fraction → decimal: divide the numerator by the denominator. Decimal → percentage: multiply by 100.",
   "M1.1.11":"2027 syllabus SO 1.11. Find a fraction or percentage of a quantity; or recover the whole from a known part.",
   "M1.1.13":"2027 syllabus SO 1.13. Compare two quantities by writing one as a fraction or percentage of the other.",
@@ -1653,7 +1652,8 @@ DATA.modules.forEach((m, mi) => {
        + '<span class="caret" aria-hidden="true">&#9656;</span></summary>'
        + '<div class="tbody">';
     t.items.forEach(it => {
-      const reference = REFERENCES[it.code] || it.n;
+      const reference = REFERENCES[it.code] || "";
+      const hasReference = Boolean(reference);
       h += '<div class="row not-started" id="row-' + it.code + '">'
          + '<div class="code"><span>' + it.code + '</span></div>'
          + '<div class="txt"><b>' + it.t + '</b><span class="desc">' + it.n + '</span></div>'
@@ -1664,11 +1664,11 @@ DATA.modules.forEach((m, mi) => {
          + '<button type="button" class="status-btn" data-code-status="' + it.code + '" data-status="confident" aria-pressed="false">Confident</button>'
          + '<button type="button" class="status-btn" data-code-status="' + it.code + '" data-status="practice" aria-pressed="false">Needs practice</button>'
          + '</div>'
-         + '<div class="row-popover" id="row-info-' + it.code + '" role="region" aria-labelledby="row-info-title-' + it.code + '" hidden>'
-         + '<div class="formula-card-head"><div><span class="formula-card-kicker">Formula &amp; concept card</span>'
-         + '<h4 id="row-info-title-' + it.code + '">' + it.code + ' — ' + it.t + '</h4></div>'
+         + '<div class="row-popover' + (hasReference ? '' : ' is-title-only') + '" id="row-info-' + it.code + '" role="region" aria-labelledby="row-info-title-' + it.code + '" hidden>'
+         + '<div class="formula-card-head">'
+         + '<h4 id="row-info-title-' + it.code + '">' + it.code + ' ' + it.t + '</h4>'
          + '<button type="button" class="formula-card-close" data-close-reference aria-label="Close reference card for ' + it.code + '">&times;</button></div>'
-         + '<div class="formula-card-body">' + reference + '</div></div>'
+         + (hasReference ? '<div class="formula-card-body">' + reference + '</div>' : '') + '</div>'
          + '</div>';
     });
     h += '</div></details>';

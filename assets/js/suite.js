@@ -11,7 +11,7 @@
   }
 
   const AlphaMath = {
-    version: "review-1.0.0-20260730",
+    version: "review-1.0.1-20260730",
 
     storage: {
       get(key, fallback = null){

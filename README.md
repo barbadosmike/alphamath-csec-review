@@ -1,7 +1,7 @@
 ---
 title: "AlphaMath CSEC Mathematics — Sanitized Reviewer Demonstration"
 status: "review-ready"
-version: "review-1.0.0-20260730"
+version: "review-1.0.1-20260730"
 created: "2026-07-30"
 privacy: "sanitized public demonstration"
 ---
