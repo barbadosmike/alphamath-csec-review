@@ -14,6 +14,7 @@
   const initialState = {
     started:false,
     startedAt:null,
+    firstStartedAt:null,
     elapsedBefore:0,
     active:0,
     responses:{},
@@ -150,6 +151,7 @@
     if(!state.started){
       state.started = true;
       state.startedAt = Date.now();
+      state.firstStartedAt = state.firstStartedAt || new Date().toISOString();
       state.elapsedBefore = 0;
       save();
     }else if(!state.submitted && !state.startedAt){
@@ -240,6 +242,41 @@
     finishExam("Answers submitted. Your work is locked for tutor review.");
   });
   document.getElementById("exportExam")?.addEventListener("click",exportRecord);
+
+  window.AlphaMathExam = {
+    questions,
+    getAttempt(){
+      return {
+        clientAttemptId: AlphaMath.ids.stable(
+          `${storageKey}:database-attempt-id`,
+          "exam-attempt"
+        ),
+        instrumentId: document.body.dataset.instrumentId || "simulated-exam-1",
+        sourceVersion: AlphaMath.version,
+        startedAt: state.firstStartedAt,
+        submittedAt: state.submittedAt,
+        elapsedSeconds: elapsed(),
+        timedOut: Boolean(state.timedOut),
+        locked: Boolean(state.submitted),
+        learner: {
+          externalId: studentId,
+          displayName: document.body.dataset.studentName || "",
+          school: document.body.dataset.school || "",
+          email: document.body.dataset.studentEmail || ""
+        },
+        responses: questions.map((question,index) => {
+          const item = response(index);
+          return {
+            itemId: String(question.label || index+1),
+            answer: item.answer || "",
+            flagged: Boolean(item.flagged),
+            drawing: item.drawing || ""
+          };
+        })
+      };
+    }
+  };
+  document.dispatchEvent(new CustomEvent("alphamath:exam-ready"));
 
   nav.addEventListener("click",event => {
     const button = event.target.closest("[data-go]");

@@ -11,7 +11,7 @@
   }
 
   const AlphaMath = {
-    version: "review-1.0.2-20260730",
+    version: "review-1.1.0-20260730",
 
     storage: {
       get(key, fallback = null){
@@ -68,6 +68,18 @@
       }
       live.textContent = "";
       requestAnimationFrame(() => { live.textContent = message; });
+    },
+
+    ids: {
+      stable(storageKey, prefix){
+        const existing = AlphaMath.storage.get(storageKey, "");
+        if(existing) return existing;
+        const suffix = globalThis.crypto?.randomUUID?.()
+          || `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+        const value = `${prefix}:${suffix}`;
+        AlphaMath.storage.set(storageKey, value);
+        return value;
+      }
     },
 
     initMathFields(root = document){
@@ -226,6 +238,140 @@
         tools.querySelectorAll("button").forEach(button => button.disabled = true);
         canvas.setAttribute("aria-disabled","true");
       }};
+    }
+  };
+
+  const runtime = window.ALPHAMATH_RUNTIME || {};
+  const connectionKey = "alphamath:evidence-api-base";
+  const tokenKey = "alphamath:evidence-api-token";
+
+  function normalizeBase(value){
+    return String(value || "").trim().replace(/\/+$/, "");
+  }
+
+  function connection(){
+    return {
+      apiBase: normalizeBase(runtime.apiBase || AlphaMath.storage.get(connectionKey, "")),
+      token: sessionStorage.getItem(tokenKey) || ""
+    };
+  }
+
+  function connectionDialog(){
+    let dialog = document.getElementById("alphamathConnectionDialog");
+    if(dialog) return dialog;
+    dialog = document.createElement("dialog");
+    dialog.id = "alphamathConnectionDialog";
+    dialog.innerHTML = `
+      <form method="dialog" class="connection-form">
+        <div class="dialog-body">
+          <p class="eyebrow">Secure evidence connection</p>
+          <h2 style="margin-top:0">Connect this browser</h2>
+          <p class="fine">PostgreSQL remains behind the AlphaMath API. The access token is kept only in this browser tab and is never written to GitHub Pages.</p>
+          <label for="alphamathApiBase">Evidence API address</label>
+          <input id="alphamathApiBase" type="url" inputmode="url" placeholder="https://api.example.org" required>
+          <label for="alphamathApiToken" style="margin-top:12px">Tutor access token</label>
+          <input id="alphamathApiToken" type="password" autocomplete="off" required>
+          <p class="connection-error fine" id="alphamathConnectionError" role="alert" hidden></p>
+        </div>
+        <div class="dialog-actions">
+          <button type="button" data-connection-cancel>Cancel</button>
+          <button type="submit" class="primary">Connect securely</button>
+        </div>
+      </form>`;
+    document.body.append(dialog);
+    return dialog;
+  }
+
+  async function configureConnection(){
+    const dialog = connectionDialog();
+    const baseField = dialog.querySelector("#alphamathApiBase");
+    const tokenField = dialog.querySelector("#alphamathApiToken");
+    const error = dialog.querySelector("#alphamathConnectionError");
+    const current = connection();
+    baseField.value = current.apiBase;
+    tokenField.value = current.token;
+    error.hidden = true;
+    return new Promise(resolve => {
+      function close(result){
+        dialog.removeEventListener("close", onClose);
+        dialog.querySelector("form").removeEventListener("submit", onSubmit);
+        dialog.querySelector("[data-connection-cancel]").removeEventListener("click", onCancel);
+        resolve(result);
+      }
+      function onClose(){ close(null); }
+      function onCancel(){ dialog.close(); }
+      async function onSubmit(event){
+        event.preventDefault();
+        const apiBase = normalizeBase(baseField.value);
+        const token = tokenField.value;
+        error.hidden = true;
+        try{
+          const response = await fetch(`${apiBase}/health`, {
+            headers: {authorization: `Bearer ${token}`}
+          });
+          if(!response.ok) throw new Error(response.status === 401 ? "Access token was not accepted." : "The API could not be reached.");
+          AlphaMath.storage.set(connectionKey, apiBase);
+          sessionStorage.setItem(tokenKey, token);
+          dialog.removeEventListener("close", onClose);
+          dialog.close();
+          close({apiBase, token});
+        }catch(problem){
+          error.textContent = problem.message;
+          error.hidden = false;
+        }
+      }
+      dialog.addEventListener("close", onClose);
+      dialog.querySelector("form").addEventListener("submit", onSubmit);
+      dialog.querySelector("[data-connection-cancel]").addEventListener("click", onCancel);
+      if(typeof dialog.showModal === "function") dialog.showModal();
+      else dialog.setAttribute("open", "");
+    });
+  }
+
+  AlphaMath.api = {
+    configured(){
+      const current = connection();
+      return Boolean(current.apiBase && current.token);
+    },
+    async connect(){
+      return configureConnection();
+    },
+    disconnect(){
+      sessionStorage.removeItem(tokenKey);
+      AlphaMath.announce("Evidence API disconnected from this browser tab.");
+    },
+    async request(path, options = {}){
+      let current = connection();
+      if(!current.apiBase || !current.token){
+        current = await configureConnection();
+        if(!current){
+          const error = new Error("Database submission cancelled. Your local draft is unchanged.");
+          error.cancelled = true;
+          throw error;
+        }
+      }
+      const response = await fetch(`${current.apiBase}${path}`, {
+        ...options,
+        headers: {
+          authorization: `Bearer ${current.token}`,
+          "content-type": "application/json",
+          ...(options.headers || {})
+        }
+      });
+      let result = {};
+      try{ result = await response.json(); }catch(_error){}
+      if(!response.ok){
+        const error = new Error(result.error || `Database request failed (${response.status}).`);
+        error.status = response.status;
+        throw error;
+      }
+      return result;
+    },
+    submit(path, payload){
+      return this.request(path, {method: "POST", body: JSON.stringify(payload)});
+    },
+    dashboard(externalId){
+      return this.request(`/v1/learners/${encodeURIComponent(externalId)}/dashboard`);
     }
   };
 

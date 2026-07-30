@@ -603,7 +603,7 @@ button:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visi
 
 <aside class="review-notice" role="note">
   <strong>Sanitized reviewer demonstration</strong>
-  <span>No real student identity, submitted response, roster mapping, or reproduced CSEC past-paper question is included. Entries stay in this browser.</span>
+  <span>No real student identity, submitted response, roster mapping, or reproduced CSEC past-paper question is included. Entries stay in this browser unless a tutor explicitly connects the evidence API.</span>
 </aside>
 <div class="mast"><div class="inner">
   <a class="mast-back" href="index.html">← Suite home</a>
@@ -612,6 +612,7 @@ button:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visi
   <div class="phase"><b>Phase 1</b> &middot; Knowledge-Gap Self-Assessment &mdash; <i>knowing what you don't know</i> &mdash; <span class="yet">yet</span></div>
   <div class="meta">AlphaMath Program &nbsp;·&nbsp; Fifth Form &nbsp;·&nbsp; Sitting June 2027 &nbsp;·&nbsp; CXC 05/G/SYLL 16 · effective for examinations from 2027</div>
   <div class="idbar">
+    <div class="short"><label for="sid">Learner ID</label><input id="sid" type="text" value="REVIEW-DEMO" autocomplete="off"></div>
     <div><label for="sc">School</label><input id="sc" type="text" autocomplete="organization" placeholder="Your school"></div>
     <div><label for="nm">Name</label><input id="nm" type="text" autocomplete="name"></div>
     <div><label for="se">Your Email</label><input id="se" type="email" autocomplete="email" placeholder="you@example.com"></div>
@@ -631,6 +632,7 @@ button:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visi
     <a href="learning-path.html">Learning path</a>
     <a href="tutorial.html">Tutorial</a>
     <a href="simulated-exam.html">Simulated exam</a>
+    <a href="dashboard.html">Dashboard</a>
   </div>
 </nav>
 
@@ -698,10 +700,14 @@ button:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visi
     <div class="share-menu">
       <button type="button" onclick="window.print()">Print field guide</button>
       <button type="button" onclick="download()">Download my answers</button>
+      <button type="button" onclick="submitIntakeToDatabase()">Submit to PostgreSQL</button>
+      <span id="databaseStatus" class="database-status" role="status" aria-live="polite">Local draft only.</span>
     </div>
   </details>
 </div></div>
 
+<script src="assets/js/runtime-config.js"></script>
+<script src="assets/js/suite.js"></script>
 <script>
 const DATA = {
 "modules": [
@@ -1629,9 +1635,9 @@ DATA.modules.forEach(m => m.topics.forEach(t => t.items.forEach(i =>
   FLAT.push({code:i.code, title:i.t.replace(/<[^>]+>/g,''), description:i.n,
     topic:t.name, topicId:t.id, moduleId:m.id}))));
 
-const S = {school:"", name:"", date:"", email:"", tutorName:"", tutorEmail:"", tutorPhone:"",
+const S = {studentId:"REVIEW-DEMO", school:"", name:"", date:"", email:"", tutorName:"", tutorEmail:"", tutorPhone:"",
   ticked:new Set(), statuses:{}, notes:{}, q:{}};
-const IDF = { sc:"school", nm:"name", dt:"date", se:"email", tn:"tutorName", te:"tutorEmail", tp:"tutorPhone" };
+const IDF = { sid:"studentId", sc:"school", nm:"name", dt:"date", se:"email", tn:"tutorName", te:"tutorEmail", tp:"tutorPhone" };
 QUESTIONS.forEach(q => S.q[q.id] = {hard:false, note:"", timed:false, time:""});
 
 /* ---------- build the checklist ---------- */
@@ -2042,7 +2048,7 @@ function save() {
   timer = setTimeout(async () => {
     try {
       await store.set('csec-gapform', JSON.stringify({
-        school:S.school, name:S.name, date:S.date, email:S.email,
+        studentId:S.studentId, school:S.school, name:S.name, date:S.date, email:S.email,
         tutorName:S.tutorName, tutorEmail:S.tutorEmail, tutorPhone:S.tutorPhone,
         ticked:[...S.ticked], statuses:S.statuses, notes:S.notes, q:S.q
       }));
@@ -2059,9 +2065,10 @@ async function restore() {
     const r = await store.get('csec-gapform');
     if (!r || !r.value) return;
     const d = JSON.parse(r.value);
-    S.school = d.school || ''; S.name = d.name || ''; S.date = d.date || '';
+    S.studentId = d.studentId || 'REVIEW-DEMO'; S.school = d.school || ''; S.name = d.name || ''; S.date = d.date || '';
     S.email = d.email || ''; S.tutorName = d.tutorName || ''; S.tutorEmail = d.tutorEmail || ''; S.tutorPhone = d.tutorPhone || '';
     document.getElementById('se').value = S.email;
+    document.getElementById('sid').value = S.studentId;
     document.getElementById('tn').value = S.tutorName;
     document.getElementById('te').value = S.tutorEmail;
     document.getElementById('tp').value = S.tutorPhone;
@@ -2144,6 +2151,53 @@ function download() {
   a.download = 'csec-maths-intake.txt';
   a.click();
   URL.revokeObjectURL(a.href);
+}
+
+async function submitIntakeToDatabase() {
+  const output = document.getElementById('databaseStatus');
+  if (!S.studentId.trim()) {
+    output.textContent = 'Enter a stable learner ID before submitting.';
+    document.getElementById('sid').focus();
+    return;
+  }
+  output.textContent = 'Connecting and validating intake evidence…';
+  const submittedAt = new Date().toISOString();
+  const payload = {
+    clientSubmissionId: AlphaMath.ids.stable('alphamath:intake:database-submission-draft', 'intake'),
+    sourceVersion: AlphaMath.version,
+    submittedAt,
+    learner: {
+      externalId: S.studentId.trim(),
+      displayName: S.name.trim(),
+      school: S.school.trim(),
+      email: S.email.trim()
+    },
+    tutor: {
+      name: S.tutorName.trim(),
+      email: S.tutorEmail.trim(),
+      phone: S.tutorPhone.trim()
+    },
+    topics: FLAT.map(item => ({
+      code: item.code,
+      status: S.statuses[item.code] || 'not-started',
+      note: (S.notes[item.code] || '').trim()
+    })),
+    practiceQuestions: QUESTIONS.map(question => ({
+      itemId: question.id,
+      foundDifficult: Boolean(S.q[question.id].hard),
+      note: S.q[question.id].note || '',
+      timed: Boolean(S.q[question.id].timed),
+      time: S.q[question.id].time || ''
+    }))
+  };
+  try {
+    const result = await AlphaMath.api.submit('/v1/intake-submissions', payload);
+    AlphaMath.storage.set('alphamath:intake:database-submission-draft', '');
+    output.textContent = 'Stored in PostgreSQL. Intake record ' + result.id + '.';
+    AlphaMath.announce('Intake submission stored in PostgreSQL.');
+  } catch (error) {
+    output.textContent = error.message;
+  }
 }
 
 restore().then(() => {

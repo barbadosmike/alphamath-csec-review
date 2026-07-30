@@ -144,10 +144,12 @@
   const state = AlphaMath.storage.get(storageKey,{
     activeSession:0,
     questions:{},
-    sessionTimer:{running:false,elapsed:0,startedAt:null}
+    sessionTimer:{running:false,elapsed:0,startedAt:null},
+    createdAt:new Date().toISOString()
   });
   state.questions ||= {};
   state.sessionTimer ||= {running:false,elapsed:0,startedAt:null};
+  state.createdAt ||= new Date().toISOString();
 
   const sessionMount = document.getElementById("sessionMount");
   const stepMount = document.getElementById("sessionSteps");
@@ -490,5 +492,39 @@
   });
 
   document.getElementById("exportPractice")?.addEventListener("click",exportRecord);
+  window.AlphaMathTutorial = {
+    questions: allQuestions,
+    getAttempt(){
+      return {
+        clientAttemptId: AlphaMath.ids.stable(
+          `${storageKey}:database-attempt-id`,
+          "tutorial-attempt"
+        ),
+        instrumentId: document.body.dataset.instrumentId || "proportional-reasoning-foundation",
+        sourceVersion: AlphaMath.version,
+        startedAt: state.createdAt,
+        submittedAt: new Date().toISOString(),
+        learner: {
+          externalId: studentId,
+          displayName: document.body.dataset.studentName || "",
+          school: document.body.dataset.school || "",
+          email: document.body.dataset.studentEmail || ""
+        },
+        responses: allQuestions.map((question,index) => {
+          const item = qState(index);
+          return {
+            itemId: String(question.label || index+1),
+            answer: item.answer || "",
+            confidence: item.confidence || "",
+            checked: Boolean(item.checked),
+            hintLevel: item.hintLevel || 0,
+            attempts: item.attempts || 0,
+            drawing: item.drawing || ""
+          };
+        }).filter(item => item.checked || item.answer || item.hintLevel || item.drawing)
+      };
+    }
+  };
+  document.dispatchEvent(new CustomEvent("alphamath:tutorial-ready"));
   renderSession();
 })();

@@ -10,7 +10,7 @@
 <body >
 <aside class="review-notice" role="note">
   <strong>Sanitized reviewer demonstration</strong>
-  <span>No real student identity, submitted response, roster mapping, or reproduced CSEC past-paper question is included. Entries stay in this browser.</span>
+  <span>No real student identity, submitted response, roster mapping, or reproduced CSEC past-paper question is included. Entries stay in this browser unless a tutor explicitly connects the evidence API.</span>
 </aside>
   <a class="skip-link" href="#main">Skip to main content</a>
   <header class="site-head">
@@ -21,7 +21,7 @@
       <div class="head-meta"><span>Reviewer demo</span><span>CSEC Mathematics</span><span>June 2027</span><span>Offline-first</span></div>
     </div>
   </header>
-  <nav class="suite-nav" aria-label="AlphaMath suite"><div class="nav-inner"><a href="index.html" aria-current="page">Suite home</a><a href="intake.html" >Intake</a><a href="learning-path.html" >Learning path</a><a href="tutorial.html" >Tutorial</a><a href="simulated-exam.html" >Simulated exam</a></div></nav>
+  <nav class="suite-nav" aria-label="AlphaMath suite"><div class="nav-inner"><a href="index.html" aria-current="page">Suite home</a><a href="intake.html" >Intake</a><a href="learning-path.html" >Learning path</a><a href="tutorial.html" >Tutorial</a><a href="simulated-exam.html" >Simulated exam</a><a href="dashboard.html">Dashboard</a></div></nav>
   <main id="main" class="shell">
   <div class="callout info prose">
     <p class="eyebrow">Sanitized review build</p>
@@ -36,10 +36,12 @@
       <a class="hub-card" href="simulated-exam.html"><span class="card-icon">03</span><h3>Simulated exam</h3><p>Autosaved timed practice with question navigation, review flags, and tutor-marked method.</p><span class="go">Open exam →</span></a>
       <a class="hub-card" href="learning-path.html"><span class="card-icon">04</span><h3>Learning path</h3><p>See the verified priority sequence, evidence requirements, and what comes next.</p><span class="go">View path →</span></a>
       <a class="hub-card" href="math-input.html"><span class="card-icon">05</span><h3>Math-input prototype</h3><p>Preview handwritten work locally and confirm the final expression in an editable math field.</p><span class="go">Try prototype →</span></a>
+      <a class="hub-card" href="dashboard.html"><span class="card-icon">06</span><h3>Evidence dashboard</h3><p>Read linked intake, tutor-reviewed tutorial, and simulated-exam evidence from PostgreSQL.</p><span class="go">Open dashboard →</span></a>
     </div>
   </section>
 </main>
   <div id="suite-live-region" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+  <script src="assets/js/runtime-config.js" defer></script>
   <script src="assets/js/suite.js" defer></script>
 </body>
 </html>
