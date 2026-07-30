@@ -447,22 +447,14 @@ body{
 .row-popover{grid-column:2/4;margin:2px 0 0;padding:0;border:1px solid #CFC4E2;
   border-radius:12px;background:#FBF9FF;box-shadow:0 10px 24px rgba(36,19,72,.12);
   font-family:var(--sans);font-size:14px;overflow:hidden}
-.formula-card-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;
-  padding:12px 14px;background:linear-gradient(100deg,#EEE8F7,#F8F4FC);border-bottom:1px solid #D8CDE8}
-.formula-card-head h4{align-self:center;margin:0;color:var(--ink);font-family:var(--serif);font-size:16px}
-.formula-card-close{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;
-  padding:0;border:1px solid #CFC4E2;border-radius:9px;background:#fff;color:var(--purple);font-size:20px}
-.formula-card-body{padding:14px 15px 15px;overflow-x:auto;font-family:var(--serif);
+.formula-card-body{padding:6px 8px;overflow-x:auto;font-family:var(--serif);
   font-size:15px;line-height:1.55;color:var(--ink)}
-.formula-guide{margin-top:0;border:1px solid #D8CDE8;border-radius:9px;overflow:hidden;
-  background:#fff}
-.formula-guide-title{margin:0;padding:9px 12px;border-bottom:1px solid #D8CDE8;
-  background:#F3EEF9;color:var(--purple);font-family:var(--sans);font-size:11px;
-  font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.formula-guide{margin:0;border:0;border-radius:0;overflow:hidden;background:transparent}
 .formula-row{display:grid;grid-template-columns:minmax(128px,.72fr) minmax(0,1.28fr);
   align-items:center;gap:12px;padding:10px 12px;border-bottom:1px solid #E9E2F1}
 .formula-row:last-child{border-bottom:0}
-.formula-label{color:var(--slate-blue);font-family:var(--sans);font-size:12px;font-weight:750}
+.formula-label{color:var(--ink);font-family:KaTeX_Main,"Latin Modern Roman","Computer Modern Serif",
+  "Times New Roman",serif;font-size:15px;font-weight:400}
 .formula-expression{min-width:0;overflow-x:auto;padding:2px 0;text-align:left}
 .formula-expression .katex-display{margin:0;text-align:left}
 .formula-note{margin-top:8px;color:var(--graphite);font-family:var(--sans);font-size:12px}
@@ -2225,7 +2217,6 @@ function formulaGuideHTML(item) {
   const rows = guide?.rows || [];
   return rows.length
     ? '<section class="formula-guide" aria-label="Standard formulas for ' + item.code + '">'
-      + '<h5 class="formula-guide-title">Standard formulas</h5>'
       + rows.map(row => '<div class="formula-row"><span class="formula-label">' + row[0]
         + '</span><span class="formula-expression tex" data-display="block">' + row[1] + '</span></div>').join('')
       + '</section>'
@@ -2314,10 +2305,7 @@ DATA.modules.forEach((m, mi) => {
          + '<button type="button" class="status-btn" data-code-status="' + it.code + '" data-status="confident" aria-pressed="false">Confident</button>'
          + '<button type="button" class="status-btn" data-code-status="' + it.code + '" data-status="practice" aria-pressed="false">Needs practice</button>'
          + '</div>'
-         + (hasReferenceDetails ? '<div class="row-popover" id="row-info-' + it.code + '" role="region" aria-labelledby="row-info-title-' + it.code + '" hidden>'
-         + '<div class="formula-card-head">'
-         + '<h4 id="row-info-title-' + it.code + '">' + it.code + ' ' + it.t + '</h4>'
-         + '<button type="button" class="formula-card-close" data-close-reference aria-label="Close reference card for ' + it.code + '">&times;</button></div>'
+         + (hasReferenceDetails ? '<div class="row-popover" id="row-info-' + it.code + '" role="region" aria-label="Formulas and references for ' + it.code + ' ' + it.t.replace(/<[^>]+>/g, '') + '" hidden>'
          + '<div class="formula-card-body">' + formulaGuideHTML(it)
          + (supplementalReference ? '<div class="topic-reference"><b>Supplemental reference</b>' + supplementalReference + '</div>' : '')
          + '</div></div>'
