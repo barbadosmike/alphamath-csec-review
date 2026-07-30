@@ -4,10 +4,14 @@
   const source = window.ALPHAMATH_REVIEW_EXAM || [];
   const questions = source.flatMap(section => section.items || []);
   const studentId = document.body.dataset.studentId || "REVIEW-DEMO";
+  const instrumentId = document.body.dataset.instrumentId || "simulated-exam-1";
+  const examName = document.body.dataset.examName || "Simulated Exam 1 — Quadratics Foundation";
   const templateMode = document.body.dataset.template === "true";
   const storageKey = templateMode
     ? "alphamath:addmaths:exam-template:v2"
-    : `alphamath:${studentId.toLowerCase()}:simulated-exam-1:v2`;
+    : instrumentId === "simulated-exam-1"
+      ? `alphamath:${studentId.toLowerCase()}:simulated-exam-1:v2`
+      : `alphamath:${studentId.toLowerCase()}:${instrumentId}:v1`;
   const durationSeconds = Number(document.body.dataset.durationSeconds || 2700);
   const warningSeconds = Math.min(2400,durationSeconds-300);
 
@@ -18,12 +22,15 @@
     elapsedBefore:0,
     active:0,
     responses:{},
+    questionElapsed:{},
+    activeQuestionStartedAt:null,
     submitted:false,
     submittedAt:null,
     timedOut:false
   };
   const state = Object.assign(initialState,AlphaMath.storage.get(storageKey,{}));
   state.responses ||= {};
+  state.questionElapsed ||= {};
 
   const cover = document.getElementById("examCover");
   const workspace = document.getElementById("examWorkspace");
@@ -53,6 +60,22 @@
     return (state.elapsedBefore || 0)+active;
   }
 
+  function questionElapsed(index = state.active){
+    const saved = Number(state.questionElapsed[index] || 0);
+    if(index !== state.active || !state.activeQuestionStartedAt || state.submitted) return saved;
+    return saved+Math.max(0,Math.floor((Date.now()-state.activeQuestionStartedAt)/1000));
+  }
+
+  function pauseQuestionClock(){
+    if(!state.activeQuestionStartedAt) return;
+    state.questionElapsed[state.active] = questionElapsed(state.active);
+    state.activeQuestionStartedAt = null;
+  }
+
+  function resumeQuestionClock(){
+    if(state.started && !state.submitted && !state.activeQuestionStartedAt) state.activeQuestionStartedAt = Date.now();
+  }
+
   function enteredCount(){
     return questions.filter((_question,index) => String(response(index).answer || "").trim()).length;
   }
@@ -67,12 +90,28 @@
     timerValue.textContent = AlphaMath.formatTime(remaining);
     timer.classList.toggle("warning",used >= warningSeconds && used < durationSeconds);
     timer.classList.toggle("timeout",used >= durationSeconds);
+    updateQuestionPace();
     if(used >= durationSeconds && !state.submitted){
       state.elapsedBefore = durationSeconds;
       state.startedAt = null;
       state.timedOut = true;
       finishExam("Time reached. Your saved responses are now locked for tutor review.");
     }
+  }
+
+  function updateQuestionPace(){
+    const question = questions[state.active];
+    const meter = document.getElementById("questionPace");
+    if(!question || !meter) return;
+    const optimal = Math.max(60,Number(question.recommendedSeconds || 300));
+    const used = questionElapsed();
+    const ratio = used/optimal;
+    meter.style.setProperty("--pace-progress",`${Math.min(100,ratio*100)}%`);
+    meter.style.setProperty("--pace-turn",`${Math.min(1,ratio)}turn`);
+    meter.classList.toggle("pace-warning",ratio >= .8 && ratio <= 1);
+    meter.classList.toggle("pace-over",ratio > 1);
+    meter.querySelector("strong").textContent = AlphaMath.formatTime(used);
+    meter.setAttribute("aria-label",`${AlphaMath.formatTime(used)} used of ${AlphaMath.formatTime(optimal)} recommended${ratio > 1 ? "; recommended time exceeded" : ""}`);
   }
 
   function renderNav(){
@@ -96,10 +135,20 @@
         <div class="question-head">
           <span class="q-number">${AlphaMath.escapeHTML(question.label || state.active+1)}</span>
           <div>
-            <strong>${AlphaMath.escapeHTML(question.tag || "Exam question")}</strong>
+            <div class="question-identity">
+              <strong>${AlphaMath.escapeHTML(question.tag || "Exam question")}</strong>
+              <button type="button" class="exam-chip" data-meta-chip title="${AlphaMath.escapeHTML(question.paper || "Exam")} style question">${AlphaMath.escapeHTML(question.paper || "Exam")}</button>
+              <button type="button" class="exam-chip year" data-meta-chip title="${AlphaMath.escapeHTML(question.provenance || "Tutor-authored")} in ${AlphaMath.escapeHTML(question.year || "2026")}; not a past-paper citation">${AlphaMath.escapeHTML(question.year || "2026")} · tutor-authored</button>
+            </div>
             <div class="q-meta">${question.cite ? AlphaMath.escapeHTML(question.cite) : "Tutor-authored bridge — not mastery evidence"}</div>
           </div>
-          <span class="status ${item.answer ? "approaching" : "not-yet"}">${item.answer ? "Answer entered" : "No answer entered"}</span>
+          <div class="question-head-actions">
+            <span class="status ${item.answer ? "approaching" : "not-yet"}">${item.answer ? "Answer entered" : "No answer entered"}</span>
+            <div class="pace-wrap">
+              <div class="pace-meter" id="questionPace" role="timer"><span class="pace-hand" aria-hidden="true"></span><strong>00:00</strong></div>
+              <span class="pace-label">Recommended ${AlphaMath.formatTime(Number(question.recommendedSeconds || 300))}</span>
+            </div>
+          </div>
         </div>
         <div class="question-body">
           <p class="question-prompt">${AlphaMath.fractionMarkup(question.prompt || "")}</p>
@@ -123,6 +172,7 @@
       onSave(){ save(); }
     });
     AlphaMath.initMathFields(questionMount);
+    updateQuestionPace();
     previousButton.disabled = state.active === 0 || state.submitted;
     nextButton.disabled = state.active === questions.length-1 || state.submitted;
     flagButton.disabled = state.submitted;
@@ -140,7 +190,9 @@
 
   function go(index){
     if(index < 0 || index >= questions.length) return;
+    pauseQuestionClock();
     state.active = index;
+    resumeQuestionClock();
     save();
     renderQuestion();
     questionMount.querySelector(".question-card")?.focus?.({preventScroll:true});
@@ -158,6 +210,7 @@
       state.startedAt = Date.now();
       save();
     }
+    resumeQuestionClock();
     cover.hidden = true;
     workspace.hidden = false;
     renderQuestion();
@@ -168,6 +221,7 @@
   }
 
   function pauseClock(){
+    pauseQuestionClock();
     if(!state.startedAt) return;
     state.elapsedBefore = elapsed();
     state.startedAt = null;
@@ -203,7 +257,7 @@
     const lines = [
       "AlphaMath CSEC Additional Mathematics Simulated Exam Record",
       `Student ID: ${studentId}`,
-      "Instrument: Simulated Exam 1 — Quadratics Foundation",
+      `Instrument: ${examName}`,
       `Status: ${state.submitted ? "submitted" : "in progress"}`,
       `Time used: ${AlphaMath.formatTime(elapsed())}`,
       `Answers entered: ${enteredCount()} of ${questions.length}`,
@@ -222,7 +276,7 @@
       lines.push("");
     });
     lines.push("This record requires human marking. It does not auto-grade or establish mastery.");
-    AlphaMath.downloadText(`${studentId}-simulated-exam-1-record.txt`,lines.join("\n"));
+    AlphaMath.downloadText(`${studentId}-${instrumentId}-record.txt`,lines.join("\n"));
   }
 
   document.getElementById("startExam").addEventListener("click",startExam);
@@ -251,7 +305,7 @@
           `${storageKey}:database-attempt-id`,
           "exam-attempt"
         ),
-        instrumentId: document.body.dataset.instrumentId || "simulated-exam-1",
+        instrumentId,
         sourceVersion: AlphaMath.version,
         startedAt: state.firstStartedAt,
         submittedAt: state.submittedAt,
@@ -293,6 +347,11 @@
   });
 
   questionMount.addEventListener("click",event => {
+    const meta = event.target.closest("[data-meta-chip]");
+    if(meta){
+      AlphaMath.announce(meta.title);
+      return;
+    }
     const button = event.target.closest("[data-exam-draw]");
     if(!button || state.submitted) return;
     const panel = questionMount.querySelector("[data-exam-draw-panel]");
@@ -308,6 +367,7 @@
       save();
     }else if(!document.hidden && state.started && !state.submitted && !state.timedOut){
       state.startedAt = Date.now();
+      resumeQuestionClock();
       save();
     }
   });
