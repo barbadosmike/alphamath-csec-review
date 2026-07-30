@@ -419,8 +419,10 @@ body{
 .row .code{min-width:0;padding-top:4px;text-align:left}
 .row .code span{display:inline-block;padding:4px 7px;border-radius:999px;background:#EEE9F5;color:var(--purple)}
 .row .txt{font-family:var(--sans);font-size:15px;line-height:1.45}
-.row .txt{padding-top:6px}
+.row .txt{padding-top:3px}
 .row .txt b{display:block;margin:0;font-size:15.5px}
+.row .txt .desc{display:block;margin-top:4px;color:var(--muted);font-size:13px;
+  font-weight:500;line-height:1.45}
 .row.on{background:var(--practice-bg);border-color:#DDBF87;box-shadow:inset 4px 0 0 var(--practice)}
 .row.on:hover{background:var(--practice-bg)}
 .row.confident{background:var(--success-bg);border-color:#B8D8C8;box-shadow:inset 4px 0 0 var(--success)}
@@ -452,10 +454,7 @@ body{
   padding:0;border:1px solid #CFC4E2;border-radius:9px;background:#fff;color:var(--purple);font-size:20px}
 .formula-card-body{padding:14px 15px 15px;overflow-x:auto;font-family:var(--serif);
   font-size:15px;line-height:1.55;color:var(--ink)}
-.topic-description{min-width:0}
-.formula-section-label{display:block;margin-bottom:5px;color:var(--purple);font-family:var(--sans);
-  font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase}
-.formula-guide{margin-top:14px;border:1px solid #D8CDE8;border-radius:9px;overflow:hidden;
+.formula-guide{margin-top:0;border:1px solid #D8CDE8;border-radius:9px;overflow:hidden;
   background:#fff}
 .formula-guide-title{margin:0;padding:9px 12px;border-bottom:1px solid #D8CDE8;
   background:#F3EEF9;color:var(--purple);font-family:var(--sans);font-size:11px;
@@ -2223,17 +2222,14 @@ const FORMULA_GUIDES = {
 
 function formulaGuideHTML(item) {
   const guide = FORMULA_GUIDES[item.code];
-  const description = guide?.description || item.n;
   const rows = guide?.rows || [];
-  const formulaRows = rows.length
+  return rows.length
     ? '<section class="formula-guide" aria-label="Standard formulas for ' + item.code + '">'
       + '<h5 class="formula-guide-title">Standard formulas</h5>'
       + rows.map(row => '<div class="formula-row"><span class="formula-label">' + row[0]
         + '</span><span class="formula-expression tex" data-display="block">' + row[1] + '</span></div>').join('')
       + '</section>'
     : '';
-  return '<span class="formula-section-label">In plain language</span>'
-    + '<div class="topic-description">' + description + '</div>' + formulaRows;
 }
 
 function renderPopoverMath(root) {
@@ -2305,23 +2301,27 @@ DATA.modules.forEach((m, mi) => {
        + '<div class="tbody">';
     t.items.forEach(it => {
       const supplementalReference = REFERENCES[it.code] || "";
+      const description = FORMULA_GUIDES[it.code]?.description || it.n;
+      const hasReferenceDetails = Boolean(FORMULA_GUIDES[it.code]?.rows?.length || supplementalReference);
       h += '<div class="row not-started" id="row-' + it.code + '">'
          + '<div class="code"><span>' + it.code + '</span></div>'
-         + '<div class="txt"><b>' + it.t + '</b></div>'
-         + '<button type="button" class="row-info" data-row-info aria-expanded="false" aria-controls="row-info-' + it.code + '" aria-label="Open details for ' + it.code + ' ' + it.t.replace(/<[^>]+>/g, '') + '">'
+         + '<div class="txt"><b>' + it.t + '</b><span class="desc">' + description + '</span></div>'
+         + (hasReferenceDetails ? '<button type="button" class="row-info" data-row-info aria-expanded="false" aria-controls="row-info-' + it.code + '" aria-label="Open formulas and references for ' + it.code + ' ' + it.t.replace(/<[^>]+>/g, '') + '">'
          + '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M0 0h24v24H0z" fill="none"/><path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg></button>'
+         : '')
          + '<div class="status-group" role="group" aria-label="Learning status for ' + it.code + '">'
          + '<button type="button" class="status-btn is-active" data-code-status="' + it.code + '" data-status="not-started" aria-pressed="true">Not started</button>'
          + '<button type="button" class="status-btn" data-code-status="' + it.code + '" data-status="confident" aria-pressed="false">Confident</button>'
          + '<button type="button" class="status-btn" data-code-status="' + it.code + '" data-status="practice" aria-pressed="false">Needs practice</button>'
          + '</div>'
-         + '<div class="row-popover" id="row-info-' + it.code + '" role="region" aria-labelledby="row-info-title-' + it.code + '" hidden>'
+         + (hasReferenceDetails ? '<div class="row-popover" id="row-info-' + it.code + '" role="region" aria-labelledby="row-info-title-' + it.code + '" hidden>'
          + '<div class="formula-card-head">'
          + '<h4 id="row-info-title-' + it.code + '">' + it.code + ' ' + it.t + '</h4>'
          + '<button type="button" class="formula-card-close" data-close-reference aria-label="Close reference card for ' + it.code + '">&times;</button></div>'
          + '<div class="formula-card-body">' + formulaGuideHTML(it)
          + (supplementalReference ? '<div class="topic-reference"><b>Supplemental reference</b>' + supplementalReference + '</div>' : '')
          + '</div></div>'
+         : '')
          + '</div>';
     });
     h += '</div></details>';
