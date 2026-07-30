@@ -3,6 +3,7 @@
 <meta charset="utf-8">
 <title>CSEC Mathematics — Phase 1: Knowledge-Gap Self-Assessment</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="assets/vendor/katex/katex.min.css">
 <style>
 :root{
   --purple:#140B2C;        /* Marion Sydney Classic Royal Purple — identity */
@@ -452,6 +453,20 @@ body{
 .formula-card-body{padding:14px 15px 15px;overflow-x:auto;font-family:var(--serif);
   font-size:15px;line-height:1.55;color:var(--ink)}
 .topic-description{min-width:0}
+.formula-section-label{display:block;margin-bottom:5px;color:var(--purple);font-family:var(--sans);
+  font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase}
+.formula-guide{margin-top:14px;border:1px solid #D8CDE8;border-radius:9px;overflow:hidden;
+  background:#fff}
+.formula-guide-title{margin:0;padding:9px 12px;border-bottom:1px solid #D8CDE8;
+  background:#F3EEF9;color:var(--purple);font-family:var(--sans);font-size:11px;
+  font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.formula-row{display:grid;grid-template-columns:minmax(128px,.72fr) minmax(0,1.28fr);
+  align-items:center;gap:12px;padding:10px 12px;border-bottom:1px solid #E9E2F1}
+.formula-row:last-child{border-bottom:0}
+.formula-label{color:var(--slate-blue);font-family:var(--sans);font-size:12px;font-weight:750}
+.formula-expression{min-width:0;overflow-x:auto;padding:2px 0;text-align:left}
+.formula-expression .katex-display{margin:0;text-align:left}
+.formula-note{margin-top:8px;color:var(--graphite);font-family:var(--sans);font-size:12px}
 .topic-reference{margin-top:12px;padding:11px 12px;border-left:3px solid var(--gold-metal);
   border-radius:0 7px 7px 0;background:#F5F1E6;font-family:var(--sans);font-size:12.5px;
   line-height:1.5;color:var(--muted)}
@@ -596,6 +611,8 @@ button:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visi
   .rail-item{flex-basis:172px;min-width:172px;min-height:74px}
   .rail-item b{font-size:13px}
   .rail-item small{font-size:11.5px}
+  .formula-row{grid-template-columns:1fr;gap:4px;padding:11px 12px}
+  .formula-expression .katex{font-size:1.02em}
 }
 </style>
 
@@ -706,6 +723,7 @@ button:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visi
   </details>
 </div></div>
 
+<script src="assets/vendor/katex/katex.min.js"></script>
 <script src="assets/js/runtime-config.js"></script>
 <script src="assets/js/suite.js"></script>
 <script>
@@ -1601,10 +1619,632 @@ const REFERENCES = {
   "M1.1.14":"2027 syllabus SO 1.14, 1.18 and 1.19. Use ratio, proportion, rates, and division in a ratio."
 };
 
+const FORMULA_GUIDES = {
+  "M1.1.1": {
+    description:"These number families fit inside one another, from counting numbers to all real numbers.",
+    rows:[
+      ["Number-set nesting", String.raw`\mathbb{N}\subset\mathbb{W}\subset\mathbb{Z}\subset\mathbb{Q}\subset\mathbb{R}`],
+      ["Rational number", String.raw`x=\dfrac{p}{q},\quad p,q\in\mathbb{Z},\ q\ne0`]
+    ]
+  },
+  "M1.1.3": {
+    description:"Powers are repeated multiplication; roots undo powers.",
+    rows:[
+      ["Power", String.raw`a^n=\underbrace{a\times a\times\cdots\times a}_{n\text{ factors}}`],
+      ["Square root", String.raw`\sqrt{a}=a^{1/2}`],
+      ["General root", String.raw`\sqrt[n]{a}=a^{1/n}`]
+    ]
+  },
+  "M1.1.4": {
+    description:"Use the agreed order of operations so everyone evaluates the same expression in the same order.",
+    rows:[
+      ["Order of operations", String.raw`\text{Brackets}\rightarrow\text{Indices}\rightarrow(\times,\div)\rightarrow(+,-)`],
+      ["Fraction addition", String.raw`\dfrac{a}{b}+\dfrac{c}{d}=\dfrac{ad+bc}{bd}`],
+      ["Fraction division", String.raw`\dfrac{a}{b}\div\dfrac{c}{d}=\dfrac{a}{b}\times\dfrac{d}{c}`]
+    ]
+  },
+  "M1.1.5": {
+    description:"A fraction, decimal and percentage can name the same amount; convert without changing its value.",
+    rows:[
+      ["Fraction to decimal", String.raw`\text{decimal}=\dfrac{\text{numerator}}{\text{denominator}}`],
+      ["Decimal to percentage", String.raw`\text{percentage}=\text{decimal}\times100\%`],
+      ["Percentage to fraction", String.raw`p\%=\dfrac{p}{100}`]
+    ]
+  },
+  "M1.1.6": {
+    rows:[
+      ["Two positive integers", String.raw`\operatorname{HCF}(a,b)\times\operatorname{LCM}(a,b)=a\times b`]
+    ]
+  },
+  "M1.1.7": {
+    rows:[
+      ["Place value in base b", String.raw`(d_nd_{n-1}\ldots d_0)_b=\sum_{k=0}^{n}d_kb^k`]
+    ]
+  },
+  "M1.1.10": {
+    rows:[
+      ["Commutative", String.raw`a+b=b+a,\qquad ab=ba`],
+      ["Associative", String.raw`(a+b)+c=a+(b+c)`],
+      ["Distributive", String.raw`a(b+c)=ab+ac`],
+      ["Identities", String.raw`a+0=a,\qquad a\times1=a`]
+    ]
+  },
+  "M1.1.11": {
+    description:"Find a part from a known whole, or reverse the calculation to recover the whole.",
+    rows:[
+      ["Find the part", String.raw`\text{part}=\dfrac{p}{100}\times\text{whole}`],
+      ["Find the whole", String.raw`\text{whole}=\dfrac{\text{part}}{p/100}`]
+    ]
+  },
+  "M1.1.12": {
+    description:"Scientific notation writes a very large or small number as a value between 1 and 10 multiplied by a power of ten.",
+    rows:[
+      ["Standard form", String.raw`N=a\times10^n,\qquad1\le |a|<10`]
+    ]
+  },
+  "M1.1.13": {
+    rows:[
+      ["As a fraction", String.raw`\dfrac{\text{first quantity}}{\text{second quantity}}`],
+      ["As a percentage", String.raw`\dfrac{\text{first quantity}}{\text{second quantity}}\times100\%`]
+    ]
+  },
+  "M1.1.14": {
+    rows:[
+      ["Share in a ratio", String.raw`\text{share}=\dfrac{\text{person's ratio part}}{\text{sum of ratio parts}}\times\text{total}`],
+      ["Rate", String.raw`\text{rate}=\dfrac{\text{quantity}}{\text{time or other unit}}`],
+      ["Direct proportion", String.raw`\dfrac{a}{b}=\dfrac{c}{d}\quad\Longleftrightarrow\quad ad=bc`]
+    ]
+  },
+  "M1.1.16": {
+    rows:[
+      ["Arithmetic sequence", String.raw`T_n=a+(n-1)d`],
+      ["Common difference", String.raw`d=T_{n+1}-T_n`]
+    ]
+  },
+  "M1.2.1": {
+    rows:[
+      ["Discount or tax", String.raw`\text{amount}=\dfrac{p}{100}\times\text{base price}`],
+      ["Selling price after discount", String.raw`SP=MP-\text{discount}`],
+      ["Selling price after tax", String.raw`SP=\text{price before tax}+\text{tax}`],
+      ["Profit or loss", String.raw`\text{profit}=SP-CP,\qquad\text{loss}=CP-SP`]
+    ]
+  },
+  "M1.2.2": {
+    rows:[
+      ["Percentage profit", String.raw`\%\text{ profit}=\dfrac{\text{profit}}{CP}\times100\%`],
+      ["Percentage loss", String.raw`\%\text{ loss}=\dfrac{\text{loss}}{CP}\times100\%`]
+    ]
+  },
+  "M1.2.3": {
+    rows:[
+      ["General percentage", String.raw`\text{percentage}=\dfrac{\text{change or charge}}{\text{stated base value}}\times100\%`]
+    ]
+  },
+  "M1.2.4": {
+    rows:[
+      ["Marked price", String.raw`MP=CP+\text{mark-up}`],
+      ["Selling price", String.raw`SP=MP-\text{discount}`],
+      ["Profit", String.raw`\text{profit}=SP-CP`]
+    ]
+  },
+  "M1.2.5": {
+    rows:[
+      ["Hire-purchase price", String.raw`HP=\text{deposit}+(\text{number of instalments})(\text{instalment})`],
+      ["Hire-purchase interest", String.raw`\text{interest}=HP-\text{cash price}`]
+    ]
+  },
+  "M1.2.6": {
+    rows:[
+      ["Simple interest", String.raw`I=\dfrac{PRT}{100}`],
+      ["Amount", String.raw`A=P+I`]
+    ]
+  },
+  "M1.2.7": {
+    rows:[
+      ["Compound amount", String.raw`A=P\left(1+\dfrac{r}{100}\right)^n`],
+      ["Compound interest", String.raw`I=A-P`]
+    ]
+  },
+  "M1.2.8": {
+    rows:[
+      ["Appreciation", String.raw`V=P\left(1+\dfrac{r}{100}\right)^n`],
+      ["Depreciation", String.raw`V=P\left(1-\dfrac{r}{100}\right)^n`]
+    ]
+  },
+  "M1.2.9": {
+    description:"Use the quoted exchange rate to move from one currency to another, and reverse the operation to come back.",
+    rows:[
+      ["Convert using a rate", String.raw`\text{target amount}=\text{source amount}\times\text{exchange rate}`],
+      ["Reverse conversion", String.raw`\text{source amount}=\dfrac{\text{target amount}}{\text{exchange rate}}`]
+    ]
+  },
+  "M1.2.10": {
+    rows:[
+      ["Basic earnings", String.raw`\text{earnings}=\text{rate}\times\text{time or quantity}`],
+      ["Total bill", String.raw`\text{total}=\text{fixed charge}+\text{usage charge}+\text{taxes}`]
+    ]
+  },
+  "M1.3.3": {
+    description:"A subset uses only elements already in the original set.",
+    rows:[
+      ["Number of subsets", String.raw`\text{number of subsets}=2^n`],
+      ["Number of proper subsets", String.raw`\text{proper subsets}=2^n-1`]
+    ]
+  },
+  "M1.3.4": {
+    description:"Union includes everything in either set; intersection includes only what the sets share.",
+    rows:[
+      ["Two-set counting rule", String.raw`n(A\cup B)=n(A)+n(B)-n(A\cap B)`],
+      ["Complement", String.raw`n(A')=n(U)-n(A)`]
+    ]
+  },
+  "M1.4.2": {
+    rows:[
+      ["Any polygon", String.raw`P=\text{sum of all side lengths}`],
+      ["Rectangle", String.raw`P=2(l+w)`],
+      ["Circle circumference", String.raw`C=2\pi r=\pi d`]
+    ]
+  },
+  "M1.4.3": {
+    description:"An arc is the same fraction of a full circumference as its central angle is of a full turn.",
+    rows:[
+      ["Arc length", String.raw`L=\dfrac{\theta}{360^\circ}\times2\pi r`],
+      ["Sector perimeter", String.raw`P=2r+\dfrac{\theta}{360^\circ}\times2\pi r`]
+    ]
+  },
+  "M1.4.4": {
+    rows:[
+      ["Rectangle", String.raw`A=lw`],
+      ["Triangle", String.raw`A=\dfrac12 bh`],
+      ["Parallelogram", String.raw`A=bh`],
+      ["Trapezium", String.raw`A=\dfrac12(a+b)h`],
+      ["Circle", String.raw`A=\pi r^2`],
+      ["Sector", String.raw`A=\dfrac{\theta}{360^\circ}\times\pi r^2`]
+    ]
+  },
+  "M1.4.5": {
+    description:"Surface area is the total area of every outside face or curved surface.",
+    rows:[
+      ["Cube", String.raw`SA=6a^2`],
+      ["Cuboid", String.raw`SA=2(lw+lh+wh)`],
+      ["Cylinder", String.raw`SA=2\pi r^2+2\pi rh`],
+      ["Cone", String.raw`SA=\pi r^2+\pi r\ell`],
+      ["Sphere", String.raw`SA=4\pi r^2`]
+    ]
+  },
+  "M1.4.6": {
+    description:"Volume measures the three-dimensional space inside a solid.",
+    rows:[
+      ["Prism", String.raw`V=(\text{cross-sectional area})(\text{length})`],
+      ["Cylinder", String.raw`V=\pi r^2h`],
+      ["Pyramid", String.raw`V=\dfrac13(\text{base area})h`],
+      ["Cone", String.raw`V=\dfrac13\pi r^2h`],
+      ["Sphere", String.raw`V=\dfrac43\pi r^3`]
+    ]
+  },
+  "M1.4.7": {
+    description:"Speed connects how far something travels with how long the journey takes.",
+    rows:[
+      ["Speed", String.raw`v=\dfrac{d}{t}`],
+      ["Distance", String.raw`d=vt`],
+      ["Time", String.raw`t=\dfrac{d}{v}`],
+      ["Average speed", String.raw`\text{average speed}=\dfrac{\text{total distance}}{\text{total time}}`]
+    ]
+  },
+  "M1.4.8": {
+    rows:[
+      ["Maximum absolute error", String.raw`\text{maximum error}=\dfrac12(\text{smallest measuring unit})`],
+      ["Measurement interval", String.raw`m-e\le x<m+e`]
+    ]
+  },
+  "M1.4.9": {
+    rows:[
+      ["Scale", String.raw`\text{scale}=\dfrac{\text{drawing length}}{\text{actual length}}`]
+    ]
+  },
+  "M1.5.4": {
+    description:"A binary operation is a custom rule that combines two inputs.",
+    rows:[
+      ["Example rule", String.raw`a*b=2a+b`],
+      ["Commutative test", String.raw`a*b=b*a`]
+    ]
+  },
+  "M1.5.6": {
+    description:"The distributive law removes brackets by multiplying every term inside.",
+    rows:[
+      ["Single bracket", String.raw`a(b+c)=ab+ac`],
+      ["Two brackets", String.raw`(a+b)(x+y)=ax+ay+bx+by`]
+    ]
+  },
+  "M1.5.7": {
+    rows:[
+      ["Addition", String.raw`\dfrac{a}{b}+\dfrac{c}{d}=\dfrac{ad+bc}{bd}`],
+      ["Multiplication", String.raw`\dfrac{a}{b}\times\dfrac{c}{d}=\dfrac{ac}{bd}`],
+      ["Division", String.raw`\dfrac{a}{b}\div\dfrac{c}{d}=\dfrac{ad}{bc}`]
+    ]
+  },
+  "M1.5.8": {
+    description:"Index laws combine powers with the same base.",
+    rows:[
+      ["Multiply powers", String.raw`x^m x^n=x^{m+n}`],
+      ["Divide powers", String.raw`\dfrac{x^m}{x^n}=x^{m-n}`],
+      ["Power of a power", String.raw`(x^m)^n=x^{mn}`],
+      ["Zero index", String.raw`x^0=1,\quad x\ne0`],
+      ["Negative index", String.raw`x^{-m}=\dfrac1{x^m}`],
+      ["Fractional index", String.raw`x^{1/n}=\sqrt[n]{x}`]
+    ]
+  },
+  "M1.5.11": {
+    description:"Changing the subject rearranges a formula so the requested letter stands alone.",
+    rows:[
+      ["Undo addition", String.raw`y=mx+c\quad\Longrightarrow\quad x=\dfrac{y-c}{m}`],
+      ["Undo multiplication", String.raw`C=2\pi r\quad\Longrightarrow\quad r=\dfrac{C}{2\pi}`]
+    ]
+  },
+  "M1.5.12": {
+    description:"Factorising reverses expansion by taking out a common factor.",
+    rows:[
+      ["Common factor", String.raw`ax+bx=x(a+b)`],
+      ["Difference of squares", String.raw`a^2-b^2=(a-b)(a+b)`]
+    ]
+  },
+  "M1.6.1": {
+    description:"A straight-line equation tells you its gradient and where it crosses the vertical axis.",
+    rows:[
+      ["Straight line", String.raw`y=mx+c`],
+      ["Horizontal line", String.raw`y=c`],
+      ["Vertical line", String.raw`x=k`]
+    ]
+  },
+  "M1.6.2": {
+    description:"An intercept is where a graph crosses an axis.",
+    rows:[
+      ["x-intercept", String.raw`y=0`],
+      ["y-intercept", String.raw`x=0`]
+    ]
+  },
+  "M2.1.2": {
+    rows:[
+      ["Total frequency", String.raw`N=\sum f`]
+    ]
+  },
+  "M2.1.3": {
+    rows:[
+      ["Pie-chart angle", String.raw`\theta=\dfrac{f}{\sum f}\times360^\circ`]
+    ]
+  },
+  "M2.1.4": {
+    description:"Mean uses every value, median is the middle ordered value, and mode is the most frequent value.",
+    rows:[
+      ["Mean", String.raw`\bar{x}=\dfrac{\sum x}{n}`],
+      ["Mean from a frequency table", String.raw`\bar{x}=\dfrac{\sum fx}{\sum f}`],
+      ["Median position", String.raw`\dfrac{n+1}{2}\text{th value}`]
+    ]
+  },
+  "M2.1.6": {
+    description:"These measures show how spread out the data are. A larger value means the observations are more widely separated.",
+    rows:[
+      ["Range", String.raw`\text{Range}=x_{\max}-x_{\min}`],
+      ["Interquartile range", String.raw`\mathrm{IQR}=Q_3-Q_1`],
+      ["Semi-interquartile range", String.raw`\text{Semi-IQR}=\dfrac{Q_3-Q_1}{2}=\dfrac{\mathrm{IQR}}{2}`]
+    ]
+  },
+  "M2.1.8": {
+    description:"Standard deviation describes spread around the mean. At this syllabus level, use it to compare data sets; calculation is not required.",
+    rows:[]
+  },
+  "M2.1.9": {
+    rows:[
+      ["Proportion", String.raw`\text{proportion}=\dfrac{\text{number meeting the condition}}{\text{total number}}`],
+      ["Percentage", String.raw`\text{percentage}=\text{proportion}\times100\%`]
+    ]
+  },
+  "M2.1.10": {
+    rows:[
+      ["Simple probability", String.raw`P(E)=\dfrac{\text{favourable outcomes}}{\text{total equally likely outcomes}}`],
+      ["Complement", String.raw`P(E')=1-P(E)`]
+    ]
+  },
+  "M2.2.1": {
+    description:"Factorising rewrites an expression as a product of simpler factors.",
+    rows:[
+      ["Difference of squares", String.raw`a^2-b^2=(a-b)(a+b)`],
+      ["Grouping", String.raw`ax+bx+ay+by=(a+b)(x+y)`]
+    ]
+  },
+  "M2.2.3": {
+    rows:[
+      ["General pair", String.raw`a_1x+b_1y=c_1,\qquad a_2x+b_2y=c_2`]
+    ]
+  },
+  "M2.2.4": {
+    description:"Completing the square rewrites a quadratic so its turning point becomes visible.",
+    rows:[
+      ["Basic identity", String.raw`x^2+bx=\left(x+\dfrac b2\right)^2-\left(\dfrac b2\right)^2`],
+      ["Completed-square form", String.raw`ax^2+bx+c=a(x+h)^2+k`]
+    ]
+  },
+  "M2.2.5": {
+    rows:[
+      ["Quadratic equation", String.raw`ax^2+bx+c=0`],
+      ["Quadratic formula", String.raw`x=\dfrac{-b\pm\sqrt{b^2-4ac}}{2a}`],
+      ["Discriminant", String.raw`\Delta=b^2-4ac`]
+    ]
+  },
+  "M2.2.8": {
+    description:"Direct variation changes in the same ratio; inverse variation changes in the opposite ratio.",
+    rows:[
+      ["Direct variation", String.raw`y\propto x\quad\Longrightarrow\quad y=kx`],
+      ["Inverse variation", String.raw`y\propto\dfrac1x\quad\Longrightarrow\quad y=\dfrac{k}{x}`],
+      ["Constant of variation", String.raw`k=\dfrac yx\text{ (direct)},\qquad k=xy\text{ (inverse)}`]
+    ]
+  },
+  "M2.3.4": {
+    description:"Function notation names the output produced by a given input.",
+    rows:[
+      ["Function value", String.raw`y=f(x)`],
+      ["Composite function", String.raw`(f\circ g)(x)=f(g(x))`],
+      ["Inverse identity", String.raw`f^{-1}(f(x))=x`]
+    ]
+  },
+  "M2.3.5": {
+    rows:[
+      ["Gradient", String.raw`m=\dfrac{y_2-y_1}{x_2-x_1}`]
+    ]
+  },
+  "M2.3.6": {
+    rows:[
+      ["Slope-intercept form", String.raw`y=mx+c`],
+      ["Point-slope form", String.raw`y-y_1=m(x-x_1)`]
+    ]
+  },
+  "M2.3.7": {
+    description:"Parallel lines have the same gradient; perpendicular lines have negative reciprocal gradients.",
+    rows:[
+      ["Parallel lines", String.raw`m_1=m_2`],
+      ["Perpendicular lines", String.raw`m_1m_2=-1`]
+    ]
+  },
+  "M2.3.8": {
+    rows:[
+      ["Distance", String.raw`d=\sqrt{(x_2-x_1)^2+(y_2-y_1)^2}`],
+      ["Midpoint", String.raw`M=\left(\dfrac{x_1+x_2}{2},\dfrac{y_1+y_2}{2}\right)`]
+    ]
+  },
+  "M2.3.10": {
+    description:"A composite function sends the input through one function and then another; order matters.",
+    rows:[
+      ["Composition", String.raw`(f\circ g)(x)=f(g(x))`],
+      ["Order generally differs", String.raw`f\circ g\ne g\circ f`]
+    ]
+  },
+  "M2.3.11": {
+    description:"An inverse function reverses the original function.",
+    rows:[
+      ["Inverse identities", String.raw`f^{-1}(f(x))=x,\qquad f(f^{-1}(x))=x`]
+    ]
+  },
+  "M2.3.12": {
+    description:"Evaluate a function by substituting the given input everywhere the variable appears.",
+    rows:[
+      ["Function value", String.raw`f(a)=f(x)\big|_{x=a}`]
+    ]
+  },
+  "M2.3.14": {
+    description:"Completed-square form shows the turning point and axis of symmetry directly.",
+    rows:[
+      ["Completed-square form", String.raw`y=a(x+h)^2+k`],
+      ["Turning point", String.raw`(-h,k)`],
+      ["Axis of symmetry", String.raw`x=-h`]
+    ]
+  },
+  "M2.4.5": {
+    rows:[
+      ["Angles at a point", String.raw`\sum\theta=360^\circ`],
+      ["Angles on a straight line", String.raw`\theta_1+\theta_2=180^\circ`],
+      ["Triangle angle sum", String.raw`A+B+C=180^\circ`],
+      ["Polygon interior-angle sum", String.raw`S=(n-2)180^\circ`]
+    ]
+  },
+  "M2.4.7": {
+    description:"In a right-angled triangle, the square of the hypotenuse equals the sum of the squares of the other two sides.",
+    rows:[
+      ["Pythagoras", String.raw`a^2+b^2=c^2`]
+    ]
+  },
+  "M2.4.8": {
+    description:"The three trigonometric ratios connect an acute angle with pairs of sides in a right-angled triangle.",
+    rows:[
+      ["Sine", String.raw`\sin\theta=\dfrac{\text{opposite}}{\text{hypotenuse}}`],
+      ["Cosine", String.raw`\cos\theta=\dfrac{\text{adjacent}}{\text{hypotenuse}}`],
+      ["Tangent", String.raw`\tan\theta=\dfrac{\text{opposite}}{\text{adjacent}}`]
+    ]
+  },
+  "M2.5.1": {
+    rows:[
+      ["Vector magnitude", String.raw`\lVert\mathbf{v}\rVert=\sqrt{x^2+y^2}`],
+      ["Unit vector", String.raw`\hat{\mathbf{v}}=\dfrac{\mathbf{v}}{\lVert\mathbf{v}\rVert}`]
+    ]
+  },
+  "M2.5.2": {
+    rows:[
+      ["Vector addition", String.raw`\begin{pmatrix}a\\b\end{pmatrix}+\begin{pmatrix}c\\d\end{pmatrix}=\begin{pmatrix}a+c\\b+d\end{pmatrix}`],
+      ["Scalar multiple", String.raw`k\begin{pmatrix}a\\b\end{pmatrix}=\begin{pmatrix}ka\\kb\end{pmatrix}`]
+    ]
+  },
+  "M2.5.3": {
+    description:"A matrix is a rectangular arrangement of values. Its order states rows first, then columns.",
+    rows:[
+      ["Matrix order", String.raw`m\times n=(\text{rows})\times(\text{columns})`]
+    ]
+  },
+  "M3.1.2": {
+    rows:[
+      ["Class midpoint", String.raw`x=\dfrac{\text{lower boundary}+\text{upper boundary}}{2}`],
+      ["Class width", String.raw`w=\text{upper boundary}-\text{lower boundary}`]
+    ]
+  },
+  "M3.1.4": {
+    rows:[
+      ["Estimated grouped mean", String.raw`\bar{x}\approx\dfrac{\sum fx}{\sum f}`]
+    ]
+  },
+  "M3.1.5": {
+    description:"For grouped data, use class boundaries and quartiles read or estimated from the distribution.",
+    rows:[
+      ["Estimated range", String.raw`\text{Range}\approx\text{upper boundary}-\text{lower boundary}`],
+      ["Interquartile range", String.raw`\mathrm{IQR}=Q_3-Q_1`],
+      ["Semi-interquartile range", String.raw`\text{Semi-IQR}=\dfrac{Q_3-Q_1}{2}`]
+    ]
+  },
+  "M3.1.6": {
+    description:"Standard deviation compares how tightly data cluster around the mean. Calculation is not required at this syllabus level.",
+    rows:[]
+  },
+  "M3.1.9": {
+    rows:[
+      ["Proportion", String.raw`\text{proportion}=\dfrac{\text{frequency meeting the condition}}{\sum f}`],
+      ["Percentage", String.raw`\text{percentage}=\text{proportion}\times100\%`]
+    ]
+  },
+  "M3.1.10": {
+    rows:[
+      ["Complement", String.raw`P(A')=1-P(A)`],
+      ["Mutually exclusive events", String.raw`P(A\cup B)=P(A)+P(B)`],
+      ["Independent events", String.raw`P(A\cap B)=P(A)P(B)`]
+    ]
+  },
+  "M3.2.4": {
+    description:"These standard equations produce the non-linear graph families named in the syllabus.",
+    rows:[
+      ["Reciprocal", String.raw`y=\dfrac{a}{x}`],
+      ["Inverse square", String.raw`y=\dfrac{a}{x^2}`],
+      ["Cubic", String.raw`y=ax^3`]
+    ]
+  },
+  "M3.2.5": {
+    description:"A graph's gradient gives a rate of change; area under a speed–time graph gives distance.",
+    rows:[
+      ["Speed from distance–time", String.raw`v=\dfrac{\Delta d}{\Delta t}`],
+      ["Acceleration from speed–time", String.raw`a=\dfrac{\Delta v}{\Delta t}`],
+      ["Distance from speed–time", String.raw`d=\text{area under the speed–time graph}`]
+    ]
+  },
+  "M3.3.1": {
+    description:"Circle theorems are fixed angle and length relationships. Name the theorem when using it.",
+    rows:[
+      ["Centre and circumference", String.raw`\angle AOB=2\angle ACB`],
+      ["Angle in a semicircle", String.raw`\angle ACB=90^\circ`],
+      ["Cyclic quadrilateral", String.raw`\angle A+\angle C=180^\circ`],
+      ["Radius and tangent", String.raw`\text{radius}\perp\text{tangent at the point of contact}`]
+    ]
+  },
+  "M3.3.2": {
+    description:"A translation moves every point by the same horizontal and vertical amounts.",
+    rows:[
+      ["Translation vector", String.raw`\begin{pmatrix}x\\y\end{pmatrix}`],
+      ["Coordinate rule", String.raw`(a,b)\mapsto(a+x,b+y)`]
+    ]
+  },
+  "M3.3.5": {
+    description:"Describe a transformation with every parameter needed to reproduce it.",
+    rows:[
+      ["Translation", String.raw`\begin{pmatrix}x\\y\end{pmatrix}`],
+      ["Enlargement", String.raw`\mathbf{x}'=\mathbf{c}+k(\mathbf{x}-\mathbf{c})`]
+    ]
+  },
+  "M3.3.7": {
+    rows:[
+      ["Sine rule", String.raw`\dfrac{a}{\sin A}=\dfrac{b}{\sin B}=\dfrac{c}{\sin C}`],
+      ["Cosine rule", String.raw`c^2=a^2+b^2-2ab\cos C`]
+    ]
+  },
+  "M3.3.8": {
+    rows:[
+      ["Two sides and included angle", String.raw`A=\dfrac12 ab\sin C`]
+    ]
+  },
+  "M3.3.9": {
+    rows:[
+      ["Segment area", String.raw`A_{\text{segment}}=A_{\text{sector}}-A_{\triangle}`],
+      ["Sector area", String.raw`A_{\text{sector}}=\dfrac{\theta}{360^\circ}\pi r^2`],
+      ["Triangle area", String.raw`A_{\triangle}=\dfrac12r^2\sin\theta`]
+    ]
+  },
+  "M3.4.1": {
+    description:"A position vector gives a point's displacement from the origin.",
+    rows:[
+      ["Position vector", String.raw`\overrightarrow{OP}=\begin{pmatrix}a\\b\end{pmatrix}`],
+      ["Displacement", String.raw`\overrightarrow{AB}=\mathbf{b}-\mathbf{a}`]
+    ]
+  },
+  "M3.4.2": {
+    rows:[
+      ["Magnitude", String.raw`\lVert\mathbf{v}\rVert=\sqrt{x^2+y^2}`],
+      ["Unit vector", String.raw`\hat{\mathbf{v}}=\dfrac{\mathbf{v}}{\lVert\mathbf{v}\rVert}`]
+    ]
+  },
+  "M3.4.3": {
+    description:"The direction angle of a two-dimensional vector comes from its vertical and horizontal components.",
+    rows:[
+      ["Direction angle", String.raw`\tan\theta=\dfrac{y}{x}`]
+    ]
+  },
+  "M3.4.5": {
+    description:"The determinant is one number calculated from a square matrix.",
+    rows:[
+      ["Determinant", String.raw`\det\begin{pmatrix}a&b\\c&d\end{pmatrix}=ad-bc`]
+    ]
+  },
+  "M3.4.6": {
+    description:"A non-singular matrix has an inverse that reverses its effect.",
+    rows:[
+      ["Inverse of a 2 × 2 matrix", String.raw`A^{-1}=\dfrac1{ad-bc}\begin{pmatrix}d&-b\\-c&a\end{pmatrix}`],
+      ["Inverse exists when", String.raw`ad-bc\ne0`],
+      ["Inverse identity", String.raw`AA^{-1}=A^{-1}A=I`]
+    ]
+  },
+  "M3.4.7": {
+    description:"A transformation matrix changes every coordinate vector by the same linear rule.",
+    rows:[
+      ["Reflection in x-axis", String.raw`\begin{pmatrix}1&0\\0&-1\end{pmatrix}`],
+      ["Reflection in y-axis", String.raw`\begin{pmatrix}-1&0\\0&1\end{pmatrix}`],
+      ["Rotation by \(\theta\)", String.raw`\begin{pmatrix}\cos\theta&-\sin\theta\\\sin\theta&\cos\theta\end{pmatrix}`],
+      ["Enlargement at origin", String.raw`\begin{pmatrix}k&0\\0&k\end{pmatrix}`]
+    ]
+  },
+  "M3.4.8": {
+    rows:[
+      ["Matrix equation", String.raw`A\mathbf{x}=\mathbf{b}`],
+      ["Solution", String.raw`\mathbf{x}=A^{-1}\mathbf{b}`]
+    ]
+  }
+};
+
+function formulaGuideHTML(item) {
+  const guide = FORMULA_GUIDES[item.code];
+  const description = guide?.description || item.n;
+  const rows = guide?.rows || [];
+  const formulaRows = rows.length
+    ? '<section class="formula-guide" aria-label="Standard formulas for ' + item.code + '">'
+      + '<h5 class="formula-guide-title">Standard formulas</h5>'
+      + rows.map(row => '<div class="formula-row"><span class="formula-label">' + row[0]
+        + '</span><span class="formula-expression tex" data-display="block">' + row[1] + '</span></div>').join('')
+      + '</section>'
+    : '';
+  return '<span class="formula-section-label">In plain language</span>'
+    + '<div class="topic-description">' + description + '</div>' + formulaRows;
+}
+
 function renderPopoverMath(root) {
   if (!window.katex) return;
   root.querySelectorAll('.tex').forEach(el => {
-    katex.render(el.textContent, el, {throwOnError:false, strict:false, displayMode:false});
+    katex.render(el.textContent, el, {
+      throwOnError:false,
+      strict:false,
+      displayMode:el.dataset.display === 'block',
+      output:'htmlAndMathml'
+    });
   });
 }
 
@@ -1679,7 +2319,7 @@ DATA.modules.forEach((m, mi) => {
          + '<div class="formula-card-head">'
          + '<h4 id="row-info-title-' + it.code + '">' + it.code + ' ' + it.t + '</h4>'
          + '<button type="button" class="formula-card-close" data-close-reference aria-label="Close reference card for ' + it.code + '">&times;</button></div>'
-         + '<div class="formula-card-body"><div class="topic-description">' + it.n + '</div>'
+         + '<div class="formula-card-body">' + formulaGuideHTML(it)
          + (supplementalReference ? '<div class="topic-reference"><b>Supplemental reference</b>' + supplementalReference + '</div>' : '')
          + '</div></div>'
          + '</div>';

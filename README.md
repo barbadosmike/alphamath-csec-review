@@ -1,7 +1,7 @@
 ---
 title: "AlphaMath CSEC Mathematics — Sanitized Reviewer Demonstration"
 status: "review-ready-with-optional-evidence-api"
-version: "review-1.1.0-20260730"
+version: "review-1.1.1-20260730"
 created: "2026-07-30"
 privacy: "sanitized public demonstration"
 ---
@@ -39,6 +39,15 @@ This repository contains the static reviewer interface plus an optional Node evi
 - `simulated-exam.html` — locked exam attempt plus human-review checkpoint
 - `dashboard.html` — PostgreSQL-backed learner evidence view
 - `math-input.html` — local math-entry prototype
+
+## Intake formula cards
+
+Formula-bearing intake topics use a consistent popover structure:
+
+1. a short **In plain language** explanation; then
+2. a **Standard formulas** panel with one typeset relationship per row.
+
+KaTeX and its fonts are bundled under `assets/vendor/katex/`, so formulas render without a CDN. Concept-only topics do not display a formula panel, and topics for which the syllabus requires comparison rather than calculation state that boundary explicitly.
 
 ## Local database and API
 
