@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>AlphaMath — Learning Evidence Dashboard</title>
+  <link rel="stylesheet" href="assets/css/alphamath.css">
+</head>
+<body>
+<aside class="review-notice" role="note">
+  <strong>Sanitized reviewer demonstration · connected evidence view</strong>
+  <span>This page reads only from the separately deployed AlphaMath API. No PostgreSQL credential is exposed to the browser.</span>
+</aside>
+<a class="skip-link" href="#main">Skip to main content</a>
+<header class="site-head">
+  <div class="head-inner">
+    <p class="brand-line"><span class="brand-mark" aria-hidden="true">α</span> AlphaMath · CSEC Additional Mathematics tutor workspace</p>
+    <h1>Learning evidence dashboard</h1>
+    <p class="lede">One learner view connecting intake priorities, tutor-reviewed tutorials, and simulated-exam evidence.</p>
+    <div class="head-meta"><span>PostgreSQL-backed</span><span>Human-reviewed evidence</span><span>No inferred mastery</span></div>
+  </div>
+</header>
+<nav class="suite-nav" aria-label="AlphaMath suite"><div class="nav-inner">
+  <a href="index.html">Suite home</a><a href="intake.html">Intake</a><a href="learning-path.html">Learning path</a><a href="tutorial.html">Tutorial</a><a href="simulated-exam.html">Simulated exam</a><a href="dashboard.html" aria-current="page">Dashboard</a>
+</div></nav>
+<main id="main" class="shell">
+  <section class="dashboard-query panel" aria-labelledby="dashboard-query-title">
+    <div>
+      <p class="eyebrow">Learner record</p>
+      <h2 id="dashboard-query-title" style="margin-top:0">Open linked evidence</h2>
+      <p class="fine">Use the same stable learner ID recorded on intake, tutorial, and exam submissions.</p>
+    </div>
+    <div class="dashboard-search">
+      <div><label for="dashboardLearnerId">Learner ID</label><input id="dashboardLearnerId" value="REVIEW-DEMO" autocomplete="off"></div>
+      <button type="button" class="primary" id="loadDashboard">Load dashboard</button>
+    </div>
+    <p id="dashboardStatus" class="fine" role="status" aria-live="polite">Connect the evidence API to begin.</p>
+  </section>
+
+  <section id="dashboardContent" hidden>
+    <div class="dashboard-learner">
+      <div>
+        <p class="eyebrow">Current learner</p>
+        <h2 id="learnerName">—</h2>
+        <p id="learnerMeta" class="fine"></p>
+      </div>
+      <span class="status approaching">Database record</span>
+    </div>
+
+    <div class="metric-grid" aria-label="Evidence counts">
+      <article class="metric-card"><span>Intakes</span><strong id="intakeCount">0</strong><small>Self-assessment snapshots</small></article>
+      <article class="metric-card"><span>Tutorial reviews</span><strong id="tutorialCount">0</strong><small>Human-reviewed attempts</small></article>
+      <article class="metric-card"><span>Exam attempts</span><strong id="examAttemptCount">0</strong><small>Locked submissions</small></article>
+      <article class="metric-card"><span>Exam reviews</span><strong id="examReviewCount">0</strong><small>Human-marked attempts</small></article>
+    </div>
+
+    <section class="panel" aria-labelledby="objective-title">
+      <div class="review-heading">
+        <div>
+          <p class="eyebrow">Syllabus-linked decisions</p>
+          <h2 id="objective-title">Latest tutor decision by objective</h2>
+        </div>
+        <p class="fine">Only an explicit tutor decision can display “Mastery confirmed.”</p>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Objective</th><th>Latest decision</th><th>Evidence items</th><th>Reviewed</th><th>Reviewer</th></tr></thead>
+          <tbody id="objectiveRows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="grid two">
+      <article class="panel" aria-labelledby="intake-priority-title">
+        <p class="eyebrow">Latest intake</p>
+        <h2 id="intake-priority-title">Topics identified for practice</h2>
+        <div id="intakePriorities" class="evidence-list"></div>
+      </article>
+      <article class="panel" aria-labelledby="evidence-title">
+        <p class="eyebrow">Audit trail</p>
+        <h2 id="evidence-title">Recent reviewed evidence</h2>
+        <div id="evidenceRows" class="evidence-list"></div>
+      </article>
+    </section>
+  </section>
+</main>
+<div id="suite-live-region" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+<script src="assets/js/runtime-config.js" defer></script>
+<script src="assets/js/suite.js" defer></script>
+<script src="assets/js/dashboard.js" defer></script>
+</body>
+</html>

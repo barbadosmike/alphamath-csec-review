@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>AlphaMath — Recognition-Assisted Math Input Prototype</title>
+  <link rel="stylesheet" href="assets/css/alphamath.css">
+</head>
+<body >
+<aside class="review-notice" role="note">
+  <strong>Sanitized reviewer demonstration</strong>
+  <span>No real student identity, submitted response, roster mapping, or reproduced CSEC past-paper question is included. Entries stay in this browser unless a tutor explicitly connects the evidence API.</span>
+</aside>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-head">
+    <div class="head-inner">
+      <p class="brand-line"><span class="brand-mark" aria-hidden="true">α</span> AlphaMath · CSEC Additional Mathematics</p>
+      <h1>Handwriting-to-math confirmation prototype</h1>
+      <p class="lede">An honest on-device boundary: local image preview, editable math confirmation, and no cloud OCR.</p>
+      <div class="head-meta"><span>Prototype</span><span>No network</span><span>Student-confirmed</span></div>
+    </div>
+  </header>
+  <nav class="suite-nav" aria-label="AlphaMath suite"><div class="nav-inner"><a href="index.html">Suite home</a><a href="intake.html" >Intake</a><a href="learning-path.html" >Learning path</a><a href="tutorial.html" >Tutorial</a><a href="simulated-exam.html" >Simulated exam</a><a href="dashboard.html">Dashboard</a></div></nav>
+  <main id="main" class="shell">
+  <div class="callout warning">
+    <h2 style="margin-top:0">Prototype boundary</h2>
+    <p>This build previews an image locally and lets the student confirm the final expression in MathLive. It does not claim handwriting recognition, upload data, or send work to a cloud service.</p>
+  </div>
+  <div class="grid two" style="margin-top:20px">
+    <section class="card" aria-labelledby="upload-title">
+      <p class="eyebrow">Step 1</p><h2 id="upload-title" style="margin-top:0">Preview working on this device</h2>
+      <label class="upload-zone" for="workImage"><strong>Choose a photo of handwritten working</strong><span class="muted">The image remains in this browser tab.</span><input id="workImage" type="file" accept="image/*" style="margin-top:12px"></label>
+      <img id="imagePreview" class="image-preview" alt="Preview of selected handwritten work" hidden>
+    </section>
+    <section class="card" aria-labelledby="confirm-title">
+      <p class="eyebrow">Step 2</p><h2 id="confirm-title" style="margin-top:0">Confirm the mathematical expression</h2>
+      <label for="confirmedMath"><strong>Editable math entry</strong></label>
+      <math-field id="confirmedMath" aria-label="Confirmed mathematical expression"></math-field>
+      <p class="fine">The student—not an automated recognizer—confirms or corrects the expression before saving.</p>
+      <button type="button" id="saveConfirmed" class="primary">Save confirmed expression locally</button>
+      <p id="recognitionStatus" class="fine" role="status" aria-live="polite"></p>
+    </section>
+  </div>
+</main>
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+  const input=document.getElementById("workImage"),preview=document.getElementById("imagePreview");
+  input.addEventListener("change",()=>{
+    const file=input.files&&input.files[0]; if(!file)return;
+    const reader=new FileReader(); reader.onload=()=>{preview.src=reader.result;preview.hidden=false;}; reader.readAsDataURL(file);
+  });
+  document.getElementById("saveConfirmed").addEventListener("click",()=>{
+    const value=document.getElementById("confirmedMath").value||"";
+    AlphaMath.storage.set("alphamath:recognition-prototype:confirmed",{value});
+    document.getElementById("recognitionStatus").textContent=value?"Saved on this device.":"Nothing entered yet.";
+  });
+  const saved=AlphaMath.storage.get("alphamath:recognition-prototype:confirmed",null);
+  if(saved&&saved.value)document.getElementById("confirmedMath").value=saved.value;
+});
+</script>
+  <div id="suite-live-region" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+  <script src="assets/vendor/mathlive.min.js" defer></script>
+  <script src="assets/js/runtime-config.js" defer></script>
+  <script src="assets/js/suite.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+{
+  "version": "1.0",
+  "source": "AlphaMath Delivery Playbook v1.0, ratified 2026-07-19",
+  "states": [
+    "not-yet",
+    "approaching",
+    "mastered"
+  ],
+  "mastery": {
+    "minimumAccuracyPercent": 80,
+    "minimumAuthenticItems": 4,
+    "paper2MethodRequired": true,
+    "retainedCheckpointRequired": true,
+    "bridgeItemsCount": false,
+    "humanTutorDecisionRequired": true,
+    "solveTimeIsGate": false
+  },
+  "lapse": {
+    "state": "not-yet",
+    "intervention": "find-the-mistake task",
+    "retestAfterDays": 3
+  },
+  "retrieval": {
+    "must": [
+      2,
+      7,
+      14,
+      21
+    ],
+    "should": [
+      7,
+      21
+    ],
+    "capDays": 21
+  }
+}

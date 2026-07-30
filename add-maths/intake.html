@@ -1,0 +1,2821 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>CSEC Additional Mathematics — Phase 1: Learning-Readiness Self-Assessment</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="assets/vendor/katex/katex.min.css">
+<style>
+:root{
+  --purple:#140B2C;        /* Marion Sydney Classic Royal Purple — identity */
+  --purple-deep:#4B006E;   /* Deep Royal Purple — header bars */
+  --purple-imp:#602F6B;    /* Imperial Purple — table headers */
+  --purple-20:#452069;     /* pressed / hover */
+  --amethyst:#9B72CF;
+  --wisteria:#C9B6E4;
+  --lavender:#EDE7F6;
+  --gold:#C8A951;          /* Marion Gold */
+  --gold-metal:#D3AF37;
+  --gold-old:#8B6914;      /* gold text on light — legibility rule */
+  --white-gold:#FFFFF4;
+  --offwhite:#F7F5EF;
+  --slate:#334155;
+  --slate-blue:#3C5F76;
+  --silver:#C0C0C0;
+  --steel:#A9A9A9;
+  --graphite:#696B68;     /* darkened from #7D7F7C — small text on off-white now meets WCAG AA (≈5:1) */
+  --platinum:#E5E4E2;
+  --sans:"Lexend",ui-sans-serif,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --serif:"Lora","Latin Modern Roman",Georgia,"Times New Roman",serif;
+}
+*{box-sizing:border-box}
+/* MSE AlphaMath type pairing (CEO decision 2026-07-20): Lexend (variable, reading-optimised
+   for fluency — apt for 15–18 ESL learners) as the sans + Lora as the serif. Both SIL-OFL,
+   embedded as data URIs from the MSE font library (Assets/Fonts masters, Assets/Web Fonts
+   woff2) so every device renders identically offline. Supersedes Sono+Spectral. Peridot PE
+   stays licence-gated and is never bundled. Math stays KaTeX's own faces. KB-18 v1.8. */
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--offwhite);color:var(--slate);
+  font-family:var(--serif);font-size:16px;line-height:1.5}
+.wrap{max-width:980px;margin:0 auto;padding:0 22px 140px}
+
+/* ---------- masthead ---------- */
+.mast{background:var(--purple-deep);color:var(--white-gold);
+  padding:30px 22px 26px;margin-bottom:26px;
+  border-bottom:3px solid var(--gold-metal)}
+.mast .inner{max-width:980px;margin:0 auto}
+.mast h1{font-family:var(--sans);font-size:31px;font-weight:700;margin:0;letter-spacing:-.2px}
+.mast h2{font-family:var(--sans);font-size:17px;font-weight:400;margin:5px 0 0;color:var(--wisteria)}
+.mast .meta{font-family:var(--sans);font-size:12.5px;margin-top:12px;color:var(--silver)}
+.mast .phase{font-family:var(--sans);font-size:13.5px;margin-top:9px;color:var(--white-gold)}
+.mast .phase b{color:var(--gold-metal);text-transform:uppercase;letter-spacing:.8px;font-weight:700}
+.mast .phase i{color:var(--wisteria);font-style:italic}
+.mast .phase .yet{color:var(--gold-metal);font-weight:700;font-style:normal}
+.idbar{display:flex;gap:16px;flex-wrap:wrap;margin-top:20px}
+.idbar label{font-family:var(--sans);font-size:12px;text-transform:uppercase;
+  letter-spacing:.6px;color:var(--wisteria);display:block;margin-bottom:4px}
+.idbar input{font-family:var(--sans);font-size:14px;padding:7px 10px;border:0.9px solid var(--silver);
+  border-radius:2px;background:var(--white-gold);color:var(--slate);width:260px}
+.idbar .short input{width:150px}
+
+/* ---------- cards ---------- */
+.card{background:#fff;border:0.9px solid var(--platinum);border-radius:3px;
+  padding:18px 20px;margin:0 0 18px}
+.card.lav{background:var(--lavender);border-color:var(--wisteria)}
+.card.gold{background:#fff;border-color:var(--gold);border-left:3px solid var(--gold)}
+.card h3{font-family:var(--sans);font-size:15px;margin:0 0 9px;color:var(--purple)}
+.card.gold h3{color:var(--gold-old)}
+.prerequisite-card{border-left:4px solid var(--amethyst);background:linear-gradient(135deg,#fff,var(--lavender))}
+.foundation-link{display:inline-flex;font-family:var(--sans);font-size:13px;font-weight:700;color:var(--purple);text-decoration:none;border-bottom:1px solid var(--gold)}
+.foundation-link:hover,.foundation-link:focus-visible{color:var(--purple-deep);border-bottom-width:2px}
+.card ol,.card ul{margin:0;padding-left:20px}
+.card li{margin-bottom:6px}
+.eg{font-size:14.5px;margin-top:8px;padding-left:12px;border-left:2px solid var(--wisteria)}
+.eg b{font-family:var(--sans);font-size:11.5px;text-transform:uppercase;letter-spacing:.6px}
+.eg .good b{color:var(--purple)} .eg .bad b{color:var(--graphite)}
+.eg p{margin:3px 0 7px;font-style:italic}
+
+/* ---------- module + topic ---------- */
+.mod{background:var(--purple-deep);color:var(--white-gold);padding:13px 18px;
+  border-radius:3px;margin:34px 0 4px}
+.mod h2{font-family:var(--sans);font-size:18px;margin:0;font-weight:700}
+.mod p{font-family:var(--sans);font-size:12px;margin:4px 0 0;color:var(--wisteria);line-height:1.45}
+.top{margin-top:26px}
+.top .hd{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+  border-bottom:1px solid var(--gold-metal);padding-bottom:5px}
+.top .hd h3{font-family:var(--sans);font-size:15.5px;color:var(--purple);margin:0}
+.top .hd .pn{font-family:var(--sans);font-size:11.5px;color:var(--slate-blue);white-space:nowrap}
+
+/* ---------- rows ---------- */
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start;padding:9px 0;
+  border-bottom:1px solid #EFEDE8}
+.row:last-child{border-bottom:0}
+.row:hover{background:var(--white-gold)}
+.row.on:hover{background:var(--lavender)}
+.row .code{font-family:var(--sans);font-size:11px;font-weight:700;color:var(--purple);
+  min-width:66px;text-align:right;padding-top:3px;letter-spacing:.2px}
+.row .txt{flex:1;font-size:15.5px}
+.row .txt b{font-weight:700;color:#1f2733}
+.row.on{background:var(--lavender)}
+.row.on .txt b{color:var(--purple)}
+.row-info{display:inline-block;vertical-align:super;margin-left:3px;border:0;padding:0;
+  background:transparent;color:var(--wisteria);line-height:0}
+.row-info:hover,.row-info:focus-visible{background:var(--purple-deep);color:var(--wisteria)}
+.row-info svg{display:block;width:16px;height:16px;fill:currentColor}
+.row-popover{flex:0 0 calc(100% - 78px);margin:0 0 2px 78px;padding:9px 11px;
+  background:var(--lavender);color:var(--slate);border:1px solid var(--amethyst);
+  border-radius:3px;box-shadow:0 4px 12px rgba(20,11,44,.2);
+  font-family:"Latin Modern Roman",serif;font-size:15px;line-height:1.4}
+.row-popover .ref-table{border-collapse:collapse;margin:4px 0 6px;width:100%}
+.row-popover .ref-table th,.row-popover .ref-table td{padding:4px 12px 4px 0;text-align:left;font-weight:400}
+.row-popover .ref-table th{font-weight:700;color:var(--purple);border-bottom:2px solid var(--amethyst)}
+.row-popover .ref-table td{border-bottom:1px dotted var(--wisteria)}
+.row-popover .ref-table tr:last-child td{border-bottom:0}
+.row-popover .formula-lines{margin:5px 0}
+.row-popover .formula-lines>.tex{display:block;margin:0;padding:7px 2px;
+  border-bottom:1px dotted var(--wisteria)}
+.row-popover .formula-lines>.tex:last-child{border-bottom:0}
+.row-popover .reference-lines{margin:5px 0}
+.row-popover .reference-lines>span{display:block;margin:0;padding:7px 2px;
+  border-bottom:1px dotted var(--wisteria)}
+.row-popover .reference-lines>span:last-child{border-bottom:0}
+.row-popover[hidden]{display:none}
+
+/* ---------- the checkbox (0.9px border, Royal Purple var(--purple)) ---------- */
+.cb{position:relative;flex:0 0 auto;margin-top:1px}
+.cb input{position:absolute;opacity:0;width:20px;height:20px;margin:0;cursor:pointer}
+.cb .bx{display:block;width:20px;height:20px;border:0.9px solid var(--purple);
+  border-radius:2px;background:var(--white-gold);transition:background .12s,border-color .12s}
+.cb input:hover+.bx{border-color:var(--purple-20);background:var(--lavender)}
+.cb input:focus-visible+.bx{outline:2px solid var(--gold-metal);outline-offset:2px}
+.cb input:checked+.bx{background:var(--purple);border-color:var(--purple)}
+.cb .bx::after{content:"";position:absolute;left:6.5px;top:2.5px;width:5px;height:10px;
+  border:solid var(--white-gold);border-width:0 2px 2px 0;transform:rotate(42deg) scale(0);
+  transition:transform .12s}
+.cb input:checked+.bx::after{transform:rotate(42deg) scale(1)}
+
+/* ---------- tally ---------- */
+.tally{font-family:var(--sans);font-size:11.5px;color:var(--graphite);
+  text-align:right;padding-top:7px}
+.tally b{color:var(--purple);font-size:13px}
+.tally.hot b{color:var(--gold-old)}
+
+/* ---------- nested progressive-disclosure (Module ▸ Topic) ---------- */
+.mod-d{margin:30px 0 8px;border-radius:3px;overflow:hidden;
+  border:0.9px solid var(--purple-deep)}
+.mod-d>summary{list-style:none;cursor:pointer;background:var(--purple-deep);
+  color:var(--white-gold);padding:13px 18px;display:flex;align-items:center;gap:14px}
+.mod-d>summary::-webkit-details-marker{display:none}
+.mod-d>summary .mod-h{font-family:var(--sans);font-size:18px;font-weight:700;flex:1}
+.mod-d>summary .mod-note{font-family:var(--sans);font-size:12px;color:var(--wisteria);
+  line-height:1.4;max-width:46%;text-align:right}
+.mod-d>summary .caret{font-family:var(--sans);font-size:13px;color:var(--gold-metal);
+  transition:transform .15s;flex:0 0 auto}
+.mod-d[open]>summary .caret{transform:rotate(90deg)}
+.mod-d>summary:focus-visible{outline:2px solid var(--gold-metal);outline-offset:-2px}
+.mbody{padding:6px 14px 12px;background:var(--offwhite)}
+
+.top-d{border:0.9px solid var(--platinum);border-radius:3px;margin:8px 0;background:#fff}
+.top-d>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;
+  padding:11px 14px}
+.top-d>summary::-webkit-details-marker{display:none}
+.top-d>summary:hover{background:var(--white-gold)}
+.top-d>summary:focus-visible{outline:2px solid var(--gold-metal);outline-offset:-2px}
+.top-d>summary .ts-h{font-family:var(--sans);font-size:15px;font-weight:700;
+  color:var(--purple);flex:1}
+.top-d>summary .ts-pn{font-family:var(--sans);font-size:11px;color:var(--slate-blue);
+  white-space:nowrap;display:none}
+@media(min-width:640px){.top-d>summary .ts-pn{display:inline}}
+.top-d>summary .tally{padding:0;font-size:11px;white-space:nowrap}
+.top-d>summary .caret{font-family:var(--sans);font-size:12px;color:var(--purple);
+  transition:transform .15s;flex:0 0 auto}
+.top-d[open]>summary .caret{transform:rotate(90deg)}
+.top-d[open]>summary{border-bottom:1px solid var(--gold-metal)}
+.tbody{padding:2px 14px 10px}
+.mod-tools{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 2px}
+.mod-tools button{font-family:var(--sans);font-size:11.5px;color:var(--purple);
+  background:#fff;border:0.9px solid var(--wisteria);border-radius:2px;padding:5px 10px;cursor:pointer}
+.mod-tools button:hover{background:var(--lavender);border-color:var(--purple)}
+
+/* ---------- maths ---------- */
+.m{font-family:var(--serif);white-space:nowrap}
+.m i{font-style:italic}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;
+  text-align:center;font-size:.82em;line-height:1.12;margin:0 .12em}
+.fr .nu{border-bottom:1px solid currentColor;padding:0 .22em}
+.fr .de{padding:0 .22em}
+.cv{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;
+  font-size:.85em;line-height:1.15;margin:0 .15em;padding:0 .28em;
+  border-left:1px solid currentColor;border-right:1px solid currentColor}
+.ovr{text-decoration:overline}
+math.inline-math{display:inline-block;margin:0 .04em;vertical-align:-.18em;
+  font-family:"STIX Two Math","Cambria Math","Times New Roman",serif;font-size:1em}
+
+/* ---------- struggle log ---------- */
+.log{margin-top:12px}
+.lrow{display:flex;gap:12px;align-items:flex-start;background:#fff;
+  border:0.9px solid var(--platinum);border-left:3px solid var(--wisteria);
+  border-radius:3px;padding:12px 14px;margin-bottom:10px}
+.lrow.filled{border-left-color:var(--purple)}
+.lrow .lc{flex:0 0 200px}
+.chip{display:inline-block;font-family:var(--sans);font-size:11.5px;font-weight:700;
+  color:var(--white-gold);background:var(--purple);padding:3px 8px;border-radius:2px;
+  letter-spacing:.3px}
+.lrow .lt{font-family:var(--sans);font-size:12px;color:var(--slate-blue);
+  margin-top:6px;line-height:1.35}
+.lrow .ld{flex:1}
+.lrow textarea{width:100%;min-height:58px;resize:vertical;font-family:var(--serif);
+  font-size:15px;line-height:1.45;padding:8px 10px;border:0.9px solid var(--silver);
+  border-radius:2px;background:var(--offwhite);color:var(--slate)}
+.lrow textarea:focus{outline:2px solid var(--gold-metal);outline-offset:1px;background:#fff}
+.lrow select{font-family:var(--sans);font-size:12.5px;padding:6px 8px;width:100%;
+  border:0.9px solid var(--silver);border-radius:2px;background:#fff;color:var(--slate)}
+.addrow{display:flex;align-items:center;gap:10px;margin-top:14px;flex-wrap:wrap;
+  background:var(--lavender);border:0.9px solid var(--wisteria);border-radius:6px;padding:10px 12px}
+.addrow label{font-family:var(--sans);font-size:12px;font-weight:700;color:var(--purple)}
+.picker{position:relative;flex:1;min-width:220px;font-family:var(--sans);font-size:12.5px}
+.picker>summary{list-style:none;cursor:pointer;padding:6px 30px 6px 8px;border:0.9px solid var(--silver);
+  border-radius:2px;background:#fff;color:var(--slate);position:relative}
+.picker>summary::-webkit-details-marker{display:none}
+.picker>summary::after{content:"\25BE";position:absolute;right:9px;color:var(--purple)}
+.picker>summary:focus-visible{outline:2px solid var(--gold-metal);outline-offset:1px}
+.pick-menu{position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:15;max-height:360px;
+  overflow:auto;background:#fff;border:0.9px solid var(--silver);border-radius:3px;
+  box-shadow:0 8px 22px rgba(20,11,44,.18)}
+.pick-group{padding:7px 10px 4px;font-size:10.5px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.45px;color:var(--purple);background:var(--lavender);position:sticky;top:0;z-index:1}
+.pick-item{display:flex;flex-wrap:wrap;align-items:center;border-bottom:1px solid var(--platinum)}
+.pick-item:last-child{border-bottom:0}
+.pick-add{flex:1;text-align:left;border:0;padding:8px 10px;background:#fff;color:var(--slate);
+  font-size:12px;font-weight:400;border-radius:0}
+.pick-add:hover,.pick-add:focus-visible{background:var(--white-gold);color:var(--purple)}
+.empty{color:var(--graphite);font-family:var(--sans);font-size:12px;font-style:normal}
+.lgroup{font-family:var(--sans);font-size:12px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.5px;color:var(--purple);margin:18px 0 6px;padding-bottom:3px;
+  border-bottom:1px solid var(--wisteria)}
+.lgroup:first-child{margin-top:0}
+.lrow .lchead{display:flex;align-items:center;gap:6px}
+.lrm{font-family:var(--sans);font-size:15px;line-height:1;color:var(--graphite);
+  background:transparent;border:0.9px solid var(--silver);border-radius:2px;
+  padding:0 7px 2px;cursor:pointer}
+.lrm:hover{color:var(--purple);border-color:var(--purple);background:var(--lavender)}
+
+/* ---------- questions ---------- */
+.q{background:#fff;border:0.9px solid var(--platinum);border-top:3px solid var(--purple);
+  border-radius:3px;padding:16px 18px;margin-bottom:14px}
+.q .qh{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}
+.q .qn{font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.7px;
+  text-transform:uppercase;color:var(--gold-old)}
+.q .qb{font-size:16px;margin:7px 0 12px}
+.q .qb .part{display:block;margin-left:16px;margin-top:4px}
+.q .qf{display:flex;gap:12px;align-items:center;flex-wrap:wrap;
+  border-top:1px solid var(--platinum);padding-top:11px}
+.q .qf label{font-family:var(--sans);font-size:13px;color:var(--slate);cursor:pointer}
+.q input[type=text]{flex:1;min-width:220px;font-family:var(--serif);font-size:14.5px;
+  padding:7px 10px;border:0.9px solid var(--silver);border-radius:2px;background:var(--offwhite)}
+.q.hard{background:var(--lavender);border-color:var(--wisteria);border-top-color:var(--purple)}
+.q .qf2{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:9px}
+.q .qf2 .tk{font-family:var(--sans);font-size:13px;color:var(--slate);cursor:pointer;
+  display:inline-flex;align-items:center;gap:6px}
+.q .qf2 .tf{flex:0 0 auto;width:140px;min-width:0;font-family:var(--sans);font-size:13.5px;
+  padding:6px 9px;border:0.9px solid var(--silver);border-radius:2px;background:var(--offwhite);color:var(--slate)}
+.q .qf2 .tf:disabled{opacity:.5;background:var(--platinum)}
+.q .qf2 .tf.bad{border-color:#B00020;background:#FFF3F3}
+.q .qf2 .hint{font-family:var(--sans);font-size:11.5px;color:var(--graphite)}
+
+/* ---------- footer bar ---------- */
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--purple-deep);
+  border-top:2px solid var(--gold-metal);z-index:20}
+.bar .inner{max-width:980px;margin:0 auto;padding:11px 22px;display:flex;
+  align-items:center;gap:16px;flex-wrap:wrap}
+.bar .st{font-family:var(--sans);font-size:13px;color:var(--white-gold);flex:1}
+.bar .st b{color:var(--gold-metal);font-size:16px}
+.bar .st span{color:var(--silver);font-size:12px}
+button{font-family:var(--sans);font-size:13px;font-weight:700;padding:8px 15px;
+  border-radius:2px;cursor:pointer;border:0.9px solid var(--silver);
+  background:transparent;color:var(--white-gold)}
+button:hover{background:var(--purple-20);border-color:var(--gold-metal)}
+button.pri{background:var(--purple);border-color:var(--gold-metal);color:var(--white-gold)}
+button.pri:hover{background:var(--amethyst)}
+button:focus-visible{outline:2px solid var(--gold-metal);outline-offset:2px}
+input:focus-visible,select:focus-visible{outline:2px solid var(--gold-metal);outline-offset:1px}
+input[type=email]:not(:placeholder-shown):invalid{border-color:#B00020;background:#FFF3F3}
+
+/* ---------- skip link (keyboard users) ---------- */
+.skip{position:absolute;left:-9999px;top:0;z-index:30;font-family:var(--sans);
+  font-size:13px;font-weight:700;background:var(--gold-metal);color:var(--purple-deep);
+  padding:8px 14px;border-radius:0 0 3px 0}
+.skip:focus{left:0}
+
+.note{font-family:var(--sans);font-size:12.5px;color:var(--graphite);margin:8px 0 0}
+.src{font-family:var(--sans);font-size:11px;color:var(--graphite);
+  border-top:1px solid var(--platinum);padding-top:14px;margin-top:34px}
+h2.sec{font-family:var(--sans);font-size:20px;color:var(--purple);
+  margin:44px 0 4px;padding-bottom:6px;border-bottom:2px solid var(--gold-metal)}
+p.lede{font-size:15.5px;margin:8px 0 16px}
+.saved{font-family:var(--sans);font-size:11.5px;color:var(--silver)}
+
+@media (max-width:680px){
+  .row .code{min-width:56px;font-size:10px}
+  .row-popover{flex-basis:calc(100% - 68px);margin-left:68px}
+  .lrow{flex-direction:column}
+  .lrow .lc{flex:none}
+  .idbar input{width:100%}
+}
+@media print{
+  .bar,.mast .idbar button{display:none}
+  body{background:#fff}
+  .wrap{padding-bottom:0}
+  .row,.q,.lrow,.card{break-inside:avoid}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* ── INK THEME #140B2C (CDR-0146) — CSEC Maths family ────────────────────────
+   ⚠️ INJECTED AT THE END OF THE STYLE BLOCK, not before it. This document has
+   no <head> element at all — it is a headless doctype+html+meta shell with one
+   inline <style> — so the usual "insert before <link rel="stylesheet" href="assets/css/alphamath.css">\n</head>" placement had nothing
+   to attach to and silently skipped the file. Appending inside the single
+   block puts the override last, which is what wins.                         */
+:root {
+  --purple:      #140B2C;
+  --purple-20:   #0C0619;
+  --purple-deep: #241348;
+  --amethyst:    #7E68C6;
+  --wisteria:    #BCB2DE;
+  --lavender:    #EAE6F5;
+  --paper:       #F6F2E8;
+  --sheet:       #FFFDF8;
+  --ink:         #252130;
+  --muted:       #5F6470;
+  --rule:        #DDD6C9;
+  --success:     #2D6A55;
+  --success-bg:  #E7F3EC;
+  --practice:    #8A5D16;
+  --practice-bg: #F8EED8;
+  --radius-lg:   16px;
+  --radius-md:   11px;
+  --shadow-card: 0 12px 30px rgba(36,19,72,.08);
+  --ease:        cubic-bezier(.2,.75,.25,1);
+}
+
+/* ── EXAM-PREP FIELD GUIDE ─────────────────────────────────────────────── */
+body{
+  background:
+    radial-gradient(circle at 8% 0%,rgba(200,169,81,.12),transparent 28rem),
+    linear-gradient(180deg,#FBF8F1 0,var(--paper) 42rem);
+  color:var(--ink);font-family:var(--sans);line-height:1.58
+}
+.wrap{max-width:1120px;padding:0 24px 150px}
+.mast{
+  position:relative;overflow:hidden;padding:24px 24px 22px;margin-bottom:22px;
+  background:linear-gradient(120deg,var(--purple-deep),#35205B 72%,#493063);
+  border-bottom:3px solid var(--gold-metal)
+}
+.mast::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.16;
+  background:repeating-linear-gradient(115deg,transparent 0 28px,rgba(255,255,255,.1) 29px 30px)}
+.mast .inner{position:relative;z-index:1;max-width:1120px}
+.mast h1{font-family:var(--serif);font-size:clamp(27px,3vw,38px);line-height:1.08}
+.mast h2{font-size:15px;margin-top:7px}
+.mast .meta{margin-top:8px}
+.mast .phase{display:inline-flex;gap:7px;align-items:center;margin-top:10px;padding:5px 9px;
+  border:1px solid rgba(211,175,55,.55);border-radius:999px;background:rgba(20,11,44,.35)}
+.idbar{display:grid;grid-template-columns:repeat(4,minmax(140px,1fr));gap:12px;margin-top:16px}
+.idbar+.idbar{grid-template-columns:repeat(3,minmax(180px,1fr));margin-top:10px}
+.idbar input,.idbar .short input{width:100%;min-height:44px;border-radius:7px;border-width:1px}
+
+.card{border:1px solid var(--rule);border-radius:var(--radius-md);padding:20px 22px;
+  background:var(--sheet);box-shadow:0 6px 20px rgba(36,19,72,.045)}
+.card.lav{background:linear-gradient(135deg,#F3F0F8,var(--sheet));border-color:#D7CFE8}
+.card.gold{background:var(--sheet);border-left:4px solid var(--gold)}
+.card h3{font-size:16px;letter-spacing:.01em}
+
+.progress-rail{position:sticky;top:12px;z-index:18;display:grid;grid-template-columns:220px 1fr;
+  gap:16px;align-items:center;margin:26px 0 30px;padding:14px 16px;
+  border:1px solid #D7CFE8;border-radius:var(--radius-lg);background:rgba(255,253,248,.96);
+  box-shadow:0 12px 34px rgba(36,19,72,.12);backdrop-filter:blur(12px)}
+.rail-kicker{display:block;color:var(--purple);font-size:10.5px;font-weight:800;
+  letter-spacing:.1em;text-transform:uppercase}
+.rail-overview strong{display:block;margin:2px 0 7px;font-size:15px;color:var(--ink)}
+.progress-track{height:7px;overflow:hidden;border-radius:99px;background:#E9E4DA}
+.progress-fill{display:block;width:0;height:100%;border-radius:inherit;
+  background:linear-gradient(90deg,var(--purple),var(--gold-metal));
+  transition:width .42s var(--ease)}
+.progress-fill.pulse{animation:progress-confirm .48s var(--ease)}
+.rail-summary{display:block;margin-top:5px;color:var(--muted);font-size:11.5px}
+.rail-items{display:grid;grid-template-columns:repeat(6,minmax(96px,1fr));gap:8px}
+.rail-item{--rail-accent:var(--purple);display:grid;grid-template-columns:7px 1fr;column-gap:8px;
+  min-height:54px;padding:8px 9px;color:var(--ink);text-decoration:none;border:1px solid var(--rule);
+  border-radius:9px;background:#fff;transition:transform .15s var(--ease),border-color .15s}
+.rail-item::before{content:"";grid-row:1/3;width:7px;border-radius:99px;background:var(--rail-accent);opacity:.75}
+.rail-item:hover,.rail-item:focus-visible{transform:translateY(-2px);border-color:var(--rail-accent)}
+.rail-item.is-complete{background:var(--success-bg);border-color:#B8D8C8}
+.rail-item b{font-size:11.5px;line-height:1.2}
+.rail-item small{color:var(--muted);font-size:10.5px;line-height:1.2}
+.completion-feedback{position:fixed;left:50%;bottom:92px;z-index:40;translate:-50% 12px;
+  padding:9px 14px;border-radius:999px;background:var(--purple-deep);color:var(--white-gold);
+  box-shadow:0 10px 30px rgba(20,11,44,.28);font-size:12.5px;font-weight:700;
+  opacity:0;pointer-events:none;transition:opacity .2s,translate .28s var(--ease)}
+.completion-feedback.show{opacity:1;translate:-50% 0}
+
+.mod-d{--section-accent:var(--amethyst);margin:30px 0 16px;border:1px solid var(--rule);
+  border-left:5px solid var(--section-accent);border-radius:var(--radius-lg);box-shadow:var(--shadow-card);
+  background:var(--sheet)}
+.mod-d>summary{padding:18px 20px;background:linear-gradient(100deg,var(--purple-deep),#35245A)}
+.mod-d>summary .mod-h{font-family:var(--serif);font-size:20px}
+.mod-d>summary .mod-note{max-width:42%;font-size:11.5px}
+.mod-progress{min-width:108px;text-align:right;font-size:11px;color:var(--white-gold)}
+.mod-progress b{display:block;color:var(--gold-metal);font-size:13px}
+.mbody{padding:10px 16px 18px;background:#FAF8F3}
+.mod-tools{justify-content:flex-end}
+.mod-tools button{min-height:36px;border-radius:7px}
+.top-d{overflow:hidden;margin:12px 0;border:1px solid var(--rule);border-radius:13px;
+  box-shadow:0 4px 12px rgba(36,19,72,.04)}
+.top-d>summary{min-height:58px;padding:13px 16px}
+.top-d>summary .ts-h{font-size:15.5px}
+.top-d[open]>summary{background:#FBF9F4;border-bottom:2px solid var(--section-accent)}
+.tbody{padding:8px 14px 14px;background:#fff}
+
+.row{display:grid;grid-template-columns:72px minmax(0,1fr) 44px;gap:8px 14px;
+  align-items:start;margin:8px 0;padding:13px 12px;border:1px solid #E8E2D8;border-radius:11px;
+  background:var(--sheet);transition:border-color .16s,box-shadow .16s,background .16s}
+.row:last-child{border-bottom:1px solid #E8E2D8}
+.row:hover{background:#FFFDF8;border-color:#CFC5B5;box-shadow:0 5px 16px rgba(36,19,72,.06)}
+.row .code{min-width:0;padding-top:4px;text-align:left}
+.row .code span{display:inline-block;padding:4px 7px;border-radius:999px;background:#EEE9F5;color:var(--purple)}
+.row .txt{font-family:var(--sans);font-size:15px;line-height:1.45}
+.row .txt{padding-top:3px}
+.row .txt b{display:block;margin:0;font-size:15.5px}
+.row .txt .desc{display:block;margin-top:4px;color:var(--muted);font-size:13px;
+  font-weight:500;line-height:1.45}
+.row.on{background:var(--practice-bg);border-color:#DDBF87;box-shadow:inset 4px 0 0 var(--practice)}
+.row.on:hover{background:var(--practice-bg)}
+.row.confident{background:var(--success-bg);border-color:#B8D8C8;box-shadow:inset 4px 0 0 var(--success)}
+.row.not-started{background:var(--sheet)}
+.row.next-focus{outline:3px solid #005FCC;outline-offset:3px;box-shadow:0 10px 26px rgba(0,95,204,.16)}
+.row-info{align-self:start;display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;
+  margin:0;border:1px solid #D8D0E7;border-radius:10px;background:#F5F1FA;color:var(--purple)}
+.row-info:hover,.row-info:focus-visible{background:var(--purple);color:#fff}
+.row-info svg{width:21px;height:21px}
+.status-group{grid-column:2/4;display:flex;gap:7px;flex-wrap:wrap}
+.status-btn{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:6px 10px;
+  border:1px solid var(--rule);border-radius:999px;background:#fff;color:var(--muted);
+  font-size:11.5px;font-weight:700}
+.status-btn::before{content:"";width:8px;height:8px;border-radius:50%;background:#A8A8A8}
+.status-btn[data-status="confident"]::before{background:var(--success)}
+.status-btn[data-status="practice"]::before{background:var(--practice)}
+.status-btn:hover{background:#F7F4ED;color:var(--ink);border-color:#BDB2A1}
+.status-btn.is-active[data-status="confident"]{background:var(--success);border-color:var(--success);color:#fff}
+.status-btn.is-active[data-status="practice"]{background:var(--practice);border-color:var(--practice);color:#fff}
+.status-btn.is-active[data-status="not-started"]{background:#5C6070;border-color:#5C6070;color:#fff}
+.status-btn.is-active::before{background:currentColor}
+.row-popover{grid-column:2/4;margin:2px 0 0;padding:0;border:1px solid #CFC4E2;
+  border-radius:12px;background:#FBF9FF;box-shadow:0 10px 24px rgba(36,19,72,.12);
+  font-family:var(--sans);font-size:14px;overflow:hidden}
+.formula-card-body{padding:6px 8px;overflow-x:auto;font-family:var(--serif);
+  font-size:15px;line-height:1.55;color:var(--ink)}
+.formula-guide{margin:0;border:0;border-radius:0;overflow:hidden;background:transparent}
+.formula-row{display:flex;align-items:baseline;justify-content:center;gap:.38em;
+  flex-wrap:wrap;padding:12px;border-bottom:1px solid #E9E2F1;text-align:center}
+.formula-row:last-child{border-bottom:0}
+.formula-expression{display:inline-flex;min-width:0;max-width:100%;overflow-x:auto;
+  padding:2px 0;text-align:center;vertical-align:middle}
+.formula-note{margin-top:8px;color:var(--graphite);font-family:var(--sans);font-size:12px}
+.topic-reference{margin-top:12px;padding:11px 12px;border-left:3px solid var(--gold-metal);
+  border-radius:0 7px 7px 0;background:#F5F1E6;font-family:var(--sans);font-size:12.5px;
+  line-height:1.5;color:var(--muted)}
+.topic-reference b{display:block;margin-bottom:3px;color:var(--purple);font-size:10px;
+  letter-spacing:.08em;text-transform:uppercase}
+.row-popover .ref-table th,.row-popover .ref-table td{padding:7px 14px 7px 0}
+.row-popover .formula-lines>.tex,.row-popover .reference-lines>span{padding:9px 3px}
+
+.lrow{border-radius:11px;padding:15px 16px;border-left-width:4px}
+.lrow textarea{min-height:76px;border-radius:8px;font-family:var(--sans)}
+.empty-state{padding:18px;border:1px dashed #CABFAD;border-radius:11px;background:#FBF9F4;
+  color:var(--muted);text-align:center}
+.addrow{border-radius:11px}
+.picker>summary{min-height:42px;padding:9px 34px 9px 10px;border-radius:8px}
+.pick-add{min-height:44px}
+
+.question-stack{display:flex;flex-direction:column}
+.q{border-radius:13px;padding:18px 20px;border-top:4px solid var(--purple);box-shadow:0 5px 16px rgba(36,19,72,.05)}
+.q .qh{align-items:center}
+.qwhy{max-width:520px;padding:7px 10px;border-radius:8px;background:#F3EFE6;color:var(--muted);
+  font-size:11.5px;line-height:1.35}
+.qwhy.is-match{background:var(--practice-bg);color:#67430D}
+.q .qb{font-family:var(--serif);font-size:16.5px}
+
+.bar .inner{max-width:1120px;min-height:66px}
+.bar .st{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+.bar .st strong{color:var(--gold-metal);font-size:16px}
+.next-action{min-height:44px;background:var(--gold-metal);border-color:var(--gold-metal);color:var(--purple-deep)}
+.next-action:hover{background:#E0C35F;color:var(--purple-deep)}
+.share-actions{position:relative;font-family:var(--sans)}
+.share-actions>summary{list-style:none;min-height:44px;display:flex;align-items:center;padding:8px 14px;
+  border:1px solid var(--silver);border-radius:7px;color:var(--white-gold);cursor:pointer;font-size:12.5px;font-weight:700}
+.share-actions>summary::-webkit-details-marker{display:none}
+.share-actions>summary::after{content:"⋯";margin-left:8px;color:var(--gold-metal);font-size:17px}
+.share-menu{position:absolute;right:0;bottom:calc(100% + 10px);display:grid;gap:6px;min-width:210px;
+  padding:9px;border:1px solid #D7CFE8;border-radius:11px;background:var(--purple-deep);
+  box-shadow:0 12px 30px rgba(20,11,44,.28)}
+.share-menu button{width:100%;text-align:left;min-height:40px}
+button:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,
+.rail-item:focus-visible{outline:3px solid #005FCC!important;outline-offset:3px!important}
+.cb{width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;margin-top:0}
+.cb input{width:44px;height:44px}
+.cb .bx{width:24px;height:24px}
+.cb .bx::after{left:18px;top:13px}
+
+@keyframes progress-confirm{
+  0%{filter:brightness(1);transform:scaleY(1)}
+  45%{filter:brightness(1.35);transform:scaleY(1.7)}
+  100%{filter:brightness(1);transform:scaleY(1)}
+}
+
+@media(max-width:900px){
+  .progress-rail{position:relative;top:auto;grid-template-columns:1fr}
+  .rail-items{display:flex;overflow-x:auto;padding-bottom:3px;scroll-snap-type:x proximity}
+  .rail-item{min-width:132px;scroll-snap-align:start}
+  .idbar,.idbar+.idbar{grid-template-columns:repeat(2,minmax(140px,1fr))}
+  .mod-d>summary{align-items:flex-start;flex-wrap:wrap}
+  .mod-d>summary .mod-note{order:4;max-width:100%;text-align:left}
+}
+@media(max-width:680px){
+  .wrap{padding:0 14px 170px}
+  .mast{padding:20px 16px}
+  .mast .phase{display:flex;max-width:max-content;flex-wrap:wrap}
+  .mast .meta{line-height:1.5}
+  .idbar,.idbar+.idbar{grid-template-columns:1fr}
+  .progress-rail{margin:18px 0 22px;padding:12px;border-radius:12px}
+  .mod-tools{display:none}
+  .row{grid-template-columns:1fr 44px;padding:13px 11px;scroll-margin-top:16px}
+  .row .code{grid-column:1/2}
+  .row .txt{grid-column:1/2}
+  .row-info{grid-column:2;grid-row:1/3}
+  .status-group,.row-popover{grid-column:1/3}
+  .status-group{display:grid;grid-template-columns:repeat(3,1fr)}
+  .status-btn{justify-content:center;min-height:44px;padding:7px 5px;font-size:10.5px}
+  .row-popover{margin-left:0}
+  .mod-progress{width:100%;text-align:left}
+  .bar .inner{display:grid;grid-template-columns:1fr auto;gap:8px 10px;
+    padding:9px 14px calc(9px + env(safe-area-inset-bottom))}
+  .bar .st{grid-column:1/3;font-size:11.5px}
+  .next-action{grid-column:1}
+  .share-actions{grid-column:2}
+  .completion-feedback{bottom:128px;max-width:calc(100vw - 24px);text-align:center}
+}
+@media print{
+  @page{size:A4;margin:15mm}
+  .progress-rail,.completion-feedback,.bar,.mod-tools,.row-info,.formula-card-close{display:none!important}
+  .mod-d,.top-d{break-inside:auto;box-shadow:none}
+  .mod-d,.top-d,.row,.q,.lrow{background:#fff!important}
+  .mod-d>summary{background:#fff!important;color:#000;border-bottom:2px solid #000}
+  .mod-d>summary *{color:#000!important}
+  .status-btn:not(.is-active){display:none}
+  .status-btn.is-active{background:#fff!important;color:#000!important;border-color:#777!important}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .progress-fill,.completion-feedback,.rail-item{transition:none!important;animation:none!important}
+}
+
+/* Corrective navigation + progress-panel readability pass (2026-07-29). */
+.intake-suite-nav{
+  position:relative;z-index:20;border-bottom:1px solid #D8D0C3;
+  background:rgba(255,253,248,.97);box-shadow:0 4px 14px rgba(36,19,72,.05)
+}
+.intake-suite-nav .intake-nav-inner{
+  display:flex;align-items:center;gap:5px;width:min(1120px,calc(100% - 36px));
+  margin:0 auto;padding:8px 0;overflow-x:auto;scrollbar-width:thin
+}
+.intake-suite-nav a{
+  flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;
+  min-height:44px;padding:8px 13px;border-radius:9px;color:#5F6470;
+  text-decoration:none;font-family:var(--sans);font-size:13px;font-weight:750;
+  white-space:nowrap
+}
+.intake-suite-nav a:first-child{color:var(--purple);border:1px solid #D7CFE8;background:#F7F3FC}
+.intake-suite-nav a:hover,.intake-suite-nav a:focus-visible,
+.intake-suite-nav a[aria-current="page"]{color:var(--purple);background:#EAE6F5}
+.mast-back{
+  position:relative;z-index:2;display:inline-flex;align-items:center;min-height:44px;
+  margin:0 0 12px;padding:7px 11px;border:1px solid rgba(255,255,255,.35);
+  border-radius:9px;background:rgba(255,255,255,.1);color:#FFFDF8;
+  font-family:var(--sans);font-size:13px;font-weight:750;text-decoration:none
+}
+.mast-back:hover,.mast-back:focus-visible{background:#FFFDF8;color:var(--purple)}
+
+.progress-rail{grid-template-columns:minmax(230px,260px) minmax(0,1fr);gap:18px}
+.rail-items{grid-template-columns:repeat(5,minmax(132px,1fr));gap:10px}
+.rail-item{
+  grid-template-columns:8px minmax(0,1fr);column-gap:10px;min-height:70px;
+  padding:10px 11px
+}
+.rail-item::before{width:8px}
+.rail-item b{font-size:13.5px;line-height:1.28;overflow-wrap:anywhere}
+.rail-item small{font-size:12px;line-height:1.35;overflow-wrap:anywhere}
+@media(max-width:1040px){
+  .progress-rail{position:relative;top:auto;grid-template-columns:1fr}
+  .rail-items{display:flex;overflow-x:auto;padding:2px 0 8px;scroll-snap-type:x proximity}
+  .rail-item{flex:0 0 184px;min-width:184px;scroll-snap-align:start}
+}
+@media(max-width:680px){
+  .intake-suite-nav .intake-nav-inner{width:calc(100% - 20px)}
+  .intake-suite-nav a{padding-inline:11px;font-size:12.5px}
+  .rail-item{flex-basis:172px;min-width:172px;min-height:74px}
+  .rail-item b{font-size:13px}
+  .rail-item small{font-size:11.5px}
+  .formula-row{gap:.32em;padding:11px 8px}
+  .formula-expression .katex{font-size:1.02em}
+}
+</style>
+
+<a class="skip" href="#modules">Skip to the checklist</a>
+
+<aside class="review-notice" role="note">
+  <strong>Sanitized reviewer demonstration</strong>
+  <span>No real student identity, submitted response, roster mapping, or reproduced CSEC past-paper question is included. Entries stay in this browser unless a tutor explicitly connects the evidence API.</span>
+</aside>
+<div class="mast"><div class="inner">
+  <a class="mast-back" href="index.html">← Suite home</a>
+  <h1>CSEC Additional Mathematics</h1>
+  <h2>Towards a Personalized Learning Plan</h2>
+  <div class="phase"><b>Phase 1</b> &middot; Learning-Readiness Self-Assessment &mdash; <i>knowing what you don't know</i> &mdash; <span class="yet">yet</span></div>
+  <div class="meta">AlphaMath Program &nbsp;·&nbsp; Fifth Form &nbsp;·&nbsp; Sitting June 2027 &nbsp;·&nbsp; CXC 37/G/SYLL 18 · Amended 2020</div>
+  <div class="idbar">
+    <div class="short"><label for="sid">Learner ID</label><input id="sid" type="text" value="REVIEW-DEMO" autocomplete="off"></div>
+    <div><label for="sc">School</label><input id="sc" type="text" autocomplete="organization" placeholder="Your school"></div>
+    <div><label for="nm">Name</label><input id="nm" type="text" autocomplete="name"></div>
+    <div><label for="se">Your Email</label><input id="se" type="email" autocomplete="email" placeholder="you@example.com"></div>
+    <div class="short"><label for="dt">Date</label><input id="dt" type="date"></div>
+  </div>
+  <div class="idbar">
+    <div><label for="tn">Tutor</label><input id="tn" type="text" placeholder="Tutor's name"></div>
+    <div><label for="te">Tutor Email</label><input id="te" type="email" placeholder="tutor@example.com"></div>
+    <div class="short"><label for="tp">Tutor Phone</label><input id="tp" type="tel" placeholder="(xxx) xxx-xxxx"></div>
+  </div>
+</div></div>
+
+<nav class="intake-suite-nav" aria-label="AlphaMath suite">
+  <div class="intake-nav-inner">
+    <a href="index.html" aria-label="Return to AlphaMath suite home">← Suite home</a>
+    <a href="intake.html" aria-current="page">Intake</a>
+    <a href="learning-path.html">Learning path</a>
+    <a href="tutorial.html">Tutorial</a>
+    <a href="simulated-exam.html">Simulated exam</a>
+    <a href="dashboard.html">Dashboard</a>
+  </div>
+</nav>
+
+<main class="wrap" id="main">
+
+<div class="card lav">
+  <h3>How to fill this in</h3>
+  <ol>
+    <li>Review each sub-topic and choose <b>Confident</b>, <b>Needs practice</b>, or <b>Not started</b>.</li>
+    <li>This is not graded. Its purpose is to identify the most useful starting point for your personalized learning plan.</li>
+    <li>Anything marked <b>Needs practice</b> appears automatically in <b>Your Practice List</b>. Describe the first step where your confidence drops.</li>
+  </ol>
+  <div class="eg">
+    <div class="good"><b>Useful</b><p>"A1.2.2 — I can complete the square, but I am unsure how the sign of the squared-term coefficient tells me whether the turning point is a minimum or maximum."</p></div>
+    <div class="bad"><b>Too broad</b><p>"Quadratics are hard."</p></div>
+  </div>
+  <p class="note">Precise notes help the tutor choose a focused worked example instead of repeating an entire topic.</p>
+</div>
+
+
+<div class="card prerequisite-card">
+  <h3>Check the CSEC Mathematics foundation first</h3>
+  <p style="margin:0 0 10px">Additional Mathematics assumes fluent fraction arithmetic, algebraic manipulation, index laws, solving linear and quadratic equations, and coordinate gradients. If one of these foundations is not yet secure, record the Add Maths topic honestly and repair the prerequisite through the CSEC Mathematics pathway before continuing.</p>
+  <a class="foundation-link" href="../intake.html">Open the CSEC Mathematics foundation check →</a>
+  <p class="note">“Not started” means the Add Maths topic has not been taught yet. “Needs practice” means you have met the topic but cannot yet complete the method independently.</p>
+</div>
+
+<div class="card gold">
+  <h3>Read this before you tick a single box</h3>
+  <p style="margin:0 0 8px">A right answer with <b>no working</b> scores badly on Paper 2. A wrong answer with <b>clear, correct working</b> still earns method marks. So the test for "I can do this" is not <i>can I get the answer</i> — it is:</p>
+  <p style="margin:0 0 8px;padding-left:14px;border-left:2px solid var(--gold)">Can I write <b>Given that…</b> → <b>name the operation</b> before I do it → <b>one step per line</b>, equals signs aligned → a <b>Check</b> line → <b>∴</b> and a <b>boxed final answer with its units</b>?</p>
+  <p style="margin:0"><b>If you cannot do that yet, choose “Needs practice.”</b></p>
+</div>
+
+<nav class="progress-rail" aria-label="Assessment progress">
+  <div class="rail-overview">
+    <span class="rail-kicker">Field guide progress</span>
+    <strong><span id="reviewedCount">0</span> of 85 topics reviewed</strong>
+    <div class="progress-track" role="progressbar" aria-label="Topics reviewed" aria-valuemin="0" aria-valuemax="85" aria-valuenow="0">
+      <span class="progress-fill" id="progressFill"></span>
+    </div>
+    <span class="rail-summary" id="progressSummary" aria-live="polite">Choose a status to begin.</span>
+  </div>
+  <div class="rail-items" id="railItems"></div>
+</nav>
+<div class="completion-feedback" id="completionFeedback" role="status" aria-live="polite"></div>
+
+<div id="modules"></div>
+
+<h2 class="sec">Where the algebra spine shows up</h2>
+<p class="lede">Polynomial fluency, quadratics, indices, surds, and logarithms run underneath coordinate geometry, trigonometry, calculus, probability, and statistics. Strengthening this algebra spine protects marks across every section.</p>
+<div class="card"><ul id="cross"></ul></div>
+
+<h2 class="sec" id="practice-list">Your Practice List</h2>
+<p class="lede">Every topic marked <b>Needs practice</b> appears here, grouped by topic. Name the first step where your confidence drops. You can also add or remove topics here without scrolling back up.</p>
+<div class="log" id="log"></div>
+
+<h2 class="sec" id="practice-questions">Your Five Practice Questions</h2>
+<p class="lede" id="practiceIntro">These questions are ordered around the topics you identify. Each card explains why it appears in your practice set. Work on paper, show every step, and record where your method first becomes uncertain.</p>
+<div id="qs" class="question-stack"></div>
+
+<div class="src">
+  Source: CXC® CSEC® Additional Mathematics Syllabus, CXC 37/G/SYLL 18, Amended 2020. The established 85-code A1.*–A4.* taxonomy is preserved for intake, tracker, and evidence compatibility.
+  <br>Palette: Marion Sydney Classic — Royal Purple var(--purple), Marion Gold #C8A951, Silver #C0C0C0.
+</div>
+</main>
+
+<div class="bar"><div class="inner">
+  <div class="st"><strong id="reviewedBar">0</strong> reviewed <span aria-hidden="true">·</span> <b id="cnt">0</b> topics identified <span id="sv" class="saved" role="status" aria-live="polite"></span></div>
+  <button type="button" class="next-action" id="nextFlagged" onclick="nextFlagged()">Next topic to practise</button>
+  <details class="share-actions">
+    <summary>Share / export</summary>
+    <div class="share-menu">
+      <button type="button" onclick="window.print()">Print field guide</button>
+      <button type="button" onclick="download()">Download my answers</button>
+      <button type="button" onclick="submitIntakeToDatabase()">Submit to PostgreSQL</button>
+      <span id="databaseStatus" class="database-status" role="status" aria-live="polite">Local draft only.</span>
+    </div>
+  </details>
+</div></div>
+
+<script src="assets/vendor/katex/katex.min.js"></script>
+<script src="assets/js/runtime-config.js"></script>
+<script src="assets/js/suite.js"></script>
+<script>
+const DATA = {
+  "modules": [
+    {
+      "id": "A1",
+      "name": "Section 1 — Algebra, Sequences and Series",
+      "note": "Paper 1: 15 items. Paper 2: two compulsory questions, 15 marks each. The algebra spine of the whole course.",
+      "topics": [
+        {
+          "id": "A1.1",
+          "name": "Algebra",
+          "note": "Sub-topics: 5",
+          "items": [
+            {
+              "code": "A1.1.1",
+              "t": "Operations on polynomial & rational expressions",
+              "n": "Add, subtract, multiply, divide and factorise polynomial and rational (algebraic-fraction) expressions."
+            },
+            {
+              "code": "A1.1.2",
+              "t": "Factorising polynomials (degree ≤ 4)",
+              "n": "Factorise a polynomial of degree ≤ 4 into real linear factors; divide a polynomial by a linear or quadratic factor."
+            },
+            {
+              "code": "A1.1.3",
+              "t": "Remainder Theorem",
+              "n": "Find the remainder when a polynomial is divided by a linear expression."
+            },
+            {
+              "code": "A1.1.4",
+              "t": "Factor Theorem",
+              "n": "Use the Factor Theorem to find factors of a polynomial."
+            },
+            {
+              "code": "A1.1.5",
+              "t": "Unknown coefficients via the Factor Theorem",
+              "n": "Evaluate unknown coefficients in a polynomial using the Factor Theorem."
+            }
+          ]
+        },
+        {
+          "id": "A1.2",
+          "name": "Quadratics",
+          "note": "Sub-topics: 7",
+          "items": [
+            {
+              "code": "A1.2.1",
+              "t": "Completing the square",
+              "n": "Express ax²+bx+c in the form a(x+h)²+k, finding h and k."
+            },
+            {
+              "code": "A1.2.2",
+              "t": "Max/min value and range",
+              "n": "Find the maximum or minimum value and the range of a quadratic by completing the square."
+            },
+            {
+              "code": "A1.2.3",
+              "t": "Sketching quadratic graphs",
+              "n": "Sketch a quadratic showing the max/min point and the intercepts on the axes."
+            },
+            {
+              "code": "A1.2.4",
+              "t": "Nature of roots (discriminant)",
+              "n": "Use D = b²−4ac to determine the nature of the roots of a quadratic equation."
+            },
+            {
+              "code": "A1.2.5",
+              "t": "Equations reducible to a quadratic",
+              "n": "Solve equations reducible to a quadratic, e.g. x⁴−6x²+8=0 or x−2√x+1=0."
+            },
+            {
+              "code": "A1.2.6",
+              "t": "Sum and product of roots",
+              "n": "Use the relationship between the sum and product of the roots and the coefficients of ax²+bx+c=0."
+            },
+            {
+              "code": "A1.2.7",
+              "t": "Linear + non-linear simultaneous equations",
+              "n": "Solve two simultaneous equations, one linear and one non-linear (including a circle)."
+            }
+          ]
+        },
+        {
+          "id": "A1.3",
+          "name": "Inequalities",
+          "note": "Sub-topics: 2",
+          "items": [
+            {
+              "code": "A1.3.1",
+              "t": "Quadratic inequalities",
+              "n": "Determine the solution set of a quadratic inequality in one unknown, algebraically or graphically."
+            },
+            {
+              "code": "A1.3.2",
+              "t": "Rational inequalities",
+              "n": "Solve inequalities of the form (ax+b)/(cx+d) > 0, ≥ 0, < 0, ≤ 0; give the solution in set-builder notation."
+            }
+          ]
+        },
+        {
+          "id": "A1.4",
+          "name": "Surds, Indices and Logarithms",
+          "note": "Sub-topics: 7",
+          "items": [
+            {
+              "code": "A1.4.1",
+              "t": "Operations with surds",
+              "n": "Add, subtract and multiply surds, and rationalise denominators."
+            },
+            {
+              "code": "A1.4.2",
+              "t": "Laws of indices / exponential equations",
+              "n": "Use the laws of indices to solve exponential equations reducible to linear or quadratic form."
+            },
+            {
+              "code": "A1.4.3",
+              "t": "Index ↔ logarithm relationship",
+              "n": "Use logₐb = c ⇔ aᶜ = b."
+            },
+            {
+              "code": "A1.4.4",
+              "t": "Laws of logarithms",
+              "n": "Simplify using log(PQ)=logP+logQ, log(P/Q)=logP−logQ, log Pᵇ=b logP, logₐa=1, logₐ1=0 (change of base excluded)."
+            },
+            {
+              "code": "A1.4.5",
+              "t": "Logarithmic equations",
+              "n": "Solve logarithmic equations."
+            },
+            {
+              "code": "A1.4.6",
+              "t": "Solving aˣ = b with logs",
+              "n": "Use logarithms to solve equations of the form aˣ = b."
+            },
+            {
+              "code": "A1.4.7",
+              "t": "Linear reduction using logs",
+              "n": "Apply logarithms to transform a given relationship to linear form."
+            }
+          ]
+        },
+        {
+          "id": "A1.5",
+          "name": "Sequences and Series",
+          "note": "Sub-topics: 7",
+          "items": [
+            {
+              "code": "A1.5.1",
+              "t": "Sequences and the nth term",
+              "n": "Define a sequence; write a specific term from the formula for the nth term."
+            },
+            {
+              "code": "A1.5.2",
+              "t": "Series and Σ notation",
+              "n": "Define a series as the sum of a sequence; use summation (Σ) notation."
+            },
+            {
+              "code": "A1.5.3",
+              "t": "Arithmetic vs geometric series",
+              "n": "Identify arithmetic and geometric series."
+            },
+            {
+              "code": "A1.5.4",
+              "t": "General terms and sums",
+              "n": "Derive and use the general term and the sum of finite arithmetic, and finite & infinite geometric series."
+            },
+            {
+              "code": "A1.5.5",
+              "t": "Convergence and divergence",
+              "n": "Arithmetic series diverge (except zero common difference); geometric series converge only when −1 < r < 1."
+            },
+            {
+              "code": "A1.5.6",
+              "t": "Sum to infinity",
+              "n": "Find the sum of a convergent geometric series."
+            },
+            {
+              "code": "A1.5.7",
+              "t": "Series in real-world problems",
+              "n": "Apply arithmetic and geometric series to problems such as investments."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "A2",
+      "name": "Section 2 — Coordinate Geometry, Vectors and Trigonometry",
+      "note": "Paper 1: 15 items. Paper 2: one compulsory question, 20 marks.",
+      "topics": [
+        {
+          "id": "A2.1",
+          "name": "Coordinate Geometry",
+          "note": "Sub-topics: 7",
+          "items": [
+            {
+              "code": "A2.1.1",
+              "t": "Equation of a straight line",
+              "n": "Find the equation of a straight line (y=mx+c or ax+by+c=0)."
+            },
+            {
+              "code": "A2.1.2",
+              "t": "Parallel and perpendicular lines",
+              "n": "Use gradients to decide whether lines are parallel or mutually perpendicular."
+            },
+            {
+              "code": "A2.1.3",
+              "t": "Intersection of two lines",
+              "n": "Determine the point of intersection of two straight lines."
+            },
+            {
+              "code": "A2.1.4",
+              "t": "Equation of a circle",
+              "n": "Write the equation of a circle: (x+f)²+(y+g)²=r² or x²+y²+2fx+2gy+c=0."
+            },
+            {
+              "code": "A2.1.5",
+              "t": "Centre and radius of a circle",
+              "n": "Determine the centre and radius of a given circle."
+            },
+            {
+              "code": "A2.1.6",
+              "t": "Tangents and normals to a circle",
+              "n": "Find the equations of tangents and normals at given points on a circle."
+            },
+            {
+              "code": "A2.1.7",
+              "t": "Circle meets a line",
+              "n": "Determine the point(s) of intersection of a circle with a straight line."
+            }
+          ]
+        },
+        {
+          "id": "A2.2",
+          "name": "Vectors",
+          "note": "Sub-topics: 8",
+          "items": [
+            {
+              "code": "A2.2.1",
+              "t": "Scalar vs vector quantities",
+              "n": "Distinguish scalar and vector quantities (distance/displacement, speed/velocity)."
+            },
+            {
+              "code": "A2.2.2",
+              "t": "Expressing a vector",
+              "n": "Express a 2-D vector as a column (x, y) or as xi + yj."
+            },
+            {
+              "code": "A2.2.3",
+              "t": "Vector algebra",
+              "n": "Identify equal vectors; add and subtract vectors; multiply a vector by a scalar."
+            },
+            {
+              "code": "A2.2.4",
+              "t": "Unit vectors",
+              "n": "Use unit vectors."
+            },
+            {
+              "code": "A2.2.5",
+              "t": "Position and displacement vectors",
+              "n": "Find position and displacement vectors."
+            },
+            {
+              "code": "A2.2.6",
+              "t": "Magnitude and direction",
+              "n": "Find the modulus (magnitude) and direction of a vector."
+            },
+            {
+              "code": "A2.2.7",
+              "t": "Scalar (dot) product and angle",
+              "n": "Find the scalar product from components or from magnitudes; find the angle between two vectors."
+            },
+            {
+              "code": "A2.2.8",
+              "t": "Parallel and perpendicular vectors",
+              "n": "Apply the properties of parallel and perpendicular vectors."
+            }
+          ]
+        },
+        {
+          "id": "A2.3",
+          "name": "Trigonometry",
+          "note": "Sub-topics: 10",
+          "items": [
+            {
+              "code": "A2.3.1",
+              "t": "Radians and conversions",
+              "n": "Define the radian; convert between degrees and radians."
+            },
+            {
+              "code": "A2.3.2",
+              "t": "Arc length and sector area",
+              "n": "Use l = rθ and A = ½r²θ."
+            },
+            {
+              "code": "A2.3.3",
+              "t": "Trig ratios for any angle",
+              "n": "Evaluate sine, cosine and tangent for angles of any size, in degrees or radians."
+            },
+            {
+              "code": "A2.3.4",
+              "t": "Exact values (special angles)",
+              "n": "Give exact sin, cos and tan for 0, π/6, π/4, π/3, π/2 and related angles."
+            },
+            {
+              "code": "A2.3.5",
+              "t": "Graphs of sin/cos/tan",
+              "n": "Draw graphs of sin kx, cos kx, tan kx (k = 1 or 2) for 0 ≤ x ≤ 2π; amplitude and periodicity."
+            },
+            {
+              "code": "A2.3.6",
+              "t": "Fundamental identities",
+              "n": "Use cos²θ + sin²θ ≡ 1 and tan θ ≡ sin θ / cos θ."
+            },
+            {
+              "code": "A2.3.7",
+              "t": "Compound-angle formulae",
+              "n": "Use sin(A±B), cos(A±B) and tan(A±B)."
+            },
+            {
+              "code": "A2.3.8",
+              "t": "Double-angle identities",
+              "n": "Derive and use the identities for sin 2x, cos 2x and tan 2x."
+            },
+            {
+              "code": "A2.3.9",
+              "t": "Proving identities",
+              "n": "Prove simple trigonometric identities."
+            },
+            {
+              "code": "A2.3.10",
+              "t": "Solving trig equations",
+              "n": "Solve trigonometric equations for 0 ≤ θ ≤ 2π (general solution excluded)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "A3",
+      "name": "Section 3 — Introductory Calculus",
+      "note": "Paper 1: 10 items. Paper 2: two compulsory questions, 15 marks each. Highest Paper-2 weight.",
+      "topics": [
+        {
+          "id": "A3.1",
+          "name": "Differentiation",
+          "note": "Sub-topics: 11",
+          "items": [
+            {
+              "code": "A3.1.1",
+              "t": "Derivative as a gradient",
+              "n": "Use the derivative at x = c as the gradient of the tangent to the curve at that point."
+            },
+            {
+              "code": "A3.1.2",
+              "t": "Derivative as a limit; notation",
+              "n": "Understand the derivative as a limit (intuitive approach); use f′(x) and dy/dx."
+            },
+            {
+              "code": "A3.1.3",
+              "t": "Differentiating xⁿ",
+              "n": "Use d/dx xⁿ = n xⁿ⁻¹ for any real n."
+            },
+            {
+              "code": "A3.1.4",
+              "t": "Differentiating sin ax, cos ax",
+              "n": "Differentiate sin ax and cos ax."
+            },
+            {
+              "code": "A3.1.5",
+              "t": "Sum and multiple rules",
+              "n": "Differentiate sums and multiples of polynomials and trigonometric functions."
+            },
+            {
+              "code": "A3.1.6",
+              "t": "Chain rule",
+              "n": "Apply the chain rule to differentiate composite functions."
+            },
+            {
+              "code": "A3.1.7",
+              "t": "Product and quotient rules",
+              "n": "Differentiate products and quotients of simple polynomials and trig functions."
+            },
+            {
+              "code": "A3.1.8",
+              "t": "Tangents and normals to curves",
+              "n": "Determine the equations of tangents and normals to curves."
+            },
+            {
+              "code": "A3.1.9",
+              "t": "Second derivative",
+              "n": "Calculate the second derivative f″(x)."
+            },
+            {
+              "code": "A3.1.10",
+              "t": "Rates of change & kinematics",
+              "n": "Use the derivative as a rate of change; kinematics (v = dx/dt, a = dv/dt); related rates for area and volume."
+            },
+            {
+              "code": "A3.1.11",
+              "t": "Stationary points",
+              "n": "Find stationary points; determine their nature from the sign change of the first derivative or from the second derivative."
+            }
+          ]
+        },
+        {
+          "id": "A3.2",
+          "name": "Integration",
+          "note": "Sub-topics: 8",
+          "items": [
+            {
+              "code": "A3.2.1",
+              "t": "Integration as anti-differentiation",
+              "n": "Recognise integration as the reverse of differentiation (anti-derivatives)."
+            },
+            {
+              "code": "A3.2.2",
+              "t": "Indefinite integrals (+ C)",
+              "n": "Use ∫ f(x) dx; the indefinite integral is a family of functions differing by a constant."
+            },
+            {
+              "code": "A3.2.3",
+              "t": "Sum and multiple rules",
+              "n": "Integrate sums and multiples of functions."
+            },
+            {
+              "code": "A3.2.4",
+              "t": "Integrating (ax ± b)ⁿ",
+              "n": "Integrate functions of the form (ax ± b)ⁿ where n ≠ −1."
+            },
+            {
+              "code": "A3.2.5",
+              "t": "Integrating simple trig",
+              "n": "Integrate a sin px ± b cos qx."
+            },
+            {
+              "code": "A3.2.6",
+              "t": "Definite integrals",
+              "n": "Compute definite integrals: ∫ₐᵇ f(x) dx = [F(x)]ₐᵇ = F(b) − F(a)."
+            },
+            {
+              "code": "A3.2.7",
+              "t": "Equation of a curve from its gradient",
+              "n": "Find the equation of a curve given its gradient function and a point on the curve."
+            },
+            {
+              "code": "A3.2.8",
+              "t": "Applications: area, volume, kinematics",
+              "n": "Area in the first quadrant; volume of revolution about the x-axis (degree ≤ 2); displacement from velocity and velocity from acceleration."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "A4",
+      "name": "Section 4 — Probability and Statistics",
+      "note": "Paper 1: 5 items. Paper 2: one compulsory question, 20 marks.",
+      "topics": [
+        {
+          "id": "A4.1",
+          "name": "Data Representation and Analysis",
+          "note": "Sub-topics: 7",
+          "items": [
+            {
+              "code": "A4.1.1",
+              "t": "Types of data",
+              "n": "Distinguish qualitative/quantitative and discrete/continuous data."
+            },
+            {
+              "code": "A4.1.2",
+              "t": "Quartiles and percentiles",
+              "n": "Determine quartiles and percentiles from raw and grouped data; range, interquartile range, semi-interquartile range."
+            },
+            {
+              "code": "A4.1.3",
+              "t": "Stem-and-leaf & box-and-whisker",
+              "n": "Represent numerical data with stem-and-leaf diagrams and box-and-whisker plots."
+            },
+            {
+              "code": "A4.1.4",
+              "t": "Choosing a diagram",
+              "n": "Outline the advantages and disadvantages of stem-and-leaf diagrams versus box-and-whisker plots."
+            },
+            {
+              "code": "A4.1.5",
+              "t": "Interpreting diagrams",
+              "n": "Interpret stem-and-leaf diagrams and box-and-whisker plots."
+            },
+            {
+              "code": "A4.1.6",
+              "t": "Variance and standard deviation",
+              "n": "Calculate variance and standard deviation for ungrouped and grouped data, using the given mean."
+            },
+            {
+              "code": "A4.1.7",
+              "t": "Interpreting centre and spread",
+              "n": "Interpret measures of central tendency and dispersion (mode, mean, median, range, IQR, semi-IQR, variance, standard deviation)."
+            }
+          ]
+        },
+        {
+          "id": "A4.2",
+          "name": "Probability Theory",
+          "note": "Sub-topics: 6",
+          "items": [
+            {
+              "code": "A4.2.1",
+              "t": "Experiment, outcome, sample space, event",
+              "n": "Distinguish the terms experiment, outcome, sample space and event."
+            },
+            {
+              "code": "A4.2.2",
+              "t": "Classical probability",
+              "n": "Calculate P(A) as favourable ÷ total when outcomes are equally likely; use relative frequency as an estimate."
+            },
+            {
+              "code": "A4.2.3",
+              "t": "Basic laws of probability",
+              "n": "Use: the probabilities of all outcomes sum to 1; 0 ≤ P(A) ≤ 1; P(A′) = 1 − P(A)."
+            },
+            {
+              "code": "A4.2.4",
+              "t": "Addition rule",
+              "n": "Use P(A∪B) = P(A) + P(B) − P(A∩B)."
+            },
+            {
+              "code": "A4.2.5",
+              "t": "Mutually exclusive events",
+              "n": "Identify mutually exclusive events, where P(A∩B) = 0."
+            },
+            {
+              "code": "A4.2.6",
+              "t": "Conditional probability",
+              "n": "Calculate P(A|B) = P(A∩B) / P(B)."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "cross": [
+    {
+      "t": "Algebra (§1) is under everything",
+      "n": "Indices, surds, logs, quadratics and factorising resurface in calculus, coordinate geometry and trigonometry. Shaky algebra leaks marks in every section."
+    },
+    {
+      "t": "The quadratic (§1B) reappears",
+      "n": "Completing the square, the discriminant and roots feed circle problems, stationary points and reducible equations."
+    },
+    {
+      "t": "Differentiation & integration (§3) are two halves",
+      "n": "Integration is differentiation in reverse; gaps in one show up immediately in the other, and both drive the kinematics and area questions."
+    },
+    {
+      "t": "Radians (§2C) run through calculus",
+      "n": "Trig is assumed in radians; d/dx sin ax and the trig integrals only make sense once radian measure is fluent."
+    }
+  ]
+};
+
+const REFERENCES = {};
+
+const FORMULA_GUIDES = {
+  "A1.1.1": {
+    "rows": [
+      [
+        "Polynomial division",
+        "P(x)=D(x)Q(x)+R(x)"
+      ],
+      [
+        "Algebraic fractions",
+        "\\dfrac{a}{b}\\pm\\dfrac{c}{d}=\\dfrac{ad\\pm bc}{bd}"
+      ]
+    ]
+  },
+  "A1.1.2": {
+    "rows": [
+      [
+        "Factorised polynomial",
+        "P(x)=a(x-r_1)(x-r_2)\\cdots(x-r_n)"
+      ]
+    ]
+  },
+  "A1.1.3": {
+    "rows": [
+      [
+        "Remainder theorem",
+        "\\text{remainder when dividing by }(x-a)=P(a)"
+      ]
+    ]
+  },
+  "A1.1.4": {
+    "rows": [
+      [
+        "Factor theorem",
+        "(x-a)\\text{ is a factor of }P(x)\\iff P(a)=0"
+      ]
+    ]
+  },
+  "A1.1.5": {
+    "rows": [
+      [
+        "Unknown coefficients",
+        "P(a)=0\\quad\\text{when }(x-a)\\text{ is a factor}"
+      ]
+    ]
+  },
+  "A1.2.1": {
+    "rows": [
+      [
+        "Completed-square form",
+        "ax^2+bx+c=a(x-h)^2+k"
+      ],
+      [
+        "Vertex",
+        "(h,k)"
+      ]
+    ]
+  },
+  "A1.2.2": {
+    "rows": [
+      [
+        "If a is positive",
+        "a>0:\\quad \\min f(x)=k,\\quad \\text{range }f(x)\\ge k"
+      ],
+      [
+        "If a is negative",
+        "a<0:\\quad \\max f(x)=k,\\quad \\text{range }f(x)\\le k"
+      ],
+      [
+        "Turning point",
+        "x=h,\\quad f(h)=k"
+      ]
+    ]
+  },
+  "A1.2.3": {
+    "rows": [
+      [
+        "Axis of symmetry",
+        "x=h"
+      ],
+      [
+        "Vertical intercept",
+        "f(0)=c"
+      ]
+    ]
+  },
+  "A1.2.4": {
+    "rows": [
+      [
+        "Discriminant",
+        "\\Delta=b^2-4ac"
+      ],
+      [
+        "Two distinct real roots",
+        "\\Delta>0"
+      ],
+      [
+        "One repeated real root",
+        "\\Delta=0"
+      ],
+      [
+        "No real roots",
+        "\\Delta<0"
+      ]
+    ]
+  },
+  "A1.2.5": {
+    "rows": [
+      [
+        "Quadratic substitution",
+        "u=x^n\\quad\\Rightarrow\\quad au^2+bu+c=0"
+      ]
+    ]
+  },
+  "A1.2.6": {
+    "rows": [
+      [
+        "Sum of roots",
+        "\\alpha+\\beta=-\\dfrac{b}{a}"
+      ],
+      [
+        "Product of roots",
+        "\\alpha\\beta=\\dfrac{c}{a}"
+      ]
+    ]
+  },
+  "A1.2.7": {
+    "rows": [
+      [
+        "Substitution",
+        "y=mx+c\\quad\\Rightarrow\\quad \\text{substitute into the non-linear equation}"
+      ]
+    ]
+  },
+  "A1.3.1": {
+    "rows": [
+      [
+        "Boundary points",
+        "ax^2+bx+c=0"
+      ],
+      [
+        "Solution set",
+        "\\{x\\in\\mathbb{R}:ax^2+bx+c\\gtrless0\\}"
+      ]
+    ]
+  },
+  "A1.3.2": {
+    "rows": [
+      [
+        "Critical values",
+        "\\dfrac{ax+b}{cx+d}=0\\text{ or undefined}"
+      ],
+      [
+        "Domain restriction",
+        "cx+d\\ne0"
+      ]
+    ]
+  },
+  "A1.4.1": {
+    "rows": [
+      [
+        "Like surds",
+        "a\\sqrt{m}+b\\sqrt{m}=(a+b)\\sqrt{m}"
+      ],
+      [
+        "Difference of squares",
+        "(a+b\\sqrt{m})(a-b\\sqrt{m})=a^2-b^2m"
+      ],
+      [
+        "Rationalising",
+        "\\dfrac{1}{a+b\\sqrt{m}}\\times\\dfrac{a-b\\sqrt{m}}{a-b\\sqrt{m}}"
+      ]
+    ]
+  },
+  "A1.4.2": {
+    "rows": [
+      [
+        "Product law",
+        "a^m a^n=a^{m+n}"
+      ],
+      [
+        "Quotient law",
+        "\\dfrac{a^m}{a^n}=a^{m-n}"
+      ],
+      [
+        "Power law",
+        "(a^m)^n=a^{mn}"
+      ],
+      [
+        "Negative index",
+        "a^{-n}=\\dfrac{1}{a^n}"
+      ]
+    ]
+  },
+  "A1.4.3": {
+    "rows": [
+      [
+        "Index-logarithm equivalence",
+        "\\log_a b=c\\iff a^c=b"
+      ]
+    ]
+  },
+  "A1.4.4": {
+    "rows": [
+      [
+        "Product law",
+        "\\log_a(PQ)=\\log_aP+\\log_aQ"
+      ],
+      [
+        "Quotient law",
+        "\\log_a\\!\\left(\\dfrac{P}{Q}\\right)=\\log_aP-\\log_aQ"
+      ],
+      [
+        "Power law",
+        "\\log_a(P^k)=k\\log_aP"
+      ],
+      [
+        "Identity values",
+        "\\log_a a=1,\\quad \\log_a1=0"
+      ]
+    ]
+  },
+  "A1.4.5": {
+    "rows": [
+      [
+        "Equal logarithms",
+        "\\log_a f(x)=\\log_a g(x)\\Rightarrow f(x)=g(x)"
+      ],
+      [
+        "Domain condition",
+        "f(x)>0,\\quad g(x)>0"
+      ]
+    ]
+  },
+  "A1.4.6": {
+    "rows": [
+      [
+        "Solve an exponential equation",
+        "a^x=b\\Rightarrow x=\\dfrac{\\log b}{\\log a}"
+      ]
+    ]
+  },
+  "A1.4.7": {
+    "rows": [
+      [
+        "Power relationship",
+        "y=ax^n\\Rightarrow \\log y=\\log a+n\\log x"
+      ],
+      [
+        "Exponential relationship",
+        "y=ab^x\\Rightarrow \\log y=\\log a+x\\log b"
+      ]
+    ]
+  },
+  "A1.5.1": {
+    "rows": [
+      [
+        "Nth term",
+        "u_n=f(n)"
+      ]
+    ]
+  },
+  "A1.5.2": {
+    "rows": [
+      [
+        "Finite series",
+        "\\sum_{r=1}^{n}u_r=u_1+u_2+\\cdots+u_n"
+      ]
+    ]
+  },
+  "A1.5.3": {
+    "rows": [
+      [
+        "Arithmetic sequence",
+        "u_{n+1}-u_n=d"
+      ],
+      [
+        "Geometric sequence",
+        "\\dfrac{u_{n+1}}{u_n}=r"
+      ]
+    ]
+  },
+  "A1.5.4": {
+    "rows": [
+      [
+        "Arithmetic nth term",
+        "u_n=a+(n-1)d"
+      ],
+      [
+        "Arithmetic sum",
+        "S_n=\\dfrac{n}{2}\\left[2a+(n-1)d\\right]"
+      ],
+      [
+        "Geometric nth term",
+        "u_n=ar^{n-1}"
+      ],
+      [
+        "Geometric sum",
+        "S_n=\\dfrac{a(1-r^n)}{1-r},\\quad r\\ne1"
+      ]
+    ]
+  },
+  "A1.5.5": {
+    "rows": [
+      [
+        "Geometric convergence",
+        "|r|<1"
+      ]
+    ]
+  },
+  "A1.5.6": {
+    "rows": [
+      [
+        "Sum to infinity",
+        "S_\\infty=\\dfrac{a}{1-r},\\quad |r|<1"
+      ]
+    ]
+  },
+  "A2.1.1": {
+    "rows": [
+      [
+        "Slope-intercept form",
+        "y=mx+c"
+      ],
+      [
+        "Point-slope form",
+        "y-y_1=m(x-x_1)"
+      ]
+    ]
+  },
+  "A2.1.2": {
+    "rows": [
+      [
+        "Parallel lines",
+        "m_1=m_2"
+      ],
+      [
+        "Perpendicular lines",
+        "m_1m_2=-1"
+      ]
+    ]
+  },
+  "A2.1.3": {
+    "rows": [
+      [
+        "Intersection",
+        "y=m_1x+c_1=m_2x+c_2"
+      ]
+    ]
+  },
+  "A2.1.4": {
+    "rows": [
+      [
+        "Centre-radius form",
+        "(x-h)^2+(y-k)^2=r^2"
+      ],
+      [
+        "General form",
+        "x^2+y^2+2fx+2gy+c=0"
+      ]
+    ]
+  },
+  "A2.1.5": {
+    "rows": [
+      [
+        "Centre from general form",
+        "(-f,-g)"
+      ],
+      [
+        "Radius from general form",
+        "r=\\sqrt{f^2+g^2-c}"
+      ]
+    ]
+  },
+  "A2.1.6": {
+    "rows": [
+      [
+        "Radius-tangent gradients",
+        "m_{\\text{radius}}m_{\\text{tangent}}=-1"
+      ],
+      [
+        "Normal",
+        "\\text{the normal passes through the circle's centre}"
+      ]
+    ]
+  },
+  "A2.1.7": {
+    "rows": [
+      [
+        "Line-circle intersection",
+        "\\text{substitute the line equation into the circle equation}"
+      ]
+    ]
+  },
+  "A2.2.2": {
+    "rows": [
+      [
+        "Component form",
+        "\\mathbf{v}=\\begin{pmatrix}x\\\\y\\end{pmatrix}=x\\mathbf{i}+y\\mathbf{j}"
+      ]
+    ]
+  },
+  "A2.2.3": {
+    "rows": [
+      [
+        "Vector addition",
+        "\\begin{pmatrix}a\\\\b\\end{pmatrix}+\\begin{pmatrix}c\\\\d\\end{pmatrix}=\\begin{pmatrix}a+c\\\\b+d\\end{pmatrix}"
+      ],
+      [
+        "Scalar multiplication",
+        "k\\begin{pmatrix}a\\\\b\\end{pmatrix}=\\begin{pmatrix}ka\\\\kb\\end{pmatrix}"
+      ]
+    ]
+  },
+  "A2.2.4": {
+    "rows": [
+      [
+        "Unit vector",
+        "\\widehat{\\mathbf{v}}=\\dfrac{\\mathbf{v}}{|\\mathbf{v}|}"
+      ]
+    ]
+  },
+  "A2.2.5": {
+    "rows": [
+      [
+        "Displacement vector",
+        "\\overrightarrow{AB}=\\mathbf{b}-\\mathbf{a}"
+      ]
+    ]
+  },
+  "A2.2.6": {
+    "rows": [
+      [
+        "Magnitude",
+        "|\\mathbf{v}|=\\sqrt{x^2+y^2}"
+      ],
+      [
+        "Direction",
+        "\\tan\\theta=\\dfrac{y}{x}"
+      ]
+    ]
+  },
+  "A2.2.7": {
+    "rows": [
+      [
+        "Dot product from components",
+        "\\mathbf{a}\\cdot\\mathbf{b}=a_xb_x+a_yb_y"
+      ],
+      [
+        "Dot product from angle",
+        "\\mathbf{a}\\cdot\\mathbf{b}=|\\mathbf{a}||\\mathbf{b}|\\cos\\theta"
+      ]
+    ]
+  },
+  "A2.2.8": {
+    "rows": [
+      [
+        "Parallel vectors",
+        "\\mathbf{a}=k\\mathbf{b}"
+      ],
+      [
+        "Perpendicular vectors",
+        "\\mathbf{a}\\cdot\\mathbf{b}=0"
+      ]
+    ]
+  },
+  "A2.3.1": {
+    "rows": [
+      [
+        "Degrees to radians",
+        "\\theta_{\\mathrm{rad}}=\\theta_{\\mathrm{deg}}\\dfrac{\\pi}{180}"
+      ],
+      [
+        "Radians to degrees",
+        "\\theta_{\\mathrm{deg}}=\\theta_{\\mathrm{rad}}\\dfrac{180}{\\pi}"
+      ]
+    ]
+  },
+  "A2.3.2": {
+    "rows": [
+      [
+        "Arc length",
+        "\\ell=r\\theta"
+      ],
+      [
+        "Sector area",
+        "A=\\dfrac12r^2\\theta"
+      ]
+    ]
+  },
+  "A2.3.5": {
+    "rows": [
+      [
+        "Sine and cosine period",
+        "T=\\dfrac{2\\pi}{|k|}"
+      ],
+      [
+        "Tangent period",
+        "T=\\dfrac{\\pi}{|k|}"
+      ]
+    ]
+  },
+  "A2.3.6": {
+    "rows": [
+      [
+        "Pythagorean identity",
+        "\\sin^2\\theta+\\cos^2\\theta\\equiv1"
+      ],
+      [
+        "Tangent identity",
+        "\\tan\\theta\\equiv\\dfrac{\\sin\\theta}{\\cos\\theta}"
+      ]
+    ]
+  },
+  "A2.3.7": {
+    "rows": [
+      [
+        "Sine addition",
+        "\\sin(A\\pm B)=\\sin A\\cos B\\pm\\cos A\\sin B"
+      ],
+      [
+        "Cosine addition",
+        "\\cos(A\\pm B)=\\cos A\\cos B\\mp\\sin A\\sin B"
+      ],
+      [
+        "Tangent addition",
+        "\\tan(A\\pm B)=\\dfrac{\\tan A\\pm\\tan B}{1\\mp\\tan A\\tan B}"
+      ]
+    ]
+  },
+  "A2.3.8": {
+    "rows": [
+      [
+        "Double-angle sine",
+        "\\sin2x=2\\sin x\\cos x"
+      ],
+      [
+        "Double-angle cosine",
+        "\\cos2x=\\cos^2x-\\sin^2x"
+      ],
+      [
+        "Double-angle tangent",
+        "\\tan2x=\\dfrac{2\\tan x}{1-\\tan^2x}"
+      ]
+    ]
+  },
+  "A3.1.1": {
+    "rows": [
+      [
+        "Gradient at a point",
+        "f'(c)=\\lim_{h\\to0}\\dfrac{f(c+h)-f(c)}{h}"
+      ]
+    ]
+  },
+  "A3.1.2": {
+    "rows": [
+      [
+        "Derivative notation",
+        "f'(x)=\\dfrac{dy}{dx}"
+      ]
+    ]
+  },
+  "A3.1.3": {
+    "rows": [
+      [
+        "Power rule",
+        "\\dfrac{d}{dx}x^n=nx^{n-1}"
+      ]
+    ]
+  },
+  "A3.1.4": {
+    "rows": [
+      [
+        "Derivative of sine",
+        "\\dfrac{d}{dx}\\sin(ax)=a\\cos(ax)"
+      ],
+      [
+        "Derivative of cosine",
+        "\\dfrac{d}{dx}\\cos(ax)=-a\\sin(ax)"
+      ]
+    ]
+  },
+  "A3.1.5": {
+    "rows": [
+      [
+        "Constant multiple",
+        "\\dfrac{d}{dx}[cf(x)]=cf'(x)"
+      ],
+      [
+        "Sum rule",
+        "\\dfrac{d}{dx}[f(x)+g(x)]=f'(x)+g'(x)"
+      ]
+    ]
+  },
+  "A3.1.6": {
+    "rows": [
+      [
+        "Chain rule",
+        "\\dfrac{dy}{dx}=\\dfrac{dy}{du}\\dfrac{du}{dx}"
+      ]
+    ]
+  },
+  "A3.1.7": {
+    "rows": [
+      [
+        "Product rule",
+        "\\dfrac{d}{dx}(uv)=u\\dfrac{dv}{dx}+v\\dfrac{du}{dx}"
+      ],
+      [
+        "Quotient rule",
+        "\\dfrac{d}{dx}\\left(\\dfrac{u}{v}\\right)=\\dfrac{v\\,du/dx-u\\,dv/dx}{v^2}"
+      ]
+    ]
+  },
+  "A3.1.8": {
+    "rows": [
+      [
+        "Tangent",
+        "y-y_1=f'(x_1)(x-x_1)"
+      ],
+      [
+        "Normal gradient",
+        "m_{\\mathrm{normal}}=-\\dfrac{1}{f'(x_1)}"
+      ]
+    ]
+  },
+  "A3.1.9": {
+    "rows": [
+      [
+        "Second derivative",
+        "f''(x)=\\dfrac{d^2y}{dx^2}"
+      ]
+    ]
+  },
+  "A3.1.10": {
+    "rows": [
+      [
+        "Velocity",
+        "v=\\dfrac{ds}{dt}"
+      ],
+      [
+        "Acceleration",
+        "a=\\dfrac{dv}{dt}=\\dfrac{d^2s}{dt^2}"
+      ]
+    ]
+  },
+  "A3.1.11": {
+    "rows": [
+      [
+        "Stationary point",
+        "f'(x)=0"
+      ],
+      [
+        "Local minimum",
+        "f''(x)>0"
+      ],
+      [
+        "Local maximum",
+        "f''(x)<0"
+      ]
+    ]
+  },
+  "A3.2.1": {
+    "rows": [
+      [
+        "Anti-derivative",
+        "\\int f'(x)\\,dx=f(x)+C"
+      ]
+    ]
+  },
+  "A3.2.2": {
+    "rows": [
+      [
+        "Power rule",
+        "\\int x^n\\,dx=\\dfrac{x^{n+1}}{n+1}+C,\\quad n\\ne-1"
+      ]
+    ]
+  },
+  "A3.2.3": {
+    "rows": [
+      [
+        "Sum rule",
+        "\\int[f(x)+g(x)]\\,dx=\\int f(x)\\,dx+\\int g(x)\\,dx"
+      ]
+    ]
+  },
+  "A3.2.4": {
+    "rows": [
+      [
+        "Linear-power integral",
+        "\\int(ax+b)^n\\,dx=\\dfrac{(ax+b)^{n+1}}{a(n+1)}+C"
+      ]
+    ]
+  },
+  "A3.2.5": {
+    "rows": [
+      [
+        "Sine integral",
+        "\\int\\sin(px)\\,dx=-\\dfrac1p\\cos(px)+C"
+      ],
+      [
+        "Cosine integral",
+        "\\int\\cos(qx)\\,dx=\\dfrac1q\\sin(qx)+C"
+      ]
+    ]
+  },
+  "A3.2.6": {
+    "rows": [
+      [
+        "Definite integral",
+        "\\int_a^b f(x)\\,dx=F(b)-F(a)"
+      ]
+    ]
+  },
+  "A3.2.7": {
+    "rows": [
+      [
+        "Curve from gradient",
+        "y=\\int\\dfrac{dy}{dx}\\,dx+C"
+      ]
+    ]
+  },
+  "A3.2.8": {
+    "rows": [
+      [
+        "Area",
+        "A=\\int_a^b y\\,dx"
+      ],
+      [
+        "Volume of revolution",
+        "V=\\pi\\int_a^b y^2\\,dx"
+      ],
+      [
+        "Displacement",
+        "s=\\int v\\,dt"
+      ],
+      [
+        "Velocity",
+        "v=\\int a\\,dt"
+      ]
+    ]
+  },
+  "A4.1.2": {
+    "rows": [
+      [
+        "Range",
+        "\\text{range}=x_{\\max}-x_{\\min}"
+      ],
+      [
+        "Interquartile range",
+        "\\mathrm{IQR}=Q_3-Q_1"
+      ],
+      [
+        "Semi-interquartile range",
+        "\\text{semi-IQR}=\\dfrac{Q_3-Q_1}{2}"
+      ]
+    ]
+  },
+  "A4.1.6": {
+    "rows": [
+      [
+        "Ungrouped variance",
+        "\\sigma^2=\\dfrac{\\sum(x-\\bar{x})^2}{n}"
+      ],
+      [
+        "Grouped variance",
+        "\\sigma^2=\\dfrac{\\sum f(x-\\bar{x})^2}{\\sum f}"
+      ],
+      [
+        "Standard deviation",
+        "\\sigma=\\sqrt{\\sigma^2}"
+      ]
+    ]
+  },
+  "A4.2.2": {
+    "rows": [
+      [
+        "Classical probability",
+        "P(A)=\\dfrac{\\text{favourable outcomes}}{\\text{total outcomes}}"
+      ],
+      [
+        "Relative frequency",
+        "P(A)\\approx\\dfrac{\\text{observed frequency of }A}{\\text{number of trials}}"
+      ]
+    ]
+  },
+  "A4.2.3": {
+    "rows": [
+      [
+        "Probability bounds",
+        "0\\le P(A)\\le1"
+      ],
+      [
+        "Complement",
+        "P(A')=1-P(A)"
+      ]
+    ]
+  },
+  "A4.2.4": {
+    "rows": [
+      [
+        "Addition rule",
+        "P(A\\cup B)=P(A)+P(B)-P(A\\cap B)"
+      ]
+    ]
+  },
+  "A4.2.5": {
+    "rows": [
+      [
+        "Mutually exclusive events",
+        "P(A\\cap B)=0"
+      ]
+    ]
+  },
+  "A4.2.6": {
+    "rows": [
+      [
+        "Conditional probability",
+        "P(A\\mid B)=\\dfrac{P(A\\cap B)}{P(B)}"
+      ],
+      [
+        "Multiplication rule",
+        "P(A\\cap B)=P(A\\mid B)P(B)"
+      ],
+      [
+        "Independent events",
+        "P(A\\cap B)=P(A)P(B)"
+      ]
+    ]
+  }
+};
+
+function normalizedFormulaName(value) {
+  return String(value || '').toLowerCase().replace(/[^a-z0-9]+/g, '');
+}
+
+function leadingFormulaName(latex) {
+  const source = String(latex || '').trim();
+  const named = source.match(/^\\(?:text|mathrm)\{([^{}]+)\}\s*=/);
+  if (named) return named[1];
+  const identifier = source.match(/^([A-Za-z]+)\s*=/);
+  return identifier ? identifier[1] : '';
+}
+
+function formulaRepeatsLabel(label, latex) {
+  const leadingName = leadingFormulaName(latex);
+  return Boolean(leadingName)
+    && normalizedFormulaName(label) === normalizedFormulaName(leadingName);
+}
+
+function formulaUsesMathematicalSymbol(latex) {
+  const source = String(latex || '').trim();
+  const named = source.match(/^\\(text|mathrm)\{([^{}]+)\}\s*=/);
+  if (named) {
+    const name = named[2];
+    return named[1] === 'mathrm'
+      || (!/\s/.test(name) && /[A-Z]/.test(name));
+  }
+  return true;
+}
+
+function escapeLatexText(value) {
+  return String(value || '')
+    .replace(/\\/g, String.raw`\textbackslash{}`)
+    .replace(/([{}%#&_])/g, String.raw`\$1`)
+    .replace(/\^/g, String.raw`\^{}`)
+    .replace(/~/g, String.raw`\~{}`);
+}
+
+function formulaStatementLatex(label, latex) {
+  if (formulaRepeatsLabel(label, latex)) return latex;
+  const punctuation = formulaUsesMathematicalSymbol(latex) ? ',' : ':';
+  return String.raw`\text{${escapeLatexText(label)}}${punctuation}\;${latex}`;
+}
+
+function formulaGuideHTML(item) {
+  const guide = FORMULA_GUIDES[item.code];
+  const rows = guide?.rows || [];
+  return rows.length
+    ? '<section class="formula-guide" aria-label="Standard formulas for ' + item.code + '">'
+      + rows.map(row => '<div class="formula-row"><span class="formula-expression tex">'
+        + formulaStatementLatex(row[0], row[1]) + '</span></div>').join('')
+      + '</section>'
+    : '';
+}
+
+function renderPopoverMath(root) {
+  if (!window.katex) return;
+  root.querySelectorAll('.tex').forEach(el => {
+    katex.render(el.textContent, el, {
+      throwOnError:false,
+      strict:false,
+      displayMode:el.dataset.display === 'block',
+      output:'htmlAndMathml'
+    });
+  });
+}
+
+const QUESTIONS = [
+  {
+    "id": "Q1",
+    "tag": "Algebra · polynomial factorisation",
+    "body": "Factorise <span class=\"m\"><i>x</i><sup>3</sup> − 4<i>x</i><sup>2</sup> − <i>x</i> + 4</span> completely."
+  },
+  {
+    "id": "Q2",
+    "tag": "Quadratics · completed-square form",
+    "body": "Express <span class=\"m\"><i>f</i>(<i>x</i>) = 2<i>x</i><sup>2</sup> − 8<i>x</i> + 11</span> in completed-square form. Hence state the minimum value and the range."
+  },
+  {
+    "id": "Q3",
+    "tag": "Calculus · derivative and gradient",
+    "body": "For <span class=\"m\"><i>y</i> = (3<i>x</i><sup>2</sup> − 1)<sup>4</sup></span>, find <span class=\"m\">d<i>y</i>/d<i>x</i></span> and the gradient at <span class=\"m\"><i>x</i> = 1</span>."
+  },
+  {
+    "id": "Q4",
+    "tag": "Coordinate geometry · circle",
+    "body": "Rewrite <span class=\"m\"><i>x</i><sup>2</sup> + <i>y</i><sup>2</sup> − 6<i>x</i> + 4<i>y</i> − 12 = 0</span> in centre-radius form. State the centre and radius."
+  },
+  {
+    "id": "Q5",
+    "tag": "Sequences · geometric series",
+    "body": "A geometric sequence has third term <span class=\"m\">12</span> and sixth term <span class=\"m\">96</span>. Find the common ratio and first term."
+  }
+];
+
+const QUESTION_MATCHES = {
+  "Q1": [
+    "A1.1"
+  ],
+  "Q2": [
+    "A1.2.1",
+    "A1.2.2",
+    "A1.2.3"
+  ],
+  "Q3": [
+    "A3.1"
+  ],
+  "Q4": [
+    "A2.1.4",
+    "A2.1.5"
+  ],
+  "Q5": [
+    "A1.5"
+  ]
+};
+const SECTION_ACCENTS = ["#7E68C6","#3D7180","#A8792C","#8A5870"];
+
+const FLAT = [];
+DATA.modules.forEach(m => m.topics.forEach(t => t.items.forEach(i =>
+  FLAT.push({code:i.code, title:i.t.replace(/<[^>]+>/g,''), description:i.n,
+    topic:t.name, topicId:t.id, moduleId:m.id}))));
+
+const S = {studentId:"REVIEW-DEMO", school:"", name:"", date:"", email:"", tutorName:"", tutorEmail:"", tutorPhone:"",
+  ticked:new Set(), statuses:{}, notes:{}, q:{}};
+const IDF = { sid:"studentId", sc:"school", nm:"name", dt:"date", se:"email", tn:"tutorName", te:"tutorEmail", tp:"tutorPhone" };
+QUESTIONS.forEach(q => S.q[q.id] = {hard:false, note:"", timed:false, time:""});
+
+/* ---------- build the checklist ---------- */
+const mods = document.getElementById('modules');
+DATA.modules.forEach((m, mi) => {
+  const md = document.createElement('details');
+  md.className = 'mod-d'; md.id = 'mod-' + m.id; md.open = true;
+  md.style.setProperty('--section-accent', SECTION_ACCENTS[mi]);
+  let h = '<summary class="mod">'
+        + '<span class="mod-h">' + m.name + '</span>'
+        + '<span class="mod-note">' + m.note + '</span>'
+        + '<span class="mod-progress" id="modprog-' + m.id + '"></span>'
+        + '<span class="caret" aria-hidden="true">&#9656;</span></summary>'
+        + '<div class="mbody">'
+        + '<div class="mod-tools">'
+        + '<button type="button" data-expand>Expand all topics</button>'
+        + '<button type="button" data-collapse>Collapse all</button></div>';
+  m.topics.forEach((t, ti) => {
+    h += '<details class="top-d" id="topd-' + t.id + '">'
+       + '<summary>'
+       + '<span class="ts-h">' + (ti+1) + '. ' + t.name + '</span>'
+       + '<span class="ts-pn">' + t.note + '</span>'
+       + '<span class="tally" id="tal-' + t.id + '"></span>'
+       + '<span class="caret" aria-hidden="true">&#9656;</span></summary>'
+       + '<div class="tbody">';
+    t.items.forEach(it => {
+      const supplementalReference = REFERENCES[it.code] || "";
+      const description = FORMULA_GUIDES[it.code]?.description || it.n;
+      const hasReferenceDetails = Boolean(FORMULA_GUIDES[it.code]?.rows?.length || supplementalReference);
+      h += '<div class="row not-started" id="row-' + it.code + '">'
+         + '<div class="code"><span>' + it.code + '</span></div>'
+         + '<div class="txt"><b>' + it.t + '</b><span class="desc">' + description + '</span></div>'
+         + (hasReferenceDetails ? '<button type="button" class="row-info" data-row-info aria-expanded="false" aria-controls="row-info-' + it.code + '" aria-label="Open formulas and references for ' + it.code + ' ' + it.t.replace(/<[^>]+>/g, '') + '">'
+         + '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M0 0h24v24H0z" fill="none"/><path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg></button>'
+         : '')
+         + '<div class="status-group" role="group" aria-label="Learning status for ' + it.code + '">'
+         + '<button type="button" class="status-btn is-active" data-code-status="' + it.code + '" data-status="not-started" aria-pressed="true">Not started</button>'
+         + '<button type="button" class="status-btn" data-code-status="' + it.code + '" data-status="confident" aria-pressed="false">Confident</button>'
+         + '<button type="button" class="status-btn" data-code-status="' + it.code + '" data-status="practice" aria-pressed="false">Needs practice</button>'
+         + '</div>'
+         + (hasReferenceDetails ? '<div class="row-popover" id="row-info-' + it.code + '" role="region" aria-label="Formulas and references for ' + it.code + ' ' + it.t.replace(/<[^>]+>/g, '') + '" hidden>'
+         + '<div class="formula-card-body">' + formulaGuideHTML(it)
+         + (supplementalReference ? '<div class="topic-reference"><b>Syllabus reference</b>' + supplementalReference + '</div>' : '')
+         + '</div></div>'
+         : '')
+         + '</div>';
+    });
+    h += '</div></details>';
+  });
+  h += '</div>';
+  md.innerHTML = h;
+  // per-module expand / collapse all
+  md.querySelector('[data-expand]').addEventListener('click',
+    () => md.querySelectorAll('.top-d').forEach(d => d.open = true));
+  md.querySelector('[data-collapse]').addEventListener('click',
+    () => md.querySelectorAll('.top-d').forEach(d => d.open = false));
+  md.querySelectorAll('.top-d').forEach(topicCard => topicCard.addEventListener('toggle', () => {
+    if (!topicCard.open || !window.matchMedia('(max-width:680px)').matches) return;
+    document.querySelectorAll('.top-d').forEach(other => {
+      if (other !== topicCard) other.open = false;
+    });
+  }));
+  mods.appendChild(md);
+});
+renderPopoverMath(mods);
+
+document.getElementById('railItems').innerHTML =
+  DATA.modules.map((m, i) =>
+    '<a class="rail-item" data-rail-module="' + m.id + '" href="#mod-' + m.id
+    + '" style="--rail-accent:' + SECTION_ACCENTS[i] + '"><b>Section ' + (i + 1)
+    + '</b><small>0 reviewed</small></a>').join('')
+  + '<a class="rail-item" data-rail-practice href="#practice-list" style="--rail-accent:#A8792C"><b>Practice list</b><small>0 identified</small></a>'
+  + '<a class="rail-item" data-rail-questions href="#practice-questions" style="--rail-accent:#8A5870"><b>Questions</b><small>Baseline order</small></a>';
+
+document.getElementById('cross').innerHTML =
+  DATA.cross.map(c => '<li><b>' + c.t + '</b> — ' + c.n + '</li>').join('');
+
+/* ---------- questions ---------- */
+document.getElementById('qs').innerHTML = QUESTIONS.map(q =>
+  '<div class="q" id="q-' + q.id + '" data-question-card="' + q.id + '">'
+  + '<div class="qh"><div class="qn">' + q.tag + '</div>'
+  + '<div class="qwhy" id="qwhy-' + q.id + '">Included as a core syllabus checkpoint.</div></div>'
+  + '<div class="qb">' + q.body + '</div>'
+  + '<div class="qf">'
+  + '<label class="cb"><input type="checkbox" id="qh-' + q.id + '" data-q="' + q.id
+  + '" aria-label="I found ' + q.id + ' difficult"><span class="bx"></span></label>'
+  + '<label for="qh-' + q.id + '">I found this difficult</label>'
+  + '<input type="text" id="qn-' + q.id + '" data-qn="' + q.id
+  + '" aria-label="Where ' + q.id + ' broke down'
+  + '" placeholder="Where exactly did it break?">'
+  + '</div>'
+  + '<div class="qf2">'
+  + '<label class="tk"><input type="checkbox" data-qt="' + q.id + '"> I timed this</label>'
+  + '<input type="text" class="tf" id="qt-' + q.id + '" data-qtime="' + q.id
+  + '" placeholder="e.g. 3 mins" aria-label="Time taken for ' + q.id + '" disabled>'
+  + '<span class="hint">units: s · secs · m · mins · h · hrs</span>'
+  + '</div>'
+  + '</div>').join('');
+
+/* ---------- events ---------- */
+const STATUS_LABELS = {confident:"Confident", practice:"Needs practice", "not-started":"Not started"};
+
+function closeReferences(exceptButton) {
+  document.querySelectorAll('[data-row-info]').forEach(other => {
+    if (other === exceptButton) return;
+    other.setAttribute('aria-expanded', 'false');
+    document.getElementById(other.getAttribute('aria-controls')).hidden = true;
+  });
+}
+
+function updateRowStatus(code) {
+  const status = S.statuses[code] || "not-started";
+  const row = document.getElementById('row-' + code);
+  if (!row) return;
+  row.classList.toggle('on', status === 'practice');
+  row.classList.toggle('confident', status === 'confident');
+  row.classList.toggle('not-started', status === 'not-started');
+  row.querySelectorAll('[data-code-status]').forEach(button => {
+    const active = button.dataset.status === status;
+    button.classList.toggle('is-active', active);
+    button.setAttribute('aria-pressed', String(active));
+  });
+}
+
+function setStatus(code, status, announce) {
+  if (status === 'not-started') delete S.statuses[code];
+  else S.statuses[code] = status;
+  if (status === 'practice') S.ticked.add(code);
+  else S.ticked.delete(code);
+  updateRowStatus(code);
+  refresh(Boolean(announce), code, status);
+}
+
+document.addEventListener('click', e => {
+  const statusButton = e.target.closest('[data-code-status]');
+  if (statusButton) {
+    setStatus(statusButton.dataset.codeStatus, statusButton.dataset.status, true);
+    return;
+  }
+
+  const closeButton = e.target.closest('[data-close-reference]');
+  if (closeButton) {
+    const popover = closeButton.closest('.row-popover');
+    const trigger = document.querySelector('[aria-controls="' + popover.id + '"]');
+    popover.hidden = true;
+    if (trigger) { trigger.setAttribute('aria-expanded', 'false'); trigger.focus(); }
+    return;
+  }
+
+  const infoButton = e.target.closest('[data-row-info]');
+  if (infoButton) {
+    const popover = document.getElementById(infoButton.getAttribute('aria-controls'));
+    const opening = popover.hidden;
+    closeReferences(infoButton);
+    popover.hidden = !opening;
+    infoButton.setAttribute('aria-expanded', String(opening));
+    return;
+  }
+
+  if (!e.target.closest('.row-popover')) closeReferences();
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  const openButton = document.querySelector('[data-row-info][aria-expanded="true"]');
+  if (openButton) {
+    closeReferences();
+    openButton.focus();
+  }
+});
+
+document.addEventListener('change', e => {
+  const cb = e.target;
+  if (cb.dataset.q) {
+    S.q[cb.dataset.q].hard = cb.checked;
+    document.getElementById('q-' + cb.dataset.q).classList.toggle('hard', cb.checked);
+    save();
+  } else if (cb.dataset.qt) {
+    const id = cb.dataset.qt; S.q[id].timed = cb.checked;
+    const tf = document.getElementById('qt-' + id);
+    if (tf) { tf.disabled = !cb.checked; if (!cb.checked) tf.classList.remove('bad'); }
+    save();
+  } else if (IDF[cb.id]) {
+    S[IDF[cb.id]] = cb.value;
+    save();
+  }
+});
+
+document.addEventListener('input', e => {
+  const t = e.target;
+  if (t.dataset.note) { S.notes[t.dataset.note] = t.value; save(); }
+  else if (t.dataset.qn) { S.q[t.dataset.qn].note = t.value; save(); }
+  else if (t.dataset.qtime) {
+    const id = t.dataset.qtime; S.q[id].time = t.value;
+    t.classList.toggle('bad', t.value.trim() !== '' && !validTime(t.value));
+    save();
+  }
+  else if (IDF[t.id]) { S[IDF[t.id]] = t.value; save(); }
+});
+
+function validTime(v) { return /^\s*\d+(?:\.\d+)?\s*(s|secs?|m|mins?|h|hrs?)\s*$/i.test(v); }
+
+function buildPickerItems() {
+  const order = [], gmap = {};
+  FLAT.filter(f => !S.ticked.has(f.code)).forEach(f => {
+    if (!gmap[f.topic]) { gmap[f.topic] = []; order.push(f.topic); }
+    gmap[f.topic].push(f);
+  });
+  return order.map(topic => '<div class="pick-group">' + topic + '</div>'
+    + gmap[topic].map(f => '<div class="pick-item">'
+      + '<button type="button" class="pick-add" data-add-code="' + f.code + '">' + f.code + ' — ' + f.title + '</button>'
+      + '</div>').join('')).join('');
+}
+function addCode(code) {
+  setStatus(code, 'practice', true);
+}
+function removeCode(code) {
+  setStatus(code, 'confident', true);
+}
+
+/* ---------- "where you get stuck": grows with the ticks, grouped by topic ---------- */
+function drawLog() {
+  const box = document.getElementById('log');
+  const flagged = FLAT.filter(f => S.ticked.has(f.code));
+  const order = [], gmap = {};
+  flagged.forEach(f => {
+    if (!gmap[f.topic]) { gmap[f.topic] = []; order.push(f.topic); }
+    gmap[f.topic].push(f);
+  });
+  let h = '';
+  if (!flagged.length) {
+    h += '<div class="empty-state"><b>No practice topics identified yet.</b><br>'
+       + 'As you review the field guide, anything marked “Needs practice” will appear here.</div>';
+  }
+  order.forEach(topic => {
+    h += '<div class="lgroup">' + topic + '</div>';
+    gmap[topic].forEach(f => {
+      h += '<div class="lrow"><div class="lc">'
+         + '<div class="lchead"><span class="chip">' + f.code + '</span>'
+         + '<button type="button" class="lrm" data-remove="' + f.code + '" title="Remove ' + f.code + '" aria-label="Remove ' + f.code + '">&times;</button></div>'
+         + '<div class="lt">' + f.title + '</div></div>'
+         + '<div class="ld"><textarea data-note="' + f.code
+         + '" aria-label="Where confidence drops in ' + f.code
+         + '" placeholder="Where does your confidence drop? Name the first uncertain step."></textarea></div></div>';
+    });
+  });
+  const items = buildPickerItems();
+  h += '<div class="addrow"><label id="addpick-label">Add one without scrolling back up</label>'
+     + '<details class="picker" data-picker><summary aria-labelledby="addpick-label">Choose a sub-topic...</summary>'
+     + '<div class="pick-menu">' + items + '</div></details></div>';
+  box.innerHTML = h;
+  box.querySelectorAll('[data-note]').forEach(tx => { tx.value = S.notes[tx.dataset.note] || ''; });
+  box.querySelectorAll('[data-add-code]').forEach(btn => btn.addEventListener('click', () => addCode(btn.dataset.addCode)));
+  box.querySelectorAll('[data-remove]').forEach(btn => btn.addEventListener('click', () => removeCode(btn.dataset.remove)));
+}
+
+let feedbackTimer = null;
+let nextTopicIndex = -1;
+
+function personalizeQuestions() {
+  const practiceCodes = [...S.ticked];
+  let matchedQuestions = 0;
+  const ranked = QUESTIONS.map((q, originalOrder) => {
+    const prefixes = QUESTION_MATCHES[q.id] || [];
+    const hits = practiceCodes.filter(code => prefixes.some(prefix => code.startsWith(prefix)));
+    if (hits.length) matchedQuestions++;
+    return {q, originalOrder, hits};
+  }).sort((a, b) => b.hits.length - a.hits.length || a.originalOrder - b.originalOrder);
+
+  ranked.forEach((entry, order) => {
+    const card = document.getElementById('q-' + entry.q.id);
+    const reason = document.getElementById('qwhy-' + entry.q.id);
+    card.style.order = order;
+    reason.classList.toggle('is-match', entry.hits.length > 0);
+    if (entry.hits.length) {
+      reason.textContent = 'Prioritized because it checks ' + entry.hits.slice(0, 3).join(', ')
+        + (entry.hits.length > 3 ? ' and ' + (entry.hits.length - 3) + ' more' : '')
+        + ' from your practice list.';
+    } else if (practiceCodes.length) {
+      reason.textContent = 'Included for broad syllabus coverage alongside your selected topics.';
+    } else {
+      reason.textContent = 'Baseline checkpoint until you identify topics to practise.';
+    }
+  });
+
+  const intro = document.getElementById('practiceIntro');
+  intro.textContent = practiceCodes.length
+    ? matchedQuestions + ' of the five questions directly match your current practice list and appear first. The remaining questions preserve broad syllabus coverage.'
+    : 'These five questions provide a broad baseline. As you identify topics to practise, matching questions will move to the front and explain why.';
+  const rail = document.querySelector('[data-rail-questions] small');
+  if (rail) rail.textContent = matchedQuestions ? matchedQuestions + ' matched first' : 'Baseline order';
+}
+
+function showCompletionFeedback(code, status, reviewed) {
+  const box = document.getElementById('completionFeedback');
+  const label = STATUS_LABELS[status] || status;
+  box.textContent = code + ' marked ' + label + ' · ' + reviewed + ' of 85 reviewed';
+  box.classList.remove('show');
+  void box.offsetWidth;
+  box.classList.add('show');
+  clearTimeout(feedbackTimer);
+  feedbackTimer = setTimeout(() => box.classList.remove('show'), 1900);
+
+  const fill = document.getElementById('progressFill');
+  fill.classList.remove('pulse');
+  void fill.offsetWidth;
+  fill.classList.add('pulse');
+}
+
+function refresh(animate, changedCode, changedStatus) {
+  FLAT.forEach(f => updateRowStatus(f.code));
+  const reviewed = FLAT.filter(f => Boolean(S.statuses[f.code])).length;
+
+  DATA.modules.forEach(m => {
+    let moduleReviewed = 0;
+    let modulePractice = 0;
+    let moduleTotal = 0;
+    m.topics.forEach(t => {
+      const topicReviewed = t.items.filter(i => Boolean(S.statuses[i.code])).length;
+      const topicPractice = t.items.filter(i => S.ticked.has(i.code)).length;
+      moduleReviewed += topicReviewed;
+      modulePractice += topicPractice;
+      moduleTotal += t.items.length;
+      const el = document.getElementById('tal-' + t.id);
+      el.innerHTML = '<b>' + topicReviewed + '/' + t.items.length + '</b> reviewed · '
+        + topicPractice + ' practice';
+      el.classList.toggle('hot', topicPractice > 0);
+    });
+
+    const moduleProgress = document.getElementById('modprog-' + m.id);
+    moduleProgress.innerHTML = '<b>' + moduleReviewed + '/' + moduleTotal + ' reviewed</b>'
+      + modulePractice + ' topics identified';
+    const railItem = document.querySelector('[data-rail-module="' + m.id + '"]');
+    railItem.classList.toggle('is-complete', moduleReviewed === moduleTotal);
+    railItem.querySelector('small').textContent = moduleReviewed + '/' + moduleTotal
+      + ' · ' + modulePractice + ' practice';
+  });
+
+  document.getElementById('reviewedCount').textContent = reviewed;
+  document.getElementById('reviewedBar').textContent = reviewed;
+  document.getElementById('cnt').textContent = S.ticked.size;
+  document.getElementById('progressFill').style.width = ((reviewed / FLAT.length) * 100) + '%';
+  const track = document.querySelector('.progress-track');
+  track.setAttribute('aria-valuenow', String(reviewed));
+  document.getElementById('progressSummary').textContent = reviewed === FLAT.length
+    ? (S.ticked.size ? 'Review complete · ' + S.ticked.size + ' topics ready for practice.'
+      : 'Review complete · no practice topics identified.')
+    : (reviewed + ' reviewed · ' + S.ticked.size + ' topics identified · '
+      + (FLAT.length - reviewed) + ' not started');
+
+  const practiceRail = document.querySelector('[data-rail-practice]');
+  practiceRail.querySelector('small').textContent = S.ticked.size + ' identified';
+  const notesComplete = [...S.ticked].every(code => (S.notes[code] || '').trim());
+  practiceRail.classList.toggle('is-complete', S.ticked.size > 0 && notesComplete);
+
+  const nextButton = document.getElementById('nextFlagged');
+  nextButton.textContent = S.ticked.size ? 'Next topic to practise'
+    : (reviewed < FLAT.length ? 'Resume next topic' : 'Review practice questions');
+
+  drawLog();
+  personalizeQuestions();
+  if (animate && changedCode) showCompletionFeedback(changedCode, changedStatus, reviewed);
+  save();
+}
+
+function nextFlagged() {
+  const candidates = S.ticked.size
+    ? FLAT.filter(f => S.ticked.has(f.code))
+    : FLAT.filter(f => !S.statuses[f.code]);
+  if (!candidates.length) {
+    document.getElementById('practice-questions').scrollIntoView({block:'start'});
+    return;
+  }
+  nextTopicIndex = (nextTopicIndex + 1) % candidates.length;
+  const target = candidates[nextTopicIndex];
+  const module = document.getElementById('mod-' + target.moduleId);
+  const topic = document.getElementById('topd-' + target.topicId);
+  if (module) module.open = true;
+  if (topic) topic.open = true;
+  const row = document.getElementById('row-' + target.code);
+  row.scrollIntoView({block:'center'});
+  row.classList.add('next-focus');
+  const focusTarget = row.querySelector('[data-status="' + (S.ticked.has(target.code) ? 'practice' : 'not-started') + '"]');
+  if (focusTarget) focusTarget.focus({preventScroll:true});
+  setTimeout(() => row.classList.remove('next-focus'), 1500);
+}
+
+function jump(){ document.getElementById('practice-list').scrollIntoView({block:'start'}); }
+
+/* ---------- save / restore (silently skipped where unavailable) ---------- */
+/* Prefers the host runtime's window.storage; falls back to localStorage so
+   autosave also works when the file is opened directly in a browser.
+   All storage is on-device — nothing leaves the machine. */
+const store = (typeof window.storage !== 'undefined') ? window.storage : (() => {
+  try {
+    localStorage.setItem('csec-addmaths-gapform-probe', '1');
+    localStorage.removeItem('csec-addmaths-gapform-probe');
+    return {
+      get: async k => ({ value: localStorage.getItem(k) }),
+      set: async (k, v) => { localStorage.setItem(k, v); }
+    };
+  } catch (err) { return undefined; }   /* private-mode quota etc. — degrade silently */
+})();
+
+let timer = null, canSave = true;
+function save() {
+  if (!canSave || !store) return;
+  clearTimeout(timer);
+  timer = setTimeout(async () => {
+    try {
+      await store.set('csec-addmaths-gapform', JSON.stringify({
+        studentId:S.studentId, school:S.school, name:S.name, date:S.date, email:S.email,
+        tutorName:S.tutorName, tutorEmail:S.tutorEmail, tutorPhone:S.tutorPhone,
+        ticked:[...S.ticked], statuses:S.statuses, notes:S.notes, q:S.q
+      }));
+      const el = document.getElementById('sv');
+      el.textContent = 'saved';
+      setTimeout(() => el.textContent = '', 1600);
+    } catch (err) { canSave = false; }
+  }, 600);
+}
+
+async function restore() {
+  if (!store) return;
+  try {
+    const r = await store.get('csec-addmaths-gapform');
+    if (!r || !r.value) return;
+    const d = JSON.parse(r.value);
+    S.studentId = d.studentId || 'REVIEW-DEMO'; S.school = d.school || ''; S.name = d.name || ''; S.date = d.date || '';
+    S.email = d.email || ''; S.tutorName = d.tutorName || ''; S.tutorEmail = d.tutorEmail || ''; S.tutorPhone = d.tutorPhone || '';
+    document.getElementById('se').value = S.email;
+    document.getElementById('sid').value = S.studentId;
+    document.getElementById('tn').value = S.tutorName;
+    document.getElementById('te').value = S.tutorEmail;
+    document.getElementById('tp').value = S.tutorPhone;
+    document.getElementById('sc').value = S.school;
+    document.getElementById('nm').value = S.name;
+    document.getElementById('dt').value = S.date;
+    S.statuses = Object.assign({}, d.statuses || {});
+    (d.ticked || []).forEach(c => {
+      S.ticked.add(c);
+      if (!S.statuses[c]) S.statuses[c] = 'practice';
+    });
+    Object.keys(S.statuses).forEach(code => {
+      if (S.statuses[code] === 'practice') S.ticked.add(code);
+      else S.ticked.delete(code);
+      if (!['practice','confident'].includes(S.statuses[code])) delete S.statuses[code];
+    });
+    S.notes = d.notes || {};
+    Object.keys(d.q || {}).forEach(k => {
+      if (!S.q[k]) return;
+      S.q[k] = Object.assign({hard:false, note:"", timed:false, time:""}, d.q[k]);
+      const cb = document.querySelector('[data-q="' + k + '"]');
+      if (cb && S.q[k].hard) { cb.checked = true; document.getElementById('q-' + k).classList.add('hard'); }
+      const tx = document.getElementById('qn-' + k);
+      if (tx) tx.value = S.q[k].note || '';
+      const tcb = document.querySelector('[data-qt="' + k + '"]');
+      if (tcb && S.q[k].timed) tcb.checked = true;
+      const tf = document.getElementById('qt-' + k);
+      if (tf) {
+        tf.disabled = !S.q[k].timed;
+        tf.value = S.q[k].time || '';
+        if (tf.value.trim() && !validTime(tf.value)) tf.classList.add('bad');
+      }
+    });
+  } catch (err) { /* nothing saved yet */ }
+}
+
+/* ---------- export ---------- */
+/* buildExport() is the single source of the .txt format — the Additional Mathematics Tutor persona and
+   the Mastery Tracker parsers consume it verbatim. Do not alter the layout. */
+function buildExport() {
+  const flagged = FLAT.filter(f => S.ticked.has(f.code));
+  const L = [];
+  L.push('CSEC ADDITIONAL MATHEMATICS — LEARNING-READINESS SELF-ASSESSMENT');
+  L.push('AlphaMath Program · Fifth Form · Sitting June 2027');
+  L.push('');
+  L.push('School: ' + (S.school || '(not given)'));
+  L.push('Name: ' + (S.name || '(not given)'));
+  L.push('Student email: ' + (S.email || '(not given)'));
+  L.push('Date: ' + (S.date || '(not given)'));
+  L.push('Tutor: ' + (S.tutorName || '(not given)'));
+  L.push('Tutor email: ' + (S.tutorEmail || '(not given)'));
+  L.push('Tutor phone: ' + (S.tutorPhone || '(not given)'));
+  L.push('Flagged: ' + S.ticked.size + ' of 85 sub-topics');
+  L.push('');
+  L.push('--- FLAGGED SUB-TOPICS ---');
+  if (!flagged.length) L.push('(none)');
+  flagged.forEach(f => {
+    L.push('');
+    L.push('[' + f.code + '] ' + f.title + '  (' + f.topic + ')');
+    L.push('   ' + (S.notes[f.code] ? S.notes[f.code].trim() : '(no description written)'));
+  });
+  L.push('');
+  L.push('--- THE FIVE QUESTIONS ---');
+  QUESTIONS.forEach(q => {
+    const a = S.q[q.id];
+    L.push('');
+    L.push(q.id + ' (' + q.tag + '): ' + (a.hard ? 'FOUND DIFFICULT' : 'ok'));
+    if (a.note) L.push('   ' + a.note.trim());
+    if (a.timed && a.time && validTime(a.time)) L.push('   Time: ' + a.time.trim());
+  });
+  L.push('');
+  return L.join('\n');
+}
+
+function download() {
+  const stamp = (S.name || 'student').replace(/[^a-z0-9]+/gi, '-').toLowerCase();
+  const blob = new Blob([buildExport()], {type:'text/plain'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'csec-addmaths-intake.txt';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+async function submitIntakeToDatabase() {
+  const output = document.getElementById('databaseStatus');
+  if (!S.studentId.trim()) {
+    output.textContent = 'Enter a stable learner ID before submitting.';
+    document.getElementById('sid').focus();
+    return;
+  }
+  output.textContent = 'Connecting and validating intake evidence…';
+  const submittedAt = new Date().toISOString();
+  const payload = {
+    clientSubmissionId: AlphaMath.ids.stable('alphamath:intake:database-submission-draft', 'intake'),
+    sourceVersion: AlphaMath.version,
+    submittedAt,
+    learner: {
+      externalId: S.studentId.trim(),
+      displayName: S.name.trim(),
+      school: S.school.trim(),
+      email: S.email.trim()
+    },
+    tutor: {
+      name: S.tutorName.trim(),
+      email: S.tutorEmail.trim(),
+      phone: S.tutorPhone.trim()
+    },
+    topics: FLAT.map(item => ({
+      code: item.code,
+      status: S.statuses[item.code] || 'not-started',
+      note: (S.notes[item.code] || '').trim()
+    })),
+    practiceQuestions: QUESTIONS.map(question => ({
+      itemId: question.id,
+      foundDifficult: Boolean(S.q[question.id].hard),
+      note: S.q[question.id].note || '',
+      timed: Boolean(S.q[question.id].timed),
+      time: S.q[question.id].time || ''
+    }))
+  };
+  try {
+    const result = await AlphaMath.api.submit('/v1/intake-submissions', payload);
+    AlphaMath.storage.set('alphamath:intake:database-submission-draft', '');
+    output.textContent = 'Stored in PostgreSQL. Intake record ' + result.id + '.';
+    AlphaMath.announce('Intake submission stored in PostgreSQL.');
+  } catch (error) {
+    output.textContent = error.message;
+  }
+}
+
+restore().then(() => {
+  refresh(false);
+  /* Open any topic that already has identified practice topics, so a returning
+     student sees their own plan without hunting for it. */
+  DATA.modules.forEach(m => m.topics.forEach(t => {
+    if (t.items.some(i => S.ticked.has(i.code))) {
+      const d = document.getElementById('topd-' + t.id);
+      if (d) d.open = true;
+    }
+  }));
+});
+</script>
