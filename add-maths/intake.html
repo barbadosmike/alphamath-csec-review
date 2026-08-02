@@ -4,15 +4,16 @@
 <title>CSEC Additional Mathematics — Phase 1: Learning-Readiness Self-Assessment</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="assets/vendor/katex/katex.min.css">
+<link rel="stylesheet" href="assets/css/palette.css">
 <style>
+/* The purple family (--purple, --purple-deep, --purple-mid, --purple-soft,
+   --purple-line, --purple-20) is supplied by assets/css/palette.css, linked
+   above and shared with alphamath.css. Do not redeclare it in this block — an
+   inline declaration wins over the linked file and reintroduces the drift that
+   had this page on #140B2C while every other page sat on #552583.
+   Renamed 2026-07-31: --amethyst/--wisteria/--lavender carried §2 shade names at
+   non-§2 values, so the names went and the values stayed. See palette.css. */
 :root{
-  --purple:#140B2C;        /* Marion Sydney Classic Royal Purple — identity */
-  --purple-deep:#4B006E;   /* Deep Royal Purple — header bars */
-  --purple-imp:#602F6B;    /* Imperial Purple — table headers */
-  --purple-20:#452069;     /* pressed / hover */
-  --amethyst:#9B72CF;
-  --wisteria:#C9B6E4;
-  --lavender:#EDE7F6;
   --gold:#C8A951;          /* Marion Gold */
   --gold-metal:#D3AF37;
   --gold-old:#8B6914;      /* gold text on light — legibility rule */
@@ -44,15 +45,15 @@ body{margin:0;background:var(--offwhite);color:var(--slate);
   border-bottom:3px solid var(--gold-metal)}
 .mast .inner{max-width:980px;margin:0 auto}
 .mast h1{font-family:var(--sans);font-size:31px;font-weight:700;margin:0;letter-spacing:-.2px}
-.mast h2{font-family:var(--sans);font-size:17px;font-weight:400;margin:5px 0 0;color:var(--wisteria)}
+.mast h2{font-family:var(--sans);font-size:17px;font-weight:400;margin:5px 0 0;color:var(--purple-line)}
 .mast .meta{font-family:var(--sans);font-size:12.5px;margin-top:12px;color:var(--silver)}
 .mast .phase{font-family:var(--sans);font-size:13.5px;margin-top:9px;color:var(--white-gold)}
 .mast .phase b{color:var(--gold-metal);text-transform:uppercase;letter-spacing:.8px;font-weight:700}
-.mast .phase i{color:var(--wisteria);font-style:italic}
+.mast .phase i{color:var(--purple-line);font-style:italic}
 .mast .phase .yet{color:var(--gold-metal);font-weight:700;font-style:normal}
 .idbar{display:flex;gap:16px;flex-wrap:wrap;margin-top:20px}
 .idbar label{font-family:var(--sans);font-size:12px;text-transform:uppercase;
-  letter-spacing:.6px;color:var(--wisteria);display:block;margin-bottom:4px}
+  letter-spacing:.6px;color:var(--purple-line);display:block;margin-bottom:4px}
 .idbar input{font-family:var(--sans);font-size:14px;padding:7px 10px;border:0.9px solid var(--silver);
   border-radius:2px;background:var(--white-gold);color:var(--slate);width:260px}
 .idbar .short input{width:150px}
@@ -60,16 +61,16 @@ body{margin:0;background:var(--offwhite);color:var(--slate);
 /* ---------- cards ---------- */
 .card{background:#fff;border:0.9px solid var(--platinum);border-radius:3px;
   padding:18px 20px;margin:0 0 18px}
-.card.lav{background:var(--lavender);border-color:var(--wisteria)}
+.card.lav{background:var(--purple-soft);border-color:var(--purple-line)}
 .card.gold{background:#fff;border-color:var(--gold);border-left:3px solid var(--gold)}
 .card h3{font-family:var(--sans);font-size:15px;margin:0 0 9px;color:var(--purple)}
 .card.gold h3{color:var(--gold-old)}
-.prerequisite-card{border-left:4px solid var(--amethyst);background:linear-gradient(135deg,#fff,var(--lavender))}
+.prerequisite-card{border-left:4px solid var(--purple-mid);background:linear-gradient(135deg,#fff,var(--purple-soft))}
 .foundation-link{display:inline-flex;font-family:var(--sans);font-size:13px;font-weight:700;color:var(--purple);text-decoration:none;border-bottom:1px solid var(--gold)}
 .foundation-link:hover,.foundation-link:focus-visible{color:var(--purple-deep);border-bottom-width:2px}
 .card ol,.card ul{margin:0;padding-left:20px}
 .card li{margin-bottom:6px}
-.eg{font-size:14.5px;margin-top:8px;padding-left:12px;border-left:2px solid var(--wisteria)}
+.eg{font-size:14.5px;margin-top:8px;padding-left:12px;border-left:2px solid var(--purple-line)}
 .eg b{font-family:var(--sans);font-size:11.5px;text-transform:uppercase;letter-spacing:.6px}
 .eg .good b{color:var(--purple)} .eg .bad b{color:var(--graphite)}
 .eg p{margin:3px 0 7px;font-style:italic}
@@ -78,7 +79,7 @@ body{margin:0;background:var(--offwhite);color:var(--slate);
 .mod{background:var(--purple-deep);color:var(--white-gold);padding:13px 18px;
   border-radius:3px;margin:34px 0 4px}
 .mod h2{font-family:var(--sans);font-size:18px;margin:0;font-weight:700}
-.mod p{font-family:var(--sans);font-size:12px;margin:4px 0 0;color:var(--wisteria);line-height:1.45}
+.mod p{font-family:var(--sans);font-size:12px;margin:4px 0 0;color:var(--purple-line);line-height:1.45}
 .top{margin-top:26px}
 .top .hd{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
   border-bottom:1px solid var(--gold-metal);padding-bottom:5px}
@@ -90,33 +91,33 @@ body{margin:0;background:var(--offwhite);color:var(--slate);
   border-bottom:1px solid #EFEDE8}
 .row:last-child{border-bottom:0}
 .row:hover{background:var(--white-gold)}
-.row.on:hover{background:var(--lavender)}
+.row.on:hover{background:var(--purple-soft)}
 .row .code{font-family:var(--sans);font-size:11px;font-weight:700;color:var(--purple);
   min-width:66px;text-align:right;padding-top:3px;letter-spacing:.2px}
 .row .txt{flex:1;font-size:15.5px}
 .row .txt b{font-weight:700;color:#1f2733}
-.row.on{background:var(--lavender)}
+.row.on{background:var(--purple-soft)}
 .row.on .txt b{color:var(--purple)}
 .row-info{display:inline-block;vertical-align:super;margin-left:3px;border:0;padding:0;
-  background:transparent;color:var(--wisteria);line-height:0}
-.row-info:hover,.row-info:focus-visible{background:var(--purple-deep);color:var(--wisteria)}
+  background:transparent;color:var(--purple-line);line-height:0}
+.row-info:hover,.row-info:focus-visible{background:var(--purple-deep);color:var(--purple-line)}
 .row-info svg{display:block;width:16px;height:16px;fill:currentColor}
 .row-popover{flex:0 0 calc(100% - 78px);margin:0 0 2px 78px;padding:9px 11px;
-  background:var(--lavender);color:var(--slate);border:1px solid var(--amethyst);
+  background:var(--purple-soft);color:var(--slate);border:1px solid var(--purple-mid);
   border-radius:3px;box-shadow:0 4px 12px rgba(20,11,44,.2);
   font-family:"Latin Modern Roman",serif;font-size:15px;line-height:1.4}
 .row-popover .ref-table{border-collapse:collapse;margin:4px 0 6px;width:100%}
 .row-popover .ref-table th,.row-popover .ref-table td{padding:4px 12px 4px 0;text-align:left;font-weight:400}
-.row-popover .ref-table th{font-weight:700;color:var(--purple);border-bottom:2px solid var(--amethyst)}
-.row-popover .ref-table td{border-bottom:1px dotted var(--wisteria)}
+.row-popover .ref-table th{font-weight:700;color:var(--purple);border-bottom:2px solid var(--purple-mid)}
+.row-popover .ref-table td{border-bottom:1px dotted var(--purple-line)}
 .row-popover .ref-table tr:last-child td{border-bottom:0}
 .row-popover .formula-lines{margin:5px 0}
 .row-popover .formula-lines>.tex{display:block;margin:0;padding:7px 2px;
-  border-bottom:1px dotted var(--wisteria)}
+  border-bottom:1px dotted var(--purple-line)}
 .row-popover .formula-lines>.tex:last-child{border-bottom:0}
 .row-popover .reference-lines{margin:5px 0}
 .row-popover .reference-lines>span{display:block;margin:0;padding:7px 2px;
-  border-bottom:1px dotted var(--wisteria)}
+  border-bottom:1px dotted var(--purple-line)}
 .row-popover .reference-lines>span:last-child{border-bottom:0}
 .row-popover[hidden]{display:none}
 
@@ -125,7 +126,7 @@ body{margin:0;background:var(--offwhite);color:var(--slate);
 .cb input{position:absolute;opacity:0;width:20px;height:20px;margin:0;cursor:pointer}
 .cb .bx{display:block;width:20px;height:20px;border:0.9px solid var(--purple);
   border-radius:2px;background:var(--white-gold);transition:background .12s,border-color .12s}
-.cb input:hover+.bx{border-color:var(--purple-20);background:var(--lavender)}
+.cb input:hover+.bx{border-color:var(--purple-20);background:var(--purple-soft)}
 .cb input:focus-visible+.bx{outline:2px solid var(--gold-metal);outline-offset:2px}
 .cb input:checked+.bx{background:var(--purple);border-color:var(--purple)}
 .cb .bx::after{content:"";position:absolute;left:6.5px;top:2.5px;width:5px;height:10px;
@@ -146,7 +147,7 @@ body{margin:0;background:var(--offwhite);color:var(--slate);
   color:var(--white-gold);padding:13px 18px;display:flex;align-items:center;gap:14px}
 .mod-d>summary::-webkit-details-marker{display:none}
 .mod-d>summary .mod-h{font-family:var(--sans);font-size:18px;font-weight:700;flex:1}
-.mod-d>summary .mod-note{font-family:var(--sans);font-size:12px;color:var(--wisteria);
+.mod-d>summary .mod-note{font-family:var(--sans);font-size:12px;color:var(--purple-line);
   line-height:1.4;max-width:46%;text-align:right}
 .mod-d>summary .caret{font-family:var(--sans);font-size:13px;color:var(--gold-metal);
   transition:transform .15s;flex:0 0 auto}
@@ -173,8 +174,8 @@ body{margin:0;background:var(--offwhite);color:var(--slate);
 .tbody{padding:2px 14px 10px}
 .mod-tools{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 2px}
 .mod-tools button{font-family:var(--sans);font-size:11.5px;color:var(--purple);
-  background:#fff;border:0.9px solid var(--wisteria);border-radius:2px;padding:5px 10px;cursor:pointer}
-.mod-tools button:hover{background:var(--lavender);border-color:var(--purple)}
+  background:#fff;border:0.9px solid var(--purple-line);border-radius:2px;padding:5px 10px;cursor:pointer}
+.mod-tools button:hover{background:var(--purple-soft);border-color:var(--purple)}
 
 /* ---------- maths ---------- */
 .m{font-family:var(--serif);white-space:nowrap}
@@ -193,7 +194,7 @@ math.inline-math{display:inline-block;margin:0 .04em;vertical-align:-.18em;
 /* ---------- struggle log ---------- */
 .log{margin-top:12px}
 .lrow{display:flex;gap:12px;align-items:flex-start;background:#fff;
-  border:0.9px solid var(--platinum);border-left:3px solid var(--wisteria);
+  border:0.9px solid var(--platinum);border-left:3px solid var(--purple-line);
   border-radius:3px;padding:12px 14px;margin-bottom:10px}
 .lrow.filled{border-left-color:var(--purple)}
 .lrow .lc{flex:0 0 200px}
@@ -210,7 +211,7 @@ math.inline-math{display:inline-block;margin:0 .04em;vertical-align:-.18em;
 .lrow select{font-family:var(--sans);font-size:12.5px;padding:6px 8px;width:100%;
   border:0.9px solid var(--silver);border-radius:2px;background:#fff;color:var(--slate)}
 .addrow{display:flex;align-items:center;gap:10px;margin-top:14px;flex-wrap:wrap;
-  background:var(--lavender);border:0.9px solid var(--wisteria);border-radius:6px;padding:10px 12px}
+  background:var(--purple-soft);border:0.9px solid var(--purple-line);border-radius:6px;padding:10px 12px}
 .addrow label{font-family:var(--sans);font-size:12px;font-weight:700;color:var(--purple)}
 .picker{position:relative;flex:1;min-width:220px;font-family:var(--sans);font-size:12.5px}
 .picker>summary{list-style:none;cursor:pointer;padding:6px 30px 6px 8px;border:0.9px solid var(--silver);
@@ -222,7 +223,7 @@ math.inline-math{display:inline-block;margin:0 .04em;vertical-align:-.18em;
   overflow:auto;background:#fff;border:0.9px solid var(--silver);border-radius:3px;
   box-shadow:0 8px 22px rgba(20,11,44,.18)}
 .pick-group{padding:7px 10px 4px;font-size:10.5px;font-weight:700;text-transform:uppercase;
-  letter-spacing:.45px;color:var(--purple);background:var(--lavender);position:sticky;top:0;z-index:1}
+  letter-spacing:.45px;color:var(--purple);background:var(--purple-soft);position:sticky;top:0;z-index:1}
 .pick-item{display:flex;flex-wrap:wrap;align-items:center;border-bottom:1px solid var(--platinum)}
 .pick-item:last-child{border-bottom:0}
 .pick-add{flex:1;text-align:left;border:0;padding:8px 10px;background:#fff;color:var(--slate);
@@ -231,13 +232,13 @@ math.inline-math{display:inline-block;margin:0 .04em;vertical-align:-.18em;
 .empty{color:var(--graphite);font-family:var(--sans);font-size:12px;font-style:normal}
 .lgroup{font-family:var(--sans);font-size:12px;font-weight:700;text-transform:uppercase;
   letter-spacing:.5px;color:var(--purple);margin:18px 0 6px;padding-bottom:3px;
-  border-bottom:1px solid var(--wisteria)}
+  border-bottom:1px solid var(--purple-line)}
 .lgroup:first-child{margin-top:0}
 .lrow .lchead{display:flex;align-items:center;gap:6px}
 .lrm{font-family:var(--sans);font-size:15px;line-height:1;color:var(--graphite);
   background:transparent;border:0.9px solid var(--silver);border-radius:2px;
   padding:0 7px 2px;cursor:pointer}
-.lrm:hover{color:var(--purple);border-color:var(--purple);background:var(--lavender)}
+.lrm:hover{color:var(--purple);border-color:var(--purple);background:var(--purple-soft)}
 
 /* ---------- questions ---------- */
 .q{background:#fff;border:0.9px solid var(--platinum);border-top:3px solid var(--purple);
@@ -252,7 +253,7 @@ math.inline-math{display:inline-block;margin:0 .04em;vertical-align:-.18em;
 .q .qf label{font-family:var(--sans);font-size:13px;color:var(--slate);cursor:pointer}
 .q input[type=text]{flex:1;min-width:220px;font-family:var(--serif);font-size:14.5px;
   padding:7px 10px;border:0.9px solid var(--silver);border-radius:2px;background:var(--offwhite)}
-.q.hard{background:var(--lavender);border-color:var(--wisteria);border-top-color:var(--purple)}
+.q.hard{background:var(--purple-soft);border-color:var(--purple-line);border-top-color:var(--purple)}
 .q .qf2{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:9px}
 .q .qf2 .tk{font-family:var(--sans);font-size:13px;color:var(--slate);cursor:pointer;
   display:inline-flex;align-items:center;gap:6px}
@@ -275,7 +276,7 @@ button{font-family:var(--sans);font-size:13px;font-weight:700;padding:8px 15px;
   background:transparent;color:var(--white-gold)}
 button:hover{background:var(--purple-20);border-color:var(--gold-metal)}
 button.pri{background:var(--purple);border-color:var(--gold-metal);color:var(--white-gold)}
-button.pri:hover{background:var(--amethyst)}
+button.pri:hover{background:var(--purple-mid)}
 button:focus-visible{outline:2px solid var(--gold-metal);outline-offset:2px}
 input:focus-visible,select:focus-visible{outline:2px solid var(--gold-metal);outline-offset:1px}
 input[type=email]:not(:placeholder-shown):invalid{border-color:#B00020;background:#FFF3F3}
@@ -309,19 +310,14 @@ p.lede{font-size:15.5px;margin:8px 0 16px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 
-/* ── INK THEME #140B2C (CDR-0146) — CSEC Maths family ────────────────────────
-   ⚠️ INJECTED AT THE END OF THE STYLE BLOCK, not before it. This document has
-   no <head> element at all — it is a headless doctype+html+meta shell with one
-   inline <style> — so the usual "insert before <link rel="stylesheet" href="assets/css/alphamath.css">\n</head>" placement had nothing
-   to attach to and silently skipped the file. Appending inside the single
-   block puts the override last, which is what wins.                         */
+/* ── SURFACE AND SEMANTIC TOKENS — CSEC Additional Mathematics intake ────────
+   This document is a headless doctype+html+meta shell with one inline <style>
+   and no <head> element, so a stylesheet cannot be injected before </head>.
+   The linked palette.css at the top of the file supplies the ink family; the
+   tokens below are this page's own surfaces and semantic colours and are
+   deliberately not shared. The ink family is NOT redeclared here — see the
+   note beside the first :root block.                                        */
 :root {
-  --purple:      #140B2C;
-  --purple-20:   #0C0619;
-  --purple-deep: #241348;
-  --amethyst:    #7E68C6;
-  --wisteria:    #BCB2DE;
-  --lavender:    #EAE6F5;
   --paper:       #F6F2E8;
   --sheet:       #FFFDF8;
   --ink:         #252130;
@@ -396,7 +392,7 @@ body{
   opacity:0;pointer-events:none;transition:opacity .2s,translate .28s var(--ease)}
 .completion-feedback.show{opacity:1;translate:-50% 0}
 
-.mod-d{--section-accent:var(--amethyst);margin:30px 0 16px;border:1px solid var(--rule);
+.mod-d{--section-accent:var(--purple-mid);margin:30px 0 16px;border:1px solid var(--rule);
   border-left:5px solid var(--section-accent);border-radius:var(--radius-lg);box-shadow:var(--shadow-card);
   background:var(--sheet)}
 .mod-d>summary{padding:18px 20px;background:linear-gradient(100deg,var(--purple-deep),#35245A)}
@@ -621,7 +617,7 @@ button:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visi
   <div class="phase"><b>Phase 1</b> &middot; Learning-Readiness Self-Assessment &mdash; <i>knowing what you don't know</i> &mdash; <span class="yet">yet</span></div>
   <div class="meta">AlphaMath Program &nbsp;·&nbsp; Fifth Form &nbsp;·&nbsp; Sitting June 2027 &nbsp;·&nbsp; CXC 37/G/SYLL 18 · Amended 2020</div>
   <div class="idbar">
-    <div class="short"><label for="sid">Learner ID</label><input id="sid" type="text" value="REVIEW-DEMO" autocomplete="off"></div>
+    <div class="short"><label for="sid">Learner ID</label><input id="sid" type="text" value="" autocomplete="off"></div>
     <div><label for="sc">School</label><input id="sc" type="text" autocomplete="organization" placeholder="Your school"></div>
     <div><label for="nm">Name</label><input id="nm" type="text" autocomplete="name"></div>
     <div><label for="se">Your Email</label><input id="se" type="email" autocomplete="email" placeholder="you@example.com"></div>
@@ -636,12 +632,12 @@ button:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visi
 
 <nav class="intake-suite-nav" aria-label="AlphaMath suite">
   <div class="intake-nav-inner">
-    <a href="index.html" aria-label="Return to AlphaMath suite home">← Suite home</a>
-    <a href="intake.html" aria-current="page">Intake</a>
-    <a href="learning-path.html">Learning path</a>
-    <a href="tutorial.html">Tutorial</a>
-    <a href="simulated-exams.html">Simulated exams</a>
-    <a href="dashboard.html">Dashboard</a>
+    <a href="index.html">Suite home</a>
+    <a href="students.html" aria-current="page">Students</a>
+    <a href="pathways.html">Pathways</a>
+    <a href="tutors.html">Tutors</a>
+    <a href="parents.html">Parents</a>
+    <a href="admin-console.html">Admin</a>
   </div>
 </nav>
 
@@ -665,8 +661,6 @@ button:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visi
 <div class="card prerequisite-card">
   <h3>Check the CSEC Mathematics foundation first</h3>
   <p style="margin:0 0 10px">Additional Mathematics assumes fluent fraction arithmetic, algebraic manipulation, index laws, solving linear and quadratic equations, and coordinate gradients. If one of these foundations is not yet secure, record the Add Maths topic honestly and repair the prerequisite through the CSEC Mathematics pathway before continuing.</p>
-  <a class="foundation-link" href="../intake.html">Open the CSEC Mathematics foundation check →</a>
-  <p class="note">“Not started” means the Add Maths topic has not been taught yet. “Needs practice” means you have met the topic but cannot yet complete the method independently.</p>
 </div>
 
 <div class="card gold">
@@ -726,6 +720,7 @@ button:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visi
 <script src="assets/vendor/katex/katex.min.js"></script>
 <script src="assets/js/runtime-config.js"></script>
 <script src="assets/js/suite.js"></script>
+<script src="assets/js/auth.js"></script>
 <script>
 const DATA = {
   "modules": [
@@ -2241,7 +2236,7 @@ DATA.modules.forEach(m => m.topics.forEach(t => t.items.forEach(i =>
   FLAT.push({code:i.code, title:i.t.replace(/<[^>]+>/g,''), description:i.n,
     topic:t.name, topicId:t.id, moduleId:m.id}))));
 
-const S = {studentId:"REVIEW-DEMO", school:"", name:"", date:"", email:"", tutorName:"", tutorEmail:"", tutorPhone:"",
+const S = {studentId:(window.AlphaMath && AlphaMath.learner.current()) || "", school:"", name:"", date:"", email:"", tutorName:"", tutorEmail:"", tutorPhone:"",
   ticked:new Set(), statuses:{}, notes:{}, q:{}};
 const IDF = { sid:"studentId", sc:"school", nm:"name", dt:"date", se:"email", tn:"tutorName", te:"tutorEmail", tp:"tutorPhone" };
 QUESTIONS.forEach(q => S.q[q.id] = {hard:false, note:"", timed:false, time:""});
@@ -2672,7 +2667,7 @@ async function restore() {
     const r = await store.get('csec-addmaths-gapform');
     if (!r || !r.value) return;
     const d = JSON.parse(r.value);
-    S.studentId = d.studentId || 'REVIEW-DEMO'; S.school = d.school || ''; S.name = d.name || ''; S.date = d.date || '';
+    S.studentId = d.studentId || (window.AlphaMath && AlphaMath.learner.current()) || ''; S.school = d.school || ''; S.name = d.name || ''; S.date = d.date || '';
     S.email = d.email || ''; S.tutorName = d.tutorName || ''; S.tutorEmail = d.tutorEmail || ''; S.tutorPhone = d.tutorPhone || '';
     document.getElementById('se').value = S.email;
     document.getElementById('sid').value = S.studentId;
@@ -2760,11 +2755,51 @@ function download() {
   URL.revokeObjectURL(a.href);
 }
 
+/* The database already holding an intake for this learner is a fact this page
+   should say out loud (Issue: a resubmit stores a SECOND record — the stable
+   client id is cleared on success, so a later submit mints a new one. It does
+   not update the first record, and the instructional plan does not change
+   through this form; the plan moves on evidence, through the tutor). Keyed per
+   learner id, because this key — unlike the tutorial and exam drafts — is not
+   learner-namespaced and one device may serve siblings. */
+function intakeSubmittedMarkerKey(learnerId) {
+  return 'alphamath:intake:database-submitted:' + learnerId;
+}
+function intakeSubmittedAt(learnerId) {
+  return learnerId ? AlphaMath.storage.get(intakeSubmittedMarkerKey(learnerId), null) : null;
+}
+function renderIntakeSubmittedNotice() {
+  const existing = document.getElementById('intakeSubmittedNotice');
+  const learnerId = (S.studentId || '').trim();
+  const when = intakeSubmittedAt(learnerId);
+  if (!when) { if (existing) existing.remove(); return; }
+  const host = document.getElementById('databaseStatus');
+  if (!host || !host.parentNode) return;
+  const notice = existing || document.createElement('p');
+  notice.id = 'intakeSubmittedNotice';
+  notice.className = 'fine';
+  notice.textContent = 'The database already holds ' + learnerId + "'s intake, submitted "
+    + new Date(when).toLocaleDateString()
+    + '. Submitting again stores a second copy — it does not update the first, and your '
+    + 'instructional plan does not change through this form. New progress? Tell your tutor: '
+    + 'the plan moves on your work, and your tutor updates it.';
+  if (!existing) host.parentNode.insertBefore(notice, host);
+}
+
 async function submitIntakeToDatabase() {
   const output = document.getElementById('databaseStatus');
   if (!S.studentId.trim()) {
     output.textContent = 'Enter a stable learner ID before submitting.';
     document.getElementById('sid').focus();
+    return;
+  }
+  const priorSubmission = intakeSubmittedAt(S.studentId.trim());
+  if (priorSubmission && !confirm(
+    'The database already holds ' + S.studentId.trim() + "'s intake from "
+    + new Date(priorSubmission).toLocaleDateString()
+    + '.\n\nSubmit a SECOND copy? It will not update the first, and it will not change the '
+    + 'instructional plan — tell your tutor about new progress instead.')) {
+    output.textContent = 'Not submitted. Your work on this device is unchanged — tell your tutor about new progress.';
     return;
   }
   output.textContent = 'Connecting and validating intake evidence…';
@@ -2800,7 +2835,14 @@ async function submitIntakeToDatabase() {
   try {
     const result = await AlphaMath.api.submit('/v1/intake-submissions', payload);
     AlphaMath.storage.set('alphamath:intake:database-submission-draft', '');
-    output.textContent = 'Stored in PostgreSQL. Intake record ' + result.id + '.';
+    output.textContent = priorSubmission
+      ? 'Stored a SECOND intake record (' + result.id + '). The original from '
+        + new Date(priorSubmission).toLocaleDateString()
+        + ' is unchanged, and the plan updates through your tutor, not through this form.'
+      : 'Stored in PostgreSQL. Intake record ' + result.id + '.';
+    AlphaMath.storage.set(intakeSubmittedMarkerKey(payload.learner.externalId),
+      AlphaMath.storage.get(intakeSubmittedMarkerKey(payload.learner.externalId), null) || submittedAt);
+    renderIntakeSubmittedNotice();
     AlphaMath.announce('Intake submission stored in PostgreSQL.');
   } catch (error) {
     output.textContent = error.message;
@@ -2809,6 +2851,7 @@ async function submitIntakeToDatabase() {
 
 restore().then(() => {
   refresh(false);
+  renderIntakeSubmittedNotice();
   /* Open any topic that already has identified practice topics, so a returning
      student sees their own plan without hunting for it. */
   DATA.modules.forEach(m => m.topics.forEach(t => {

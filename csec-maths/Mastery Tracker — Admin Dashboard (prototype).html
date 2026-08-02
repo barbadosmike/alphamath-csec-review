@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>AlphaMath — Tutor Admin Dashboard Prototype</title>
+  <link rel="stylesheet" href="assets/css/alphamath.css">
+</head>
+<body >
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-head">
+    <div class="head-inner">
+      <p class="brand-line"><span class="brand-mark" aria-hidden="true">α</span> AlphaMath · CSEC Mathematics</p>
+      <h1>Tutor evidence workspace</h1>
+      <p class="lede">A restrained administrative view for reviewing learner evidence, scheduling retrieval, and preserving human mastery decisions.</p>
+      <div class="head-meta"><span>Working as <strong data-active-learner>—</strong></span><span>Prototype</span><span>On-device</span><span>Subject-scoped IDs</span></div>
+    </div>
+  </header>
+  <nav class="suite-nav" aria-label="AlphaMath suite"><div class="nav-inner"><a href="index.html" >Suite home</a><a href="students.html" >Students</a><a href="pathways.html" >Pathways</a><a href="tutors.html" >Tutors</a><a href="parents.html" >Parents</a><a href="admin-console.html" >Admin</a></div></nav>
+  <main id="main" class="shell">
+  <div class="dashboard-layout">
+    <aside class="side-panel card" aria-label="Tutor workspace navigation">
+      <a href="#overview" aria-current="page">Overview</a>
+      <a href="#learner">Learner pathway</a>
+      <a href="#evidence">Evidence requirements</a>
+      <a href="#privacy">Privacy boundary</a>
+    </aside>
+    <div>
+      <section id="overview"><h2>Tutor overview</h2>
+        <div class="metric-grid">
+          <div class="metric-card"><span>Learners shown</span><strong>1</strong><span>subject-scoped ID only</span></div>
+          <div class="metric-card gold"><span>Priority skills</span><strong>4</strong><span>documented cluster</span></div>
+          <div class="metric-card green"><span>Mastery decisions</span><strong>0</strong><span>none made by this build</span></div>
+          <div class="metric-card blue"><span>Next review</span><strong>—</strong><span>tutor to schedule</span></div>
+        </div>
+      </section>
+      <section id="learner"><h2>Learner pathway</h2>
+        <div class="table-wrap"><table><thead><tr><th>Learner ID</th><th>Verified signal</th><th>Current state</th><th>Next instructional action</th></tr></thead>
+        <tbody><tr><td>REVIEW-DEMO</td><td>Conversions, reverse percentage, ratio/proportion</td><td><span class="status not-yet">Not-yet</span></td><td>Begin the conversion foundation; collect method and confidence evidence.</td></tr></tbody></table></div>
+      </section>
+      <section id="evidence"><h2>Evidence gate</h2><div class="callout info"><p>No authentic marked attempt set or retained checkpoint was supplied. Therefore the dashboard makes no approaching/mastered claim.</p></div></section>
+      <section id="privacy"><h2>Privacy boundary</h2><div class="callout warning"><p>Use subject-scoped ID REVIEW-DEMO in routine artifacts. Do not copy the roster mapping into exports, screenshots, filenames, or shared documentation.</p></div></section>
+    </div>
+  </div>
+</main>
+  <div id="suite-live-region" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+  <script src="assets/js/runtime-config.js" defer></script>
+  <script src="assets/js/suite.js" defer></script>
+</body>
+</html>

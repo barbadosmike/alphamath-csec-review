@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>AlphaMath — Tell Your Tutor — CSEC Mathematics</title>
+  <link rel="stylesheet" href="assets/css/alphamath.css">
+</head>
+<body >
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-head">
+    <div class="head-inner">
+      <p class="brand-line"><span class="brand-mark" aria-hidden="true">α</span> AlphaMath · CSEC Mathematics</p>
+      <h1>Tell your tutor</h1>
+      <p class="lede">What you've started, where you want more practice, and anything else — sent to the person who plans your work. Your intake stays as it was on day one; this is how the picture moves.</p>
+      <div class="head-meta"><span>Working as <strong data-active-learner>—</strong></span><span>Signed-in learners</span><span>Read by your tutor</span><span>Your plan updates through them</span></div>
+    </div>
+  </header>
+  <nav class="suite-nav" aria-label="AlphaMath suite"><div class="nav-inner"><a href="index.html" >Suite home</a><a href="students.html" aria-current="page">Students</a><a href="pathways.html" >Pathways</a><a href="tutors.html" >Tutors</a><a href="parents.html" >Parents</a><a href="admin-console.html" >Admin</a></div></nav>
+  <main id="main" class="shell">
+  <div data-auth-gate></div>
+
+  <div data-tyt hidden>
+    <section class="panel" aria-labelledby="tyt-board-title">
+      <p class="eyebrow">Signal · not a form</p>
+      <h2 id="tyt-board-title">I've started a topic</h2>
+      <p class="fine">Topics your intake recorded as <strong>Not started</strong>. Tap one when you begin it — it moves to Started and is included the next time you send. Sending tells your tutor; it never edits your intake, and mastery states only ever change when your tutor updates them.</p>
+      <div data-board></div>
+    </section>
+
+    <section class="panel" aria-labelledby="tyt-practice-title" style="margin-top:22px">
+      <p class="eyebrow">A prioritized ask</p>
+      <h2 id="tyt-practice-title">I want more practice on…</h2>
+      <p class="fine">Topics you already know or have started — up to <strong>five per message</strong>, so it stays a priority list rather than a wishlist.</p>
+      <p class="fine" data-cap-warning hidden><strong>That's more than five.</strong> Untick down to the ones that matter most this week.</p>
+      <div data-practice></div>
+    </section>
+
+    <section class="panel" aria-labelledby="tyt-note-title" style="margin-top:22px">
+      <p class="eyebrow">Anything else</p>
+      <h2 id="tyt-note-title">Something else…</h2>
+      <label for="tytNote" class="fine">Your tutor reads this before your next session, not the moment you send it. If something is wrong and you need help now, tell an adult at your school.</label>
+      <textarea id="tytNote" data-note rows="4" maxlength="2000" style="width:100%;resize:vertical" placeholder="Anything you want your tutor to know."></textarea>
+    </section>
+
+    <section class="panel" aria-labelledby="tyt-send-title" style="margin-top:22px">
+      <h2 id="tyt-send-title" class="sr-only">Review and send</h2>
+      <p data-summary class="fine"></p>
+      <button type="button" data-send disabled>Send to your tutor</button>
+      <p data-send-status class="fine" role="status" aria-live="polite"></p>
+    </section>
+  </div>
+</main>
+  <div id="suite-live-region" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+  <script src="assets/js/runtime-config.js" defer></script>
+  <script src="assets/js/suite.js" defer></script>
+  <script src="assets/js/auth.js" defer></script>
+  <script src="assets/data/csec-taxonomy.js" defer></script>
+  <script src="assets/js/tell-your-tutor.js" defer></script>
+</body>
+</html>

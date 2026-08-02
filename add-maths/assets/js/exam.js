@@ -3,7 +3,13 @@
 
   const source = window.ALPHAMATH_REVIEW_EXAM || [];
   const questions = source.flatMap(section => section.items || []);
-  const studentId = document.body.dataset.studentId || "REVIEW-DEMO";
+  /* The active learner decides the storage namespace below, so it decides whose
+     draft this page reads and writes. AlphaMath.learner.current() resolves
+     ?learner= → stored selection → this page's data-student-id; the literal
+     fallback that used to sit here made every page a single-learner demo.
+     "unassigned" is deliberately not a real id: a page that cannot say who it is
+     for must not write into someone else's namespace. */
+  const studentId = (window.AlphaMath && AlphaMath.learner.current()) || "unassigned";
   const instrumentId = document.body.dataset.instrumentId || "simulated-exam-1";
   const examName = document.body.dataset.examName || "Simulated Exam 1 — Quadratics Foundation";
   const templateMode = document.body.dataset.template === "true";
@@ -48,11 +54,66 @@
 
   function save(){
     AlphaMath.storage.set(storageKey,state);
+    document.dispatchEvent(new CustomEvent("alphamath:attempt-changed",{
+      detail:{kind:"exam",instrumentId}
+    }));
+  }
+
+  function questionParts(question){
+    if(Array.isArray(question?.parts) && question.parts.length) return question.parts;
+    return [{id:"answer",label:"Answer",prompt:""}];
   }
 
   function response(index){
-    return state.responses[index] ||= {answer:"",flagged:false,drawing:""};
+    const item = state.responses[index] ||= {
+      answer:"",
+      parts:{},
+      flagged:false,
+      drawing:"",
+      sketchpadSize:"standard"
+    };
+    item.parts ||= {};
+    item.sketchpadSize ||= "standard";
+    const parts = questionParts(questions[index]);
+    const hasPartAnswer = parts.some(part => String(item.parts[part.id] || "").trim());
+    if(String(item.answer || "").trim() && !hasPartAnswer && !item.legacyAnswer){
+      if(parts.length === 1) item.parts[parts[0].id] = item.answer;
+      else item.legacyAnswer = item.answer;
+    }
+    return item;
   }
+
+  function responseStatus(index){
+    const item = response(index);
+    const parts = questionParts(questions[index]);
+    const completedParts = parts.filter(part => String(item.parts[part.id] || "").trim()).length;
+    if(completedParts === parts.length) return "complete";
+    if(completedParts > 0 || String(item.legacyAnswer || "").trim()) return "partial";
+    return "empty";
+  }
+
+  function flattenedAnswer(index){
+    const item = response(index);
+    const partLines = questionParts(questions[index])
+      .map(part => {
+        const value = String(item.parts[part.id] || "").trim();
+        return value ? `${part.label || part.id} ${value}` : "";
+      })
+      .filter(Boolean);
+    if(String(item.legacyAnswer || "").trim()){
+      partLines.push(`Earlier saved answer: ${item.legacyAnswer}`);
+    }
+    return partLines.join("\n") || String(item.answer || "");
+  }
+
+  function syncFlattenedAnswer(index){
+    response(index).answer = flattenedAnswer(index);
+  }
+
+  // Keep the existing storage key and migrate in place so earlier attempts are
+  // preserved. Multipart legacy answers remain explicitly unassigned.
+  questions.forEach((_question,index) => response(index));
+  AlphaMath.storage.set(storageKey,state);
 
   function elapsed(){
     if(!state.started || state.submitted) return state.elapsedBefore || 0;
@@ -77,7 +138,11 @@
   }
 
   function enteredCount(){
-    return questions.filter((_question,index) => String(response(index).answer || "").trim()).length;
+    return questions.filter((_question,index) => responseStatus(index) === "complete").length;
+  }
+
+  function partialCount(){
+    return questions.filter((_question,index) => responseStatus(index) === "partial").length;
   }
 
   function flaggedCount(){
@@ -117,8 +182,11 @@
   function renderNav(){
     nav.innerHTML = questions.map((question,index) => {
       const item = response(index);
-      return `<button type="button" data-go="${index}" class="${index===state.active?"is-current":""} ${item.answer?"is-answered":""} ${item.flagged?"is-flagged":""}"
-        aria-label="Question ${question.label || index+1}${item.answer?", answer entered":""}${item.flagged?", flagged for review":""}"
+      const status = responseStatus(index);
+      const answerLabel = status === "complete" ? ", all parts answered"
+        : status === "partial" ? ", partly answered" : "";
+      return `<button type="button" data-go="${index}" class="${index===state.active?"is-current":""} ${status==="complete"?"is-answered":""} ${status==="partial"?"is-partial":""} ${item.flagged?"is-flagged":""}"
+        aria-label="Question ${question.label || index+1}${answerLabel}${item.flagged?", flagged for review":""}"
         aria-current="${index===state.active?"step":"false"}">${question.label || index+1}</button>`;
     }).join("");
   }
@@ -130,6 +198,23 @@
       return;
     }
     const item = response(state.active);
+    const parts = questionParts(question);
+    const status = responseStatus(state.active);
+    const partFields = parts.map(part => `
+      <div class="answer-part">
+        ${part.prompt ? `<p class="part-prompt"><strong>${AlphaMath.escapeHTML(part.label || part.id)}</strong> ${AlphaMath.fractionMarkup(part.prompt)}</p>` : ""}
+        <label for="exam-answer-${state.active}-${AlphaMath.escapeHTML(part.id)}">${parts.length === 1 ? "My answer" : `Answer ${AlphaMath.escapeHTML(part.label || part.id)}`}</label>
+        <math-field id="exam-answer-${state.active}-${AlphaMath.escapeHTML(part.id)}"
+          data-exam-answer="${state.active}" data-answer-part="${AlphaMath.escapeHTML(part.id)}"
+          aria-label="${parts.length === 1 ? `Answer for question ${question.label || state.active+1}` : `Answer ${part.label || part.id} for question ${question.label || state.active+1}`}"
+          ${state.submitted ? "read-only" : ""}>${AlphaMath.escapeHTML(item.parts[part.id] || "")}</math-field>
+      </div>`).join("");
+    const legacyAnswer = item.legacyAnswer ? `
+      <div class="callout warning legacy-answer" role="note">
+        <strong>Earlier saved answer retained</strong>
+        <p>This answer predates the part-by-part layout. It remains in exports and tutor evidence until you copy it into the appropriate parts.</p>
+        <math-field read-only aria-label="Earlier saved answer">${AlphaMath.escapeHTML(item.legacyAnswer)}</math-field>
+      </div>` : "";
     questionMount.innerHTML = `
       <article class="question-card exam-question">
         <div class="question-head">
@@ -143,7 +228,10 @@
             <div class="q-meta">${question.cite ? AlphaMath.escapeHTML(question.cite) : "Tutor-authored bridge — not mastery evidence"}</div>
           </div>
           <div class="question-head-actions">
-            <span class="status ${item.answer ? "approaching" : "not-yet"}">${item.answer ? "Answer entered" : "No answer entered"}</span>
+            <span class="status ${status === "complete" ? "approaching" : "not-yet"}">${
+              status === "complete" ? "All parts answered"
+                : status === "partial" ? "Answer in progress" : "No answer entered"
+            }</span>
             <div class="pace-wrap">
               <div class="pace-meter" id="questionPace" role="timer"><span class="pace-hand" aria-hidden="true"></span><strong>00:00</strong></div>
               <span class="pace-label">Recommended ${AlphaMath.formatTime(Number(question.recommendedSeconds || 300))}</span>
@@ -152,15 +240,15 @@
         </div>
         <div class="question-body">
           <p class="question-prompt">${AlphaMath.fractionMarkup(question.prompt || "")}</p>
-          <div class="answer-row">
-            <div>
-              <label for="exam-answer-${state.active}">My answer</label>
-              <math-field id="exam-answer-${state.active}" data-exam-answer="${state.active}" aria-label="Answer for question ${question.label || state.active+1}"
-                ${state.submitted ? "read-only" : ""}>${AlphaMath.escapeHTML(item.answer)}</math-field>
-            </div>
-            <button type="button" class="secondary" data-exam-draw aria-expanded="${item.drawing?"true":"false"}" ${state.submitted?"disabled":""}>Draw working</button>
+          <div class="answer-parts" aria-label="Answer parts for question ${question.label || state.active+1}">
+            ${partFields}
           </div>
-          <div class="draw-panel" data-exam-draw-panel ${item.drawing?"":"hidden"}></div>
+          ${legacyAnswer}
+          <div class="sketchpad-row">
+            <button type="button" class="secondary" data-exam-draw aria-expanded="${item.drawing?"true":"false"}" ${state.submitted?"disabled":""}>Sketchpad</button>
+            <span class="fine">Use the sketchpad for diagrams and longer working; each result belongs in its matching answer part.</span>
+          </div>
+          <div class="draw-panel" data-exam-draw-panel ${item.drawing?"":"hidden"} aria-label="Sketchpad for question ${question.label || state.active+1}"></div>
           <p class="fine">Your tutor reviews method and correctness. The page does not auto-grade.</p>
         </div>
       </article>`;
@@ -168,7 +256,7 @@
     AlphaMath.createDrawingPad(panel,{
       state:item,
       locked:state.submitted,
-      label:`Drawing area for exam question ${question.label || state.active+1}`,
+      label:`Sketchpad for exam question ${question.label || state.active+1}`,
       onSave(){ save(); }
     });
     AlphaMath.initMathFields(questionMount);
@@ -184,8 +272,9 @@
 
   function updateProgress(){
     const entered = enteredCount();
+    const partial = partialCount();
     const flagged = flaggedCount();
-    progress.textContent = `${entered} of ${questions.length} answers entered · ${flagged} flagged`;
+    progress.textContent = `${entered} of ${questions.length} complete · ${partial} in progress · ${flagged} flagged`;
   }
 
   function go(index){
@@ -239,16 +328,17 @@
     const notice = document.getElementById("examNotice");
     notice.hidden = false;
     notice.innerHTML = `<strong>${AlphaMath.escapeHTML(message)}</strong>
-      <br>${enteredCount()} of ${questions.length} answers entered; ${flaggedCount()} flagged.`;
+      <br>${enteredCount()} of ${questions.length} complete; ${partialCount()} in progress; ${flaggedCount()} flagged.`;
     AlphaMath.announce(message);
   }
 
   function openSubmitDialog(){
     const entered = enteredCount();
-    const unanswered = questions.length-entered;
+    const partial = partialCount();
+    const unanswered = questions.length-entered-partial;
     const flagged = flaggedCount();
     document.getElementById("dialogSummary").textContent =
-      `${entered} answers entered, ${unanswered} unanswered, and ${flagged} flagged for review.`;
+      `${entered} questions complete, ${partial} in progress, ${unanswered} not started, and ${flagged} flagged for review.`;
     if(typeof dialog.showModal === "function") dialog.showModal();
     else dialog.setAttribute("open","");
   }
@@ -260,7 +350,8 @@
       `Instrument: ${examName}`,
       `Status: ${state.submitted ? "submitted" : "in progress"}`,
       `Time used: ${AlphaMath.formatTime(elapsed())}`,
-      `Answers entered: ${enteredCount()} of ${questions.length}`,
+      `Questions complete: ${enteredCount()} of ${questions.length}`,
+      `Questions in progress: ${partialCount()}`,
       `Flagged for review: ${flaggedCount()}`,
       "Mastery status: NOT DETERMINED — tutor review required",
       "",
@@ -269,9 +360,14 @@
     questions.forEach((question,index) => {
       const item = response(index);
       lines.push(`Question ${question.label || index+1} [${question.tag || "Exam"}]`);
-      lines.push(`Answer entered: ${item.answer || "(none)"}`);
+      questionParts(question).forEach(part => {
+        lines.push(`${part.label || part.id}: ${item.parts[part.id] || "(none)"}`);
+      });
+      if(item.legacyAnswer) lines.push(`Earlier saved answer: ${item.legacyAnswer}`);
+      lines.push(`Combined answer: ${flattenedAnswer(index) || "(none)"}`);
       lines.push(`Flagged: ${item.flagged ? "yes" : "no"}`);
-      lines.push(`Drawing saved: ${item.drawing ? "yes" : "no"}`);
+      lines.push(`Sketchpad saved: ${item.drawing ? "yes" : "no"}`);
+      lines.push(`Sketchpad size: ${item.sketchpadSize || "standard"}`);
       if(question.cite) lines.push(`Source: ${question.cite}`);
       lines.push("");
     });
@@ -322,9 +418,16 @@
           const item = response(index);
           return {
             itemId: String(question.label || index+1),
-            answer: item.answer || "",
+            answerSchemaVersion: 2,
+            answer: flattenedAnswer(index),
+            parts: Object.fromEntries(questionParts(question).map(part => [
+              String(part.id),
+              String(item.parts[part.id] || "")
+            ])),
+            legacyAnswer: item.legacyAnswer || "",
             flagged: Boolean(item.flagged),
-            drawing: item.drawing || ""
+            drawing: item.drawing || "",
+            sketchpadSize: item.sketchpadSize || "standard"
           };
         })
       };
@@ -340,7 +443,10 @@
   questionMount.addEventListener("input",event => {
     const field = event.target.closest("[data-exam-answer]");
     if(!field || state.submitted) return;
-    response(Number(field.dataset.examAnswer)).answer = field.value || "";
+    const index = Number(field.dataset.examAnswer);
+    const item = response(index);
+    item.parts[field.dataset.answerPart || "answer"] = field.value || "";
+    syncFlattenedAnswer(index);
     save();
     updateProgress();
     renderNav();

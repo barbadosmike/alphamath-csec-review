@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>AlphaMath — Simulated Exam Template</title>
+  <link rel="stylesheet" href="assets/css/alphamath.css">
+</head>
+<body data-template="true" data-student-id="STUDENT-ID" data-duration-seconds="2700" data-review-kind="exam" data-syllabus-codes="M1.1.4">
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-head">
+    <div class="head-inner">
+      <p class="brand-line"><span class="brand-mark" aria-hidden="true">α</span> AlphaMath · CSEC Mathematics</p>
+      <h1>Simulated exam template</h1>
+      <p class="lede">A reusable timed assessment shell with autosave, navigation, review flags, method capture, accessible submission, and export.</p>
+      <div class="head-meta"><span>Working as <strong data-active-learner>—</strong></span><span>Template</span><span>Tutor-marked</span><span>No auto-grading</span></div>
+    </div>
+  </header>
+  <nav class="suite-nav" aria-label="AlphaMath suite"><div class="nav-inner"><a href="index.html" >Suite home</a><a href="students.html" aria-current="page">Students</a><a href="pathways.html" >Pathways</a><a href="tutors.html" >Tutors</a><a href="parents.html" >Parents</a><a href="admin-console.html" >Admin</a></div></nav>
+  <main id="main" class="shell">
+    <section class="exam-cover" id="examCover" aria-labelledby="exam-ready">
+      <p class="eyebrow">Before the timer starts</p>
+      <h2 id="exam-ready">Ready when you are</h2>
+      <ul class="checklist">
+        <li>20 questions; approximately 40–45 minutes</li>
+        <li>Work without a calculator unless your tutor says otherwise</li>
+        <li>Show method in the drawing area or on paper</li>
+        <li>Answers save on this device</li>
+        <li>Your tutor marks the exam; this page does not auto-grade</li>
+      </ul>
+      <button type="button" id="startExam" class="primary">Start exam</button>
+    </section>
+    <section id="examWorkspace" hidden>
+      <div class="callout success" id="examNotice" hidden></div>
+      <div class="exam-shell">
+        <aside class="exam-sidebar" aria-label="Exam navigation">
+          <div class="timer" id="timerBox"><span class="eyebrow">Time remaining</span><strong id="timerValue">45:00</strong></div>
+          <div class="card">
+            <strong id="examProgress">0 of 20 answers entered · 0 flagged</strong>
+            <div class="question-nav" id="questionNav" style="margin-top:12px"></div>
+          </div>
+        </aside>
+        <div>
+          <div id="examQuestion"></div>
+          <div class="button-row">
+            <button type="button" id="examPrevious">Previous</button>
+            <button type="button" id="flagQuestion" class="warning" aria-pressed="false">Flag for review</button>
+            <button type="button" id="examNext">Next</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <div class="sticky-actions"><div class="action-inner">
+    <button type="button" id="exportExam">Export saved record</button>
+    <!-- Enabled only once the attempt is locked: the API rejects an unlocked attempt. -->
+    <button type="button" id="sendExam" disabled>Send for marking</button>
+    <span class="action-copy fine">“Answers entered” does not mean correct or complete.</span>
+    <button type="button" id="submitExam" class="primary">Review and submit</button>
+  </div></div>
+  <dialog id="submitDialog" aria-labelledby="submit-title">
+    <div class="dialog-body">
+      <p class="eyebrow">Final review</p>
+      <h2 id="submit-title" style="margin-top:0">Submit this attempt?</h2>
+      <p id="dialogSummary"></p>
+      <p>Submitting locks the saved responses for tutor review. It does not generate a grade or mastery decision.</p>
+    </div>
+    <div class="dialog-actions">
+      <button type="button" id="cancelSubmit">Keep working</button>
+      <button type="button" id="confirmSubmit" class="primary">Submit and lock</button>
+    </div>
+  </dialog>
+  <div id="suite-live-region" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+  <script src="assets/js/runtime-config.js" defer></script>
+  <script src="assets/vendor/mathlive.min.js" defer></script>
+  <script src="assets/js/suite.js" defer></script>
+  <script src="assets/js/auth.js" defer></script>
+  <script src="assets/js/evidence-adapter.js" defer></script>
+  <script src="assets/data/m-stu-001-content.js" defer></script>
+  <script src="assets/js/exam.js" defer></script>
+  <script src="assets/js/review.js" defer></script>
+</body>
+</html>

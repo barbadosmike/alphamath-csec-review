@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="robots" content="noindex,nofollow">
+  <title>AlphaMath — Request a Tutor Account</title>
+  <link rel="stylesheet" href="assets/css/alphamath.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+<header class="site-head">
+  <div class="head-inner">
+    <p class="brand-line"><span class="brand-mark" aria-hidden="true">α</span> AlphaMath · CSEC Additional Mathematics</p>
+    <h1>Request a tutor account</h1>
+    <p class="lede">Tutor accounts read the work of the learners assigned to them, so an administrator reviews every request before it can sign in.</p>
+    <div class="head-meta"><span>Reviewed before access</span><span>You choose your own password</span><span>No access until approved</span></div>
+  </div>
+</header>
+
+<nav class="suite-nav" aria-label="AlphaMath suite"><div class="nav-inner"><a href="index.html">Suite home</a><a href="students.html">Students</a><a href="pathways.html">Pathways</a><a href="tutors.html" aria-current="page">Tutors</a><a href="parents.html">Parents</a><a href="admin-console.html">Admin</a></div></nav>
+
+<main id="main" class="shell">
+  <div class="callout warning">
+    <p><strong>Submitting this form does not create access.</strong> It records a request. An administrator approves it before the account can sign in — until then the password you choose will not work, and that is deliberate: these accounts read children's work.</p>
+  </div>
+
+  <section class="panel" aria-labelledby="request-title">
+    <p class="eyebrow">Account request</p>
+    <h2 id="request-title">Your details</h2>
+    <form class="stack" data-signup-form>
+      <label for="externalId">Tutor ID</label>
+      <input id="externalId" name="externalId" required maxlength="60"
+             pattern="[A-Za-z0-9][A-Za-z0-9_.\-]{1,59}" autocomplete="username"
+             title="Letters, digits, dot, dash or underscore">
+      <p class="fine">The identifier you will sign in with, for example <code>TUT-002</code>. Ask your coordinator which to use.</p>
+
+      <label for="displayName">Full name</label>
+      <input id="displayName" name="displayName" required maxlength="200" autocomplete="name">
+
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" required maxlength="320" autocomplete="email">
+
+      <label for="password">Choose a password</label>
+      <input id="password" name="password" type="password" required minlength="12" autocomplete="new-password">
+      <p class="fine">At least 12 characters. It is encrypted before it is stored, and no administrator can read it — approval does not involve anyone handling your password.</p>
+
+      <label for="confirm">Confirm password</label>
+      <input id="confirm" name="confirm" type="password" required minlength="12" autocomplete="new-password">
+
+      <button type="submit">Send request</button>
+    </form>
+    <p class="fine" data-signup-status role="status" aria-live="polite"></p>
+  </section>
+</main>
+
+<div id="suite-live-region" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+<script src="assets/js/runtime-config.js"></script>
+<script src="assets/js/suite.js"></script>
+<script src="assets/js/auth.js"></script>
+<script>
+/*
+ * Unauthenticated by design — this is how someone who has no account asks for one.
+ *
+ * The server answers 202 whether or not it created anything, so this page CANNOT
+ * tell the visitor whether an id or email is already taken, and must not try to
+ * infer it. That is not an oversight to be smoothed over in the UI: an open
+ * endpoint that distinguishes taken from available is an account-enumeration
+ * oracle, and the login route deliberately refuses to be one.
+ */
+(function(){
+  "use strict";
+  const form = document.querySelector("[data-signup-form]");
+  const status = document.querySelector("[data-signup-status]");
+  if(!form || !window.AlphaMath) return;
+
+  form.addEventListener("submit", async event => {
+    event.preventDefault();
+    if(form.password.value !== form.confirm.value){
+      status.textContent = "The two passwords do not match.";
+      AlphaMath.announce("The two passwords do not match.");
+      return;
+    }
+    const base = AlphaMath.auth.apiBase();
+    if(!base){
+      status.textContent = "The evidence API address is not set for this deployment. Ask your coordinator.";
+      return;
+    }
+    status.textContent = "Sending your request…";
+    try{
+      const response = await fetch(`${base}/v1/signup-requests`, {
+        method: "POST",
+        headers: {"content-type": "application/json"},
+        body: JSON.stringify({
+          externalId: form.externalId.value.trim(),
+          displayName: form.displayName.value.trim(),
+          email: form.email.value.trim(),
+          password: form.password.value
+        })
+      });
+      const payload = await response.json().catch(() => ({}));
+      if(!response.ok){
+        status.textContent = payload.error || `The request could not be sent (${response.status}).`;
+        return;
+      }
+      form.reset();
+      status.textContent = payload.message || "Your request has been recorded.";
+      AlphaMath.announce("Your request has been recorded.");
+    }catch(_error){
+      status.textContent = "Could not reach the evidence API. Check the address and try again.";
+    }
+  });
+})();
+</script>
+</body>
+</html>

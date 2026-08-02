@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="robots" content="noindex,nofollow">
+  <title>AlphaMath — Tutor Review Queue</title>
+  <link rel="stylesheet" href="assets/css/alphamath.css">
+</head>
+<body>
+<aside class="review-notice" role="note">
+  <strong>Tutor workspace · signed-in access only</strong>
+  <span>This queue shows only learners assigned to your account. It carries no answers and no learner working — open an attempt to mark it.</span>
+</aside>
+<a class="skip-link" href="#main">Skip to main content</a>
+<header class="site-head">
+  <div class="head-inner">
+    <p class="brand-line"><span class="brand-mark" aria-hidden="true">α</span> AlphaMath · CSEC Additional Mathematics tutor workspace</p>
+    <h1>Review queue</h1>
+    <p class="lede">Locked simulated-exam attempts awaiting marking, for your assigned learners.</p>
+    <div class="head-meta"><span>Assigned learners only</span><span>One tutor per attempt</span><span>Named human review</span></div>
+  </div>
+</header>
+
+<nav class="suite-nav" aria-label="AlphaMath suite"><div class="nav-inner"><a href="index.html">Suite home</a><a href="students.html">Students</a><a href="pathways.html">Pathways</a><a href="tutors.html" aria-current="page">Tutors</a><a href="parents.html">Parents</a><a href="admin-console.html">Admin</a></div></nav>
+
+<main id="main" class="shell">
+  <div data-auth-gate></div>
+
+  <section class="panel" data-queue hidden>
+    <div class="review-heading">
+      <div>
+        <p class="eyebrow">Awaiting review</p>
+        <h2 id="queue-title">Assigned attempts</h2>
+        <p class="lede">Claiming an attempt reserves it for thirty minutes so two tutors cannot mark the same work.</p>
+      </div>
+      <span class="status not-yet" data-signed-in-as></span>
+    </div>
+
+    <div class="review-identity grid two">
+      <div>
+        <label for="queueStatus">Show</label>
+        <select id="queueStatus" data-queue-status>
+          <option value="submitted">Awaiting review</option>
+          <option value="claimed">Claimed</option>
+          <option value="reviewed">Recently reviewed</option>
+        </select>
+      </div>
+      <div style="display:flex;align-items:flex-end;gap:8px">
+        <button type="button" class="secondary" data-queue-refresh>Refresh</button>
+        <button type="button" class="secondary" data-sign-out>Sign out</button>
+      </div>
+    </div>
+
+    <p class="fine" data-queue-status-line role="status" aria-live="polite">Loading…</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption class="sr-only">Attempts assigned to you</caption>
+        <thead>
+          <tr>
+            <th scope="col">Learner</th>
+            <th scope="col">Instrument</th>
+            <th scope="col">Submitted</th>
+            <th scope="col">Items</th>
+            <th scope="col">State</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody data-queue-rows></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<script src="assets/js/runtime-config.js"></script>
+<script src="assets/js/suite.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/tutor-queue.js"></script>
+</body>
+</html>

@@ -1,3 +1,7 @@
+/* Ink palette (CDR-0146) lives in one file shared with intake.html.
+   @import must precede every other rule, including @font-face. */
+@import url("palette.css");
+
 @font-face{
   font-family:"Lexend";
   src:url("../fonts/lexend-variable.woff2") format("woff2");
@@ -34,9 +38,10 @@
   --ink:#14213d;
   --muted:#556071;
   --line:#d9d2c4;
-  --purple:#552583;
-  --purple-deep:#35124f;
-  --purple-soft:#eee7f6;
+  /* --purple, --purple-deep, --purple-soft and --purple-line come from
+     palette.css (imported above) and are shared with intake.html. Do not
+     redeclare them here. Gold, greys and the semantic ramps below are this
+     stylesheet's own and are not part of the ink family. */
   --gold:#c8a951;
   --gold-deep:#795d16;
   --blue:#2c6bd4;
@@ -64,7 +69,7 @@ body{
   margin:0;
   color:var(--ink);
   background:
-    radial-gradient(circle at 8% 3%,rgba(85,37,131,.075),transparent 29rem),
+    radial-gradient(circle at 8% 3%,rgba(20,11,44,.075),transparent 29rem),
     radial-gradient(circle at 95% 7%,rgba(200,169,81,.12),transparent 25rem),
     repeating-linear-gradient(90deg,rgba(20,33,61,.014) 0 1px,transparent 1px 4px),
     var(--paper);
@@ -75,7 +80,7 @@ button,input,textarea,select{font:inherit}
 button,a,[role="button"],summary{touch-action:manipulation}
 a{color:var(--purple);text-underline-offset:3px}
 img,svg,canvas,math,math-field{max-width:100%}
-math-field{--caret-color:var(--purple);--selection-background-color:#ddd0ee}
+math-field{--caret-color:var(--purple);--selection-background-color:#D6CFE8}
 
 .skip-link{
   position:fixed;
@@ -153,7 +158,7 @@ math-field{--caret-color:var(--purple);--selection-background-color:#ddd0ee}
 .site-head .lede{
   max-width:780px;
   margin:14px 0 0;
-  color:#eee7f4;
+  color:#E8E4F2;
   font-size:clamp(15px,2vw,18px);
 }
 .head-meta{
@@ -165,6 +170,12 @@ math-field{--caret-color:var(--purple);--selection-background-color:#ddd0ee}
 .head-meta span,.pill{
   display:inline-flex;
   align-items:center;
+  /* A chip that mixes text with an element — "Working as <strong>ID</strong>" —
+     loses the space between them without this: flex layout discards whitespace
+     BETWEEN flex items, and the markup's space is exactly that. The gap puts a
+     word space back. Do not remove it on the grounds that the HTML already has
+     a space; it does, and flex drops it. */
+  gap:.3em;
   min-height:32px;
   padding:5px 10px;
   border:1px solid rgba(255,255,255,.23);
@@ -182,6 +193,12 @@ math-field{--caret-color:var(--purple);--selection-background-color:#ddd0ee}
 }
 .suite-nav .nav-inner{
   display:flex;
+  /* Wraps since 2026-07-31, when administration took the nav from seven entries to
+     ten. Without this the row stays on one line and the overflow-x below hides the
+     last entries behind a scroll nobody looks for — the tenth link was simply
+     invisible at 1280px. Wrapping keeps every destination on screen; the scroll
+     remains for viewports too narrow even for two rows. */
+  flex-wrap:wrap;
   gap:4px;
   width:min(1120px,calc(100% - 36px));
   margin:auto;
@@ -287,7 +304,7 @@ p{margin:0 0 13px}
   gap:16px;
   margin:20px 0 24px;
   padding:14px;
-  border:1px solid rgba(85,37,131,.18);
+  border:1px solid rgba(20,11,44,.18);
   border-radius:15px;
   background:rgba(255,255,255,.95);
   box-shadow:var(--shadow-small);
@@ -327,7 +344,7 @@ p{margin:0 0 13px}
   overflow-x:auto;
   padding:2px 2px 9px;
   scroll-snap-type:x proximity;
-  scrollbar-color:rgba(85,37,131,.42) transparent;
+  scrollbar-color:rgba(20,11,44,.42) transparent;
   scrollbar-width:thin;
 }
 .progress-step{
@@ -369,7 +386,7 @@ p{margin:0 0 13px}
   border:2px solid var(--purple);
   padding:10px 11px;
   background:var(--purple-soft);
-  box-shadow:0 0 0 3px rgba(85,37,131,.09);
+  box-shadow:0 0 0 3px rgba(20,11,44,.09);
 }
 .progress-step.is-active::after{
   content:"Current";
@@ -520,7 +537,7 @@ p{margin:0 0 13px}
 .exam-chip{
   min-height:30px;
   padding:4px 9px;
-  border-color:#cab9dd;
+  border-color:var(--purple-line);
   border-radius:999px;
   color:var(--purple);
   background:var(--purple-soft);
@@ -591,6 +608,26 @@ p{margin:0 0 13px}
 }
 .answer-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:end}
 .answer-row label{display:block;margin-bottom:5px;font-size:12px;font-weight:800}
+.answer-parts{display:grid;gap:14px}
+.answer-part{
+  min-width:0;
+  padding:14px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:var(--paper);
+}
+.answer-part label{display:block;margin:10px 0 5px;font-size:12px;font-weight:800}
+.part-prompt{margin:0;color:var(--ink);font-size:15px}
+.part-prompt strong{display:inline-block;min-width:30px;color:var(--purple)}
+.sketchpad-row{
+  display:flex;
+  align-items:center;
+  gap:10px 14px;
+  flex-wrap:wrap;
+  margin-top:14px;
+}
+.legacy-answer{margin-top:14px}
+.legacy-answer p{margin:.35rem 0 .65rem}
 .answer-input,math-field{
   display:block;
   width:100%;
@@ -612,7 +649,7 @@ p{margin:0 0 13px}
   min-width:52px;
   min-height:44px;
   padding:6px 15px;
-  border-color:#cab9dd;
+  border-color:var(--purple-line);
   color:var(--purple);
   background:var(--purple-soft);
   font-size:19px;
@@ -647,7 +684,7 @@ button,.button{
 }
 button:hover,.button:hover{transform:translateY(-1px);box-shadow:var(--shadow-small)}
 button.primary,.button.primary{color:#fff;background:var(--purple);border-color:var(--purple)}
-button.secondary,.button.secondary{color:var(--purple);background:var(--purple-soft);border-color:#cab9dd}
+button.secondary,.button.secondary{color:var(--purple);background:var(--purple-soft);border-color:var(--purple-line)}
 button.success,.button.success{color:#fff;background:var(--green);border-color:var(--green)}
 button.warning,.button.warning{color:var(--amber);background:var(--amber-soft);border-color:#e2c66e}
 button.danger{color:var(--coral);background:var(--coral-soft);border-color:#e7b8ae}
@@ -683,12 +720,16 @@ button:disabled{opacity:.56;cursor:not-allowed;transform:none;box-shadow:none}
 .reflection{margin-top:14px;padding:14px;border-radius:10px;background:var(--paper-deep)}
 
 .draw-panel{margin-top:14px}
-.draw-tools{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:7px}
+.draw-tools{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px 14px;margin-bottom:8px}
+.draw-tool-group{display:flex;align-items:center;flex-wrap:wrap;gap:7px}
+.sketchpad-sizes .fine{margin-right:2px;font-weight:800}
+.sketchpad-sizes button[aria-pressed="true"]{color:#fff;background:var(--purple);border-color:var(--purple)}
 .draw-tools button{min-height:44px;padding:7px 11px;font-size:12px}
 .draw-canvas{
   display:block;
   width:100%;
-  height:210px;
+  height:auto;
+  min-height:180px;
   border:2px dashed #b6ac9c;
   border-radius:12px;
   background:
@@ -715,7 +756,7 @@ button:disabled{opacity:.56;cursor:not-allowed;transform:none;box-shadow:none}
   padding:9px 0;
 }
 
-.exam-shell{display:grid;grid-template-columns:220px minmax(0,1fr);gap:22px;align-items:start}
+.exam-shell{display:grid;grid-template-columns:280px minmax(0,1fr);gap:24px;align-items:start}
 .exam-sidebar{position:sticky;top:18px;display:grid;gap:12px}
 .timer{
   padding:16px;
@@ -727,15 +768,17 @@ button:disabled{opacity:.56;cursor:not-allowed;transform:none;box-shadow:none}
 .timer strong{display:block;font:700 30px/1 var(--mono);font-variant-numeric:tabular-nums}
 .timer.warning{border-color:#e2c66e;background:var(--amber-soft)}
 .timer.timeout{border-color:#e7b8ae;background:var(--coral-soft)}
-.question-nav{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.question-nav{display:grid;grid-template-columns:repeat(auto-fit,minmax(44px,1fr));gap:6px;overflow:clip}
 .question-nav button{
-  min-height:42px;
+  min-width:44px;
+  min-height:44px;
   padding:5px;
   border-radius:8px;
   font-size:12px;
 }
 .question-nav button.is-current{color:#fff;background:var(--purple);border-color:var(--purple)}
 .question-nav button.is-answered{border-color:var(--green);box-shadow:inset 0 -4px 0 var(--green)}
+.question-nav button.is-partial{border-color:var(--blue);box-shadow:inset 0 -4px 0 var(--blue)}
 .question-nav button.is-flagged::after{content:"◆";margin-left:3px;color:var(--gold-deep);font-size:8px}
 .exam-question[hidden],.exam-cover[hidden]{display:none}
 .exam-cover{
@@ -778,7 +821,18 @@ dialog::backdrop{background:rgba(20,33,61,.62)}
   width:100%;
 }
 .review-items{margin-top:22px}
-.review-response{max-width:280px;overflow-wrap:anywhere}
+.review-response{width:min(340px,34vw);max-width:340px;overflow-wrap:anywhere}
+.review-response-part{display:grid;gap:5px;margin-bottom:10px}
+.review-response-part:last-child{margin-bottom:0}
+.review-response-part>strong{color:var(--purple);font-size:12px}
+.review-response-part.legacy>strong{color:var(--amber)}
+.review-response math-field{
+  min-height:42px;
+  padding:7px 9px;
+  border-width:1px;
+  background:var(--paper);
+  pointer-events:none;
+}
 .review-submit{
   display:flex;
   justify-content:space-between;
@@ -948,6 +1002,7 @@ tr:last-child td{border-bottom:0}
   .review-items thead{display:none}
   .review-items tr{margin-bottom:12px;padding:12px;border:1px solid var(--line);border-radius:12px;background:#fff}
   .review-items td{padding:7px 0;border:0}
+  .review-response{width:100%;max-width:none}
 }
 
 @media(prefers-reduced-motion:reduce){
@@ -958,6 +1013,18 @@ tr:last-child td{border-bottom:0}
     animation-iteration-count:1!important;
     transition-duration:.01ms!important;
   }
+}
+
+
+/* .head-meta is styled for the dark site header: white text on a translucent
+   white fill. Inside a white card that is white-on-white — 1:1 contrast, so the
+   chips are present in the DOM, announced by a screen reader, and invisible to
+   everyone else. Scoped override, because the header styling is correct where it
+   belongs. */
+.hub-card .head-meta span,.card .head-meta span,.panel .head-meta span{
+  color:var(--purple);
+  background:var(--purple-soft);
+  border-color:var(--purple-line);
 }
 
 @media print{
@@ -984,9 +1051,152 @@ tr:last-child td{border-bottom:0}
   font-size:13px;
   line-height:1.4;
 }
-.review-notice strong{flex:0 0 auto;color:#552583}
+.review-notice strong{flex:0 0 auto;color:var(--purple)}
 html,body{max-width:100%;overflow-x:clip}
 @media(max-width:620px){
   .review-notice{display:block;padding:10px 14px}
   .review-notice strong{display:block;margin-bottom:3px}
 }
+
+/* ── Tutor surfaces (Phase 3) ─────────────────────────────────────────────── */
+
+/* The sign-in form inherited the inline label/input flow used by the compact
+   filter rows, which is wrong for a credential form: labels ran alongside their
+   fields. Stack them, and cap the width so the form does not sprawl. */
+.signin{max-width:26rem;display:grid;gap:6px}
+.signin h2{margin:0}
+.signin label{display:block;margin-top:10px;font-size:13px;font-weight:750;color:var(--muted)}
+.signin input{width:100%;min-height:44px}
+.signin button{margin-top:14px;justify-self:start}
+
+/* Administrative forms (2026-07-31). Same shape as .signin, which was the only
+   stacked form in the build until the admin console needed three more. Inputs
+   default to inline, so a form without this reads as one run-on line of controls
+   — which is exactly how the first render of the signup page came out. */
+.stack{max-width:30rem;display:grid;gap:6px}
+.stack h3{margin:0 0 4px}
+.stack label{display:block;margin-top:10px;font-size:13px;font-weight:750;color:var(--muted)}
+.stack input,.stack select{width:100%;min-height:44px}
+.stack button{margin-top:16px;justify-self:start}
+.stack .fine{margin:2px 0 0}
+
+/* A checkbox reads as a label beside its control, not stacked above it. */
+.checkline{display:flex;align-items:center;gap:9px;margin-top:12px;
+  font-size:13px;font-weight:750;color:var(--muted)}
+.checkline input{width:auto;min-height:0;min-width:20px;height:20px}
+
+/* Row actions. Buttons wrap rather than widening the table past the viewport. */
+.action-cell{display:flex;flex-wrap:wrap;gap:8px}
+.action-cell button{min-height:38px;padding-inline:12px;font-size:13px}
+
+/* A failed administrative action must not read like an ordinary status line.
+   --coral is the build's error ink and clears 4.5:1 on the panel background. */
+.error-text{color:var(--coral);font-weight:750}
+
+/* The active-learner picker on the suite home, and the indicator every
+   learner-facing page carries. The indicator matters more than it looks: storage
+   is namespaced by this id, so a page that does not say whose work it holds can
+   quietly write a learner's answers into another learner's namespace. */
+.learner-picker{display:grid;gap:6px}
+.learner-picker label{font-size:13px;font-weight:750;color:var(--muted)}
+.learner-picker-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.learner-picker-row input{flex:1 1 15rem;min-height:44px}
+.learner-picker-row button{min-height:44px}
+.learner-picker .fine{margin:2px 0 0}
+
+/* "no learner selected" is a state to notice, not a neutral value — so it is
+   coloured, and therefore has to clear 4.5:1 on BOTH grounds it appears against.
+   No single value does: --amber is 5.87 on white but 3.21 on the dark header,
+   --amber-soft is 17.33 on the header and 1.09 on white. So the default serves the
+   header, where the indicator lives, and the override serves light containers —
+   the same split .head-meta span already needed at the foot of this file, for the
+   same reason. Measured, not assumed. */
+.learner-unset{color:var(--amber-soft);font-weight:750}
+.hub-card .learner-unset,.card .learner-unset,.panel .learner-unset{color:var(--amber)}
+
+/* Reviewer identity supplied by the session is displayed, not typed. Styled to
+   read as a value rather than an editable field, so it is obvious it cannot be
+   changed here. */
+.review-identity-fixed{
+  margin:0;
+  padding:9px 12px;
+  border:1px solid var(--line);
+  border-radius:var(--radius-small);
+  background:var(--paper-deep);
+  font-weight:750;
+}
+.review-identity .label{
+  display:block;
+  margin-bottom:4px;
+  font-size:13px;
+  font-weight:750;
+  color:var(--muted);
+}
+
+/* Learner working on the tutor page is evidence, not a canvas: it renders as a
+   plain image and must never look editable. */
+figure.draw-panel{margin:14px 0 0;padding:12px;border:1px solid var(--line);border-radius:var(--radius-small);background:var(--card)}
+figure.draw-panel img{display:block;margin-top:8px;border:1px solid var(--line);border-radius:6px}
+figure.draw-panel figcaption{margin:0}
+
+/* Two stacked layers, never flattened. The learner's PNG is evidence and takes
+   no pointer events at all — a tutor cannot draw on it even by accident. The
+   transparent overlay above it carries the red pen. */
+.layer-stack{position:relative;display:block;line-height:0}
+.layer-stack .learner-layer{display:block;width:100%;height:auto;pointer-events:none;user-select:none;border:1px solid var(--line);border-radius:6px;background:#fff}
+.layer-stack .tutor-layer{position:absolute;inset:0;width:100%;height:100%;background:transparent;border-radius:6px;cursor:crosshair;touch-action:none}
+.tutor-pad-tools{margin-top:10px}
+/* The learner's returned view stacks two IMAGES rather than an image and a
+   canvas: their work below, the tutor's finalized marks above. Nothing is
+   flattened, so hiding the top layer restores exactly what was submitted. */
+.layer-stack img.tutor-layer{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+
+/* ── Phase 7 hardening ────────────────────────────────────────────────────── */
+
+/* Touch targets. Buttons already carry min-height:44px, but native selects and
+   inputs inherited only their font size — a <select> measured 23px at 390px
+   wide, well under the 44px floor the accessibility requirement sets. Applied
+   to the control elements themselves rather than per-page, so a new form cannot
+   quietly reintroduce it. */
+input:not([type="checkbox"]):not([type="radio"]),
+select,
+textarea{
+  min-height:44px;
+  padding:8px 11px;
+  border:1px solid var(--line);
+  border-radius:var(--radius-small);
+  background:var(--card);
+  color:var(--ink);
+}
+textarea{min-height:88px;line-height:1.5}
+
+/* Wide content scrolls inside its own container rather than forcing the page
+   sideways. Checked at 390, 768, 1024 and 1440. */
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+
+/* Pathways rail and catalogue badges (2026-07-31). A hand-rolled scroll-snap
+   rail rather than a vendored carousel: both QA suites forbid external scripts,
+   and snap + native scrolling needs no JavaScript at all — which also means it
+   cannot break under prefers-reduced-motion. "Coming soon" is a muted card plus
+   an explicit badge, NOT semi-transparent text: transparency on text is a
+   contrast failure wearing a style. */
+.rail{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 12px;scrollbar-width:thin}
+.rail-card{flex:0 0 min(78vw,340px);scroll-snap-align:start}
+.card.soon{border-style:dashed;background:linear-gradient(0deg,rgba(20,33,61,.04),rgba(20,33,61,.04)),#fff}
+.badge-live,.badge-soon{display:inline-flex;align-items:center;min-height:26px;padding:2px 10px;
+  border-radius:999px;font-size:12.5px;font-weight:750;margin-bottom:8px}
+.badge-live{color:#fff;background:var(--green)}
+.badge-soon{color:var(--amber);background:var(--amber-soft);border:1px solid #e2c66e}
+
+/* Tell your tutor (spec 2026-08-01) */
+.tyt-columns{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media (max-width:760px){.tyt-columns{grid-template-columns:1fr}}
+.tyt-list{list-style:none;margin:8px 0;padding:0;display:flex;flex-direction:column;gap:6px}
+.tyt-chip button,.tyt-chip label{display:block;width:100%;text-align:left;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--paper);cursor:pointer;font:inherit}
+.tyt-chip label{display:flex;gap:8px;align-items:baseline}
+.tyt-chip .fine{display:block;margin-top:2px}
+.tyt-pending button{border-color:var(--ink);background:#fff}
+.tyt-sent{padding:8px 10px;border:1px dashed var(--line);border-radius:8px;color:var(--muted)}
+.tyt-module{margin-top:8px}
+.tyt-module summary{cursor:pointer;font-weight:750}

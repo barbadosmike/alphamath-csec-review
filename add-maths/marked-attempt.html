@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="robots" content="noindex,nofollow">
+  <title>AlphaMath — Your Marked Work</title>
+  <link rel="stylesheet" href="assets/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="assets/css/alphamath.css">
+</head>
+<body>
+<aside class="review-notice" role="note">
+  <strong>Your returned work · signed-in access only</strong>
+  <span>This page shows only your own attempts, and only after a tutor has finished marking them.</span>
+</aside>
+<a class="skip-link" href="#main">Skip to main content</a>
+<header class="site-head">
+  <div class="head-inner">
+    <p class="brand-line"><span class="brand-mark" aria-hidden="true">α</span> AlphaMath · CSEC Additional Mathematics</p>
+    <h1 data-title>Your marked work</h1>
+    <p class="lede" data-subtitle>Signing in…</p>
+    <div class="head-meta">
+      <span data-meta-reviewer>Marked by —</span>
+      <span data-meta-reviewed>Returned —</span>
+      <span data-meta-outcome>Outcome —</span>
+    </div>
+  </div>
+</header>
+
+<nav class="suite-nav" aria-label="AlphaMath suite"><div class="nav-inner"><a href="index.html">Suite home</a><a href="students.html" aria-current="page">Students</a><a href="pathways.html">Pathways</a><a href="tutors.html">Tutors</a><a href="parents.html">Parents</a><a href="admin-console.html">Admin</a></div></nav>
+
+<main id="main" class="shell">
+  <div data-auth-gate></div>
+  <p class="fine" data-load-status role="status" aria-live="polite"></p>
+
+  <!-- Index of returned attempts, shown when no specific attempt is requested. -->
+  <section class="panel" data-returned-list hidden>
+    <div class="review-heading">
+      <div>
+        <p class="eyebrow">Returned work</p>
+        <h2>Attempts a tutor has marked</h2>
+        <p class="lede">Open one to read the tutor's comments and see their marks on your working.</p>
+      </div>
+      <button type="button" class="secondary" data-sign-out>Sign out</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <caption class="sr-only">Your marked attempts</caption>
+        <thead>
+          <tr>
+            <th scope="col">Exam</th>
+            <th scope="col">Submitted</th>
+            <th scope="col">Returned</th>
+            <th scope="col">Marked by</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody data-returned-rows></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- One marked attempt. -->
+  <section class="panel" data-marked hidden>
+    <div class="review-heading">
+      <div>
+        <p class="eyebrow">Tutor feedback</p>
+        <h2 id="overall-title">Overall comment</h2>
+        <p class="lede" data-overall-feedback></p>
+      </div>
+      <div class="draw-tool-group" role="group" aria-label="Display options">
+        <button type="button" class="secondary" data-toggle-marks aria-pressed="true">Hide tutor marks</button>
+        <a class="button secondary" href="marked-attempt.html">All returned work</a>
+      </div>
+    </div>
+    <p class="fine" data-marks-state role="status" aria-live="polite"></p>
+    <div data-items></div>
+  </section>
+</main>
+
+<script src="assets/js/runtime-config.js"></script>
+<script src="assets/vendor/katex/katex.min.js"></script>
+<script src="assets/vendor/mathlive.min.js"></script>
+<script src="assets/js/suite.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/marked-attempt.js"></script>
+</body>
+</html>

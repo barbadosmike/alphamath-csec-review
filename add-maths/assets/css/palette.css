@@ -1,0 +1,59 @@
+/* ============================================================================
+   AlphaMath — CSEC Additional Mathematics ink palette (CDR-0146)
+   SINGLE SOURCE OF TRUTH for the Add Maths purple family.
+
+   Consumed by:
+     assets/css/alphamath.css  — @import at the top of the file
+     intake.html               — <link> before its inline <style>
+
+   intake.html is a headless doctype+html+meta shell with one inline <style>
+   and its own token vocabulary; it does not use alphamath.css. Both
+   vocabularies are therefore defined here so a palette change is one edit in
+   one file. Before this file existed the two drifted apart — alphamath.css sat
+   on Marion Sydney Classic #552583 while intake.html carried #140B2C, and the
+   suite rendered as two documents.
+
+   Do not redeclare these tokens in a page's inline <style>: an inline block
+   wins over this stylesheet and reintroduces exactly that drift.
+
+   PROVENANCE — read before changing a value.
+   --purple #140B2C is Midnight Purple, CEO-specified under CDR-0146 and filed in
+   Assets/Corporate Identity/MSE_Approved_Color_Schemes.md §2.
+
+   The rest are NOT filed in §2. They are the Add Maths ink theme's own derived
+   values, carried forward from the CEO-approved override block in the older Add
+   Maths templates, and shifted cooler than the §2 tints so they sit against
+   #140B2C rather than against the warm document lane.
+
+   NAMING, resolved 2026-07-31 (CEO decision, on Brand Guardian finding).
+   Three tokens previously reused §2 shade NAMES while carrying different values:
+
+     was            value      §2 register entry it wrongly claimed
+     --amethyst     #7E68C6    Amethyst       #9B72CF
+     --wisteria     #BCB2DE    Wisteria       #C9B6E4
+     --lavender     #EAE6F5    Lavender Mist  #EDE7F6
+
+   The values were right and the names were not, so the names went. They are now
+   --purple-mid, --purple-line and --purple-soft, in this file's own idiom and
+   claiming nothing from the register. Two of the three were already exact
+   duplicates of tokens defined here — --wisteria == --purple-line and
+   --lavender == --purple-soft — so the rename also collapsed a duplication.
+
+   Rule: a token in this file may carry a §2 NAME only if it carries the §2
+   VALUE. Derived values get derived names.
+
+   Gold, greys and the semantic ramps are NOT part of this family and stay with
+   their consuming stylesheet.
+   ============================================================================ */
+
+/* One vocabulary, shared by alphamath.css and intake.html. The two-vocabulary
+   split this file used to carry was itself the symptom: it is what let three
+   tokens keep §2 names at non-§2 values. */
+:root{
+  --purple:#140B2C;       /* main chrome, links, accents                    */
+  --purple-deep:#241348;  /* header/table chrome carrying white text        */
+  --purple-mid:#7E68C6;   /* mid violet accent (was --amethyst)             */
+  --purple-soft:#EAE6F5;  /* light wash behind --purple text (was --lavender) */
+  --purple-line:#BCB2DE;  /* border tint on washed surfaces (was --wisteria)  */
+  --purple-20:#0C0619;    /* pressed / hover, one step below the main       */
+}

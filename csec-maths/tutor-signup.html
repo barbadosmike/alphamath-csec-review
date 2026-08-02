@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>AlphaMath — Request a Tutor Account — CSEC Mathematics</title>
+  <link rel="stylesheet" href="assets/css/alphamath.css">
+</head>
+<body >
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-head">
+    <div class="head-inner">
+      <p class="brand-line"><span class="brand-mark" aria-hidden="true">α</span> AlphaMath · CSEC Mathematics</p>
+      <h1>Request a tutor account</h1>
+      <p class="lede">Tutor accounts read the work of the learners assigned to them, so an administrator reviews every request before it can sign in.</p>
+      <div class="head-meta"><span>Working as <strong data-active-learner>—</strong></span><span>Reviewed before access</span><span>You choose your own password</span><span>No access until approved</span></div>
+    </div>
+  </header>
+  <nav class="suite-nav" aria-label="AlphaMath suite"><div class="nav-inner"><a href="index.html" >Suite home</a><a href="students.html" >Students</a><a href="pathways.html" >Pathways</a><a href="tutors.html" aria-current="page">Tutors</a><a href="parents.html" >Parents</a><a href="admin-console.html" >Admin</a></div></nav>
+  <main id="main" class="shell">
+  <div class="callout warning">
+    <p><strong>Submitting this form does not create access.</strong> It records a request. An administrator approves it before the account can sign in — until then the password you choose will not work, and that is deliberate: these accounts read children's work.</p>
+  </div>
+
+  <section class="panel" aria-labelledby="request-title">
+    <p class="eyebrow">Account request</p>
+    <h2 id="request-title">Your details</h2>
+    <form class="stack" data-signup-form>
+      <label for="externalId">Tutor ID</label>
+      <input id="externalId" name="externalId" required maxlength="60"
+             pattern="[A-Za-z0-9][A-Za-z0-9_.-]{1,59}" autocomplete="username"
+             title="Letters, digits, dot, dash or underscore">
+      <p class="fine">The identifier you will sign in with, for example <code>TUT-002</code>. Ask your coordinator which to use.</p>
+
+      <label for="displayName">Full name</label>
+      <input id="displayName" name="displayName" required maxlength="200" autocomplete="name">
+
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" required maxlength="320" autocomplete="email">
+
+      <label for="password">Choose a password</label>
+      <input id="password" name="password" type="password" required minlength="12" autocomplete="new-password">
+      <p class="fine">At least 12 characters. It is encrypted before it is stored, and no administrator can read it — approval does not involve anyone handling your password.</p>
+
+      <label for="confirm">Confirm password</label>
+      <input id="confirm" name="confirm" type="password" required minlength="12" autocomplete="new-password">
+
+      <button type="submit">Send request</button>
+    </form>
+    <p class="fine" data-signup-status role="status" aria-live="polite"></p>
+  </section>
+</main>
+  <div id="suite-live-region" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+  <script src="assets/js/runtime-config.js" defer></script>
+  <script src="assets/js/suite.js" defer></script>
+  <script src="assets/js/auth.js" defer></script>
+</body>
+</html>

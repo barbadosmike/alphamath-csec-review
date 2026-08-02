@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>AlphaMath — Your Marked Work</title>
+  <link rel="stylesheet" href="assets/css/alphamath.css">
+</head>
+<body >
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-head">
+    <div class="head-inner">
+      <p class="brand-line"><span class="brand-mark" aria-hidden="true">α</span> AlphaMath · CSEC Mathematics</p>
+      <h1>Your marked work</h1>
+      <p class="lede">Read your tutor's comments and see their marks over your own working.</p>
+      <div class="head-meta"><span>Working as <strong data-active-learner>—</strong></span><span>Signed-in access only</span><span>Tutor-marked</span><span>No auto-grading</span></div>
+    </div>
+  </header>
+  <nav class="suite-nav" aria-label="AlphaMath suite"><div class="nav-inner"><a href="index.html" >Suite home</a><a href="students.html" aria-current="page">Students</a><a href="pathways.html" >Pathways</a><a href="tutors.html" >Tutors</a><a href="parents.html" >Parents</a><a href="admin-console.html" >Admin</a></div></nav>
+  <main id="main" class="shell">
+  <div class="callout info prose">
+    <p class="eyebrow">Your returned work · signed-in access only</p>
+    <p>This page shows only your own attempts, and only after a tutor has finished marking them.</p>
+  </div>
+  <div data-auth-gate></div>
+  <p class="fine" data-load-status role="status" aria-live="polite"></p>
+
+  <section class="panel" data-returned-list hidden>
+    <div class="review-heading">
+      <div>
+        <p class="eyebrow">Returned work</p>
+        <h2>Attempts a tutor has marked</h2>
+        <p class="lede">Open one to read the tutor's comments and see their marks on your working.</p>
+      </div>
+      <button type="button" class="secondary" data-sign-out>Sign out</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <caption class="sr-only">Your marked attempts</caption>
+        <thead>
+          <tr>
+            <th scope="col">Exam</th>
+            <th scope="col">Submitted</th>
+            <th scope="col">Returned</th>
+            <th scope="col">Marked by</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody data-returned-rows></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel" data-marked hidden>
+    <div class="review-heading">
+      <div>
+        <p class="eyebrow">Tutor feedback</p>
+        <h2 id="overall-title">Overall comment</h2>
+        <p class="lede" data-overall-feedback></p>
+      </div>
+      <div class="draw-tool-group" role="group" aria-label="Display options">
+        <button type="button" class="secondary" data-toggle-marks aria-pressed="true">Hide tutor marks</button>
+        <a class="button secondary" href="marked-attempt.html">All returned work</a>
+      </div>
+    </div>
+    <p class="fine" data-marks-state role="status" aria-live="polite"></p>
+    <div data-items></div>
+  </section>
+
+  <div class="head-meta" style="margin-top:18px">
+    <span data-meta-reviewer>Marked by —</span>
+    <span data-meta-reviewed>Returned —</span>
+    <span data-meta-outcome>Outcome —</span>
+  </div>
+</main>
+  <div id="suite-live-region" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+  <script src="assets/js/runtime-config.js" defer></script>
+  <script src="assets/vendor/mathlive.min.js" defer></script>
+  <script src="assets/js/suite.js" defer></script>
+  <script src="assets/js/auth.js" defer></script>
+  <script src="assets/js/marked-attempt.js" defer></script>
+</body>
+</html>

@@ -32,6 +32,70 @@
       }
     },
 
+    /*
+     * WHICH LEARNER IS THIS PAGE FOR?
+     *
+     * Every learner-facing page used to answer that with
+     *   document.body.dataset.studentId || "REVIEW-DEMO"
+     * so the suite was a single-learner demo: the fallback was baked in, and each
+     * page carried its own copy of the answer. Storage keys are namespaced by this
+     * id (alphamath:<id>:simulated-exam-1:v2), so the id decides whose draft a page
+     * reads and writes — it is not cosmetic.
+     *
+     * Resolution order, most explicit first:
+     *   1. ?learner=ID   — an explicit choice; persisted so the rest of the suite follows
+     *   2. the stored selection
+     *   3. data-student-id on <body> — the page's own declaration, used for authored
+     *      documents written for one learner
+     *   4. null — nothing is assumed. A page with no learner should say so rather
+     *      than silently write into someone else's namespace.
+     *
+     * THESE PAGES ARE OFFLINE-FIRST AND UNAUTHENTICATED, deliberately: tutorials
+     * and exams work with no API and no login. So this is a SELECTION, not an
+     * identity claim, and it authorises nothing. Anyone at the keyboard can change
+     * it and read the local drafts under that id — true before this change and
+     * still true, and the reason a shared device should not be used for drafting.
+     * Everything in the database is authorised server-side, where the session
+     * decides and this value is never consulted.
+     */
+    learner: {
+      STORAGE_KEY: "alphamath:active-learner",
+      VALID: /^[A-Za-z0-9][A-Za-z0-9_.-]{1,59}$/,
+
+      current(){
+        const url = new URLSearchParams(location.search).get("learner");
+        if(url && AlphaMath.learner.VALID.test(url)){
+          AlphaMath.learner.set(url);
+          return url;
+        }
+        const stored = AlphaMath.storage.get(AlphaMath.learner.STORAGE_KEY, "");
+        if(stored && AlphaMath.learner.VALID.test(stored)) return stored;
+        const declared = document.body?.dataset?.studentId || "";
+        return AlphaMath.learner.VALID.test(declared) ? declared : null;
+      },
+
+      set(id){
+        if(!AlphaMath.learner.VALID.test(String(id || ""))) return false;
+        return AlphaMath.storage.set(AlphaMath.learner.STORAGE_KEY, String(id));
+      },
+
+      clear(){
+        try{ localStorage.removeItem(AlphaMath.learner.STORAGE_KEY); return true; }
+        catch(_error){ return false; }
+      },
+
+      /* Renders "working as <id>" into any [data-active-learner] element, so no
+         page can leave it ambiguous whose work is on screen. */
+      show(){
+        const id = AlphaMath.learner.current();
+        document.querySelectorAll("[data-active-learner]").forEach(node => {
+          node.textContent = id || "no learner selected";
+          node.classList.toggle("learner-unset", !id);
+        });
+        return id;
+      }
+    },
+
     escapeHTML(value){
       return String(value ?? "").replace(/[&<>"']/g, char => ({
         "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
@@ -107,29 +171,94 @@
       });
     },
 
+    /*
+     * A stacked fraction that assistive technology can also read.
+     *
+     * The visual build is two grid rows with a rule between them, which looks
+     * right and carries no semantics at all. Read by textContent — which is what
+     * a screen reader gets — the two rows run together, so \f(3,5) was announced
+     * as "thirty-five". Exam question 10 asks the learner to order 3/5, 0.58 and
+     * 62%; spoken, it asked them to order 35, 0.58 and 62%. Not unclear — a
+     * different and wrong question, and silent, because the page looks correct.
+     *
+     * role="math" plus an accessible name is the standard fallback where MathML
+     * is not used; the rows are hidden from the tree so they cannot be read
+     * twice, once as a fraction and once as digits.
+     */
     fractionMarkup(value){
-      return String(value || "").replace(/\\f\(([^,()]+),([^()]+)\)/g,
-        '<span style="display:inline-grid;grid-template-rows:auto auto;vertical-align:middle;text-align:center;line-height:1.05;margin:0 .12em"><span style="border-bottom:1.4px solid currentColor;padding:0 .16em">$1</span><span style="padding:0 .16em">$2</span></span>');
+      const attr = text => String(text).replace(/&/g,"&amp;").replace(/"/g,"&quot;")
+        .replace(/</g,"&lt;").replace(/>/g,"&gt;");
+      return String(value || "").replace(/\\f\(([^,()]+),([^()]+)\)/g, (_match, numerator, denominator) =>
+        `<span role="math" aria-label="${attr(numerator.trim())} over ${attr(denominator.trim())}"` +
+        ' style="display:inline-grid;grid-template-rows:auto auto;vertical-align:middle;text-align:center;line-height:1.05;margin:0 .12em">' +
+        `<span aria-hidden="true" style="border-bottom:1.4px solid currentColor;padding:0 .16em">${numerator}</span>` +
+        `<span aria-hidden="true" style="padding:0 .16em">${denominator}</span></span>`);
     },
 
+    /*
+     * createDrawingPad — the learner sketchpad, and (from Phase 4) the tutor's
+     * red-pen overlay.
+     *
+     * EVERY OPTION DEFAULTS TO THE ORIGINAL LEARNER BEHAVIOUR. Called with no
+     * options beyond the existing ones, this is byte-for-byte the pad it always
+     * was: opaque white ground, dark ink, eraser that paints white, resizable.
+     *
+     *   transparent  false  — true skips the white fill entirely, so the layer
+     *                         composites over whatever sits beneath it
+     *   penColor     dark   — tutor overlays use red
+     *   eraserMode   "paint-white" | "destination-out"
+     *   fixedSize    null   — pin to a sketchpad size and remove the size controls
+     *
+     * THE ERASER IS THE DANGEROUS ONE. On the learner's own pad, "erasing" by
+     * painting white is harmless because the ground is white. On a TRANSPARENT
+     * overlay the same code paints opaque white over the learner's working
+     * underneath — silently, and invisibly to any test that only compares
+     * responses[].drawing bytes, because the learner's stored PNG is untouched
+     * while the composited image a human sees is destroyed. Transparent mode
+     * therefore erases with destination-out, which removes alpha instead.
+     */
     createDrawingPad(container, options = {}){
       const key = options.storageKey;
       const state = options.state || {};
+      const transparent = options.transparent === true;
+      const penColor = options.penColor || "#14213d";
+      const eraserMode = options.eraserMode || (transparent ? "destination-out" : "paint-white");
+      const sizes = {
+        compact:{width:960,height:320,label:"Compact"},
+        standard:{width:960,height:480,label:"Standard"},
+        expanded:{width:960,height:700,label:"Expanded"}
+      };
+      // A pinned overlay MUST match the learner canvas it sits on. Resizing
+      // resamples via drawImage, which would misregister every tutor stroke
+      // against the working it refers to.
+      if(options.fixedSize && sizes[options.fixedSize]) state.sketchpadSize = options.fixedSize;
+      state.sketchpadSize = sizes[state.sketchpadSize] ? state.sketchpadSize : "standard";
+      const initialSize = sizes[state.sketchpadSize];
       const canvas = document.createElement("canvas");
       canvas.className = "draw-canvas";
-      canvas.width = 960;
-      canvas.height = 360;
-      canvas.setAttribute("aria-label",options.label || "Drawing area for mathematical working");
+      canvas.width = initialSize.width;
+      canvas.height = initialSize.height;
+      canvas.setAttribute("aria-label",options.label || "Sketchpad for mathematical working");
       canvas.setAttribute("role","img");
       canvas.tabIndex = 0;
 
       const tools = document.createElement("div");
       tools.className = "draw-tools";
       tools.innerHTML = [
-        '<button type="button" data-tool="pen" aria-pressed="true">Pen</button>',
-        '<button type="button" data-tool="eraser" aria-pressed="false">Eraser</button>',
-        '<button type="button" data-tool="undo">Undo</button>',
-        '<button type="button" data-tool="clear" class="danger">Clear</button>'
+        '<div class="draw-tool-group" aria-label="Sketchpad tools">',
+          '<button type="button" data-tool="pen" aria-pressed="true">Pen</button>',
+          '<button type="button" data-tool="eraser" aria-pressed="false">Eraser</button>',
+          '<button type="button" data-tool="undo">Undo</button>',
+          '<button type="button" data-tool="clear" class="danger">Clear</button>',
+        '</div>',
+        options.fixedSize ? '' : [
+          '<div class="draw-tool-group sketchpad-sizes" aria-label="Sketchpad size">',
+            '<span class="fine">Size</span>',
+            ...Object.entries(sizes).map(([id,size]) =>
+              `<button type="button" data-sketchpad-size="${id}" aria-pressed="${String(id === state.sketchpadSize)}">${size.label}</button>`
+            ),
+          '</div>'
+        ].join("")
       ].join("");
       container.append(tools,canvas);
 
@@ -140,6 +269,7 @@
       const history = [];
 
       function whiteBackground(){
+        if(transparent) return;   // an overlay has no ground of its own
         context.save();
         context.fillStyle = "#fff";
         context.fillRect(0,0,canvas.width,canvas.height);
@@ -150,7 +280,7 @@
         if(history.length > 15) history.shift();
       }
       function restore(dataURL){
-        if(!dataURL){ whiteBackground(); return; }
+        if(!dataURL){ context.clearRect(0,0,canvas.width,canvas.height); whiteBackground(); return; }
         const image = new Image();
         image.onload = () => {
           context.clearRect(0,0,canvas.width,canvas.height);
@@ -163,6 +293,23 @@
         state.drawing = canvas.toDataURL("image/png");
         if(key) AlphaMath.storage.set(key,state);
         if(typeof options.onSave === "function") options.onSave(state.drawing);
+      }
+      function resizeCanvas(sizeId){
+        const nextSize = sizes[sizeId];
+        if(!nextSize || sizeId === state.sketchpadSize) return;
+        const copy = document.createElement("canvas");
+        copy.width = canvas.width;
+        copy.height = canvas.height;
+        copy.getContext("2d").drawImage(canvas,0,0);
+        canvas.width = nextSize.width;
+        canvas.height = nextSize.height;
+        whiteBackground();
+        context.drawImage(copy,0,0,copy.width,copy.height,0,0,canvas.width,canvas.height);
+        state.sketchpadSize = sizeId;
+        tools.querySelectorAll("[data-sketchpad-size]").forEach(button =>
+          button.setAttribute("aria-pressed",String(button.dataset.sketchpadSize === sizeId)));
+        save();
+        AlphaMath.announce(`Sketchpad size changed to ${nextSize.label.toLowerCase()}.`);
       }
       function point(event){
         const rect = canvas.getBoundingClientRect();
@@ -187,7 +334,14 @@
         context.lineCap = "round";
         context.lineJoin = "round";
         context.lineWidth = erasing ? 24 : 4;
-        context.strokeStyle = erasing ? "#fff" : "#14213d";
+        if(erasing && eraserMode === "destination-out"){
+          // Remove alpha rather than paint over it, so what is beneath shows
+          // through again instead of being covered in white.
+          context.globalCompositeOperation = "destination-out";
+          context.strokeStyle = "rgba(0,0,0,1)";
+        }else{
+          context.strokeStyle = erasing ? "#fff" : penColor;
+        }
         context.beginPath();
         context.moveTo(previous.x,previous.y);
         context.lineTo(next.x,next.y);
@@ -209,6 +363,10 @@
       tools.addEventListener("click",event => {
         const button = event.target.closest("button");
         if(!button || options.locked) return;
+        if(button.dataset.sketchpadSize){
+          resizeCanvas(button.dataset.sketchpadSize);
+          return;
+        }
         const tool = button.dataset.tool;
         if(tool === "pen" || tool === "eraser"){
           erasing = tool === "eraser";
@@ -233,7 +391,7 @@
         tools.querySelectorAll("button").forEach(button => button.disabled = true);
         canvas.setAttribute("aria-disabled","true");
       }
-      return {canvas,save,lock(){
+      return {canvas,save,resize:resizeCanvas,lock(){
         options.locked = true;
         tools.querySelectorAll("button").forEach(button => button.disabled = true);
         canvas.setAttribute("aria-disabled","true");
@@ -241,131 +399,47 @@
     }
   };
 
-  const runtime = window.ALPHAMATH_RUNTIME || {};
-  const connectionKey = "alphamath:evidence-api-base";
-  const tokenKey = "alphamath:evidence-api-token";
-
-  function normalizeBase(value){
-    return String(value || "").trim().replace(/\/+$/, "");
-  }
-
-  function connection(){
-    return {
-      apiBase: normalizeBase(runtime.apiBase || AlphaMath.storage.get(connectionKey, "")),
-      token: sessionStorage.getItem(tokenKey) || ""
-    };
-  }
-
-  function connectionDialog(){
-    let dialog = document.getElementById("alphamathConnectionDialog");
-    if(dialog) return dialog;
-    dialog = document.createElement("dialog");
-    dialog.id = "alphamathConnectionDialog";
-    dialog.innerHTML = `
-      <form method="dialog" class="connection-form">
-        <div class="dialog-body">
-          <p class="eyebrow">Secure evidence connection</p>
-          <h2 style="margin-top:0">Connect this browser</h2>
-          <p class="fine">PostgreSQL remains behind the AlphaMath API. The access token is kept only in this browser tab and is never written to GitHub Pages.</p>
-          <label for="alphamathApiBase">Evidence API address</label>
-          <input id="alphamathApiBase" type="url" inputmode="url" placeholder="https://api.example.org" required>
-          <label for="alphamathApiToken" style="margin-top:12px">Tutor access token</label>
-          <input id="alphamathApiToken" type="password" autocomplete="off" required>
-          <p class="connection-error fine" id="alphamathConnectionError" role="alert" hidden></p>
-        </div>
-        <div class="dialog-actions">
-          <button type="button" data-connection-cancel>Cancel</button>
-          <button type="submit" class="primary">Connect securely</button>
-        </div>
-      </form>`;
-    document.body.append(dialog);
-    return dialog;
-  }
-
-  async function configureConnection(){
-    const dialog = connectionDialog();
-    const baseField = dialog.querySelector("#alphamathApiBase");
-    const tokenField = dialog.querySelector("#alphamathApiToken");
-    const error = dialog.querySelector("#alphamathConnectionError");
-    const current = connection();
-    baseField.value = current.apiBase;
-    tokenField.value = current.token;
-    error.hidden = true;
-    return new Promise(resolve => {
-      function close(result){
-        dialog.removeEventListener("close", onClose);
-        dialog.querySelector("form").removeEventListener("submit", onSubmit);
-        dialog.querySelector("[data-connection-cancel]").removeEventListener("click", onCancel);
-        resolve(result);
-      }
-      function onClose(){ close(null); }
-      function onCancel(){ dialog.close(); }
-      async function onSubmit(event){
-        event.preventDefault();
-        const apiBase = normalizeBase(baseField.value);
-        const token = tokenField.value;
-        error.hidden = true;
-        try{
-          const response = await fetch(`${apiBase}/health`, {
-            headers: {authorization: `Bearer ${token}`}
-          });
-          if(!response.ok) throw new Error(response.status === 401 ? "Access token was not accepted." : "The API could not be reached.");
-          AlphaMath.storage.set(connectionKey, apiBase);
-          sessionStorage.setItem(tokenKey, token);
-          dialog.removeEventListener("close", onClose);
-          dialog.close();
-          close({apiBase, token});
-        }catch(problem){
-          error.textContent = problem.message;
-          error.hidden = false;
-        }
-      }
-      dialog.addEventListener("close", onClose);
-      dialog.querySelector("form").addEventListener("submit", onSubmit);
-      dialog.querySelector("[data-connection-cancel]").addEventListener("click", onCancel);
-      if(typeof dialog.showModal === "function") dialog.showModal();
-      else dialog.setAttribute("open", "");
-    });
+  /*
+   * Evidence submission runs on the signed-in account, and on nothing else.
+   *
+   * What used to live here was a dialog that asked the user for a shared
+   * deployment token and kept it in sessionStorage. Every user of every page was
+   * handed the same secret, and the API accepted it for writes — so a learner
+   * submitting their own intake held a credential that could write evidence
+   * against any child in the database. That is now closed on both sides: this
+   * module carries no token, and the API refuses one.
+   *
+   * All of this delegates to AlphaMath.auth, which owns the session. A page that
+   * submits must therefore load auth.js; the guard below says so plainly rather
+   * than failing with "cannot read properties of undefined".
+   */
+  function session(){
+    if(!AlphaMath.auth) throw new Error("This page cannot save to the database: the sign-in module was not loaded.");
+    return AlphaMath.auth;
   }
 
   AlphaMath.api = {
     configured(){
-      const current = connection();
-      return Boolean(current.apiBase && current.token);
+      return Boolean(AlphaMath.auth && AlphaMath.auth.signedIn());
     },
     async connect(){
-      return configureConnection();
+      return session().ensureSession();
     },
     disconnect(){
-      sessionStorage.removeItem(tokenKey);
-      AlphaMath.announce("Evidence API disconnected from this browser tab.");
+      session().logout();
+      AlphaMath.announce("Signed out of the evidence database in this browser tab.");
     },
     async request(path, options = {}){
-      let current = connection();
-      if(!current.apiBase || !current.token){
-        current = await configureConnection();
-        if(!current){
-          const error = new Error("Database submission cancelled. Your local draft is unchanged.");
-          error.cancelled = true;
-          throw error;
-        }
-      }
-      const response = await fetch(`${current.apiBase}${path}`, {
-        ...options,
-        headers: {
-          authorization: `Bearer ${current.token}`,
-          "content-type": "application/json",
-          ...(options.headers || {})
-        }
-      });
-      let result = {};
-      try{ result = await response.json(); }catch(_error){}
-      if(!response.ok){
-        const error = new Error(result.error || `Database request failed (${response.status}).`);
-        error.status = response.status;
+      const account = await session().ensureSession();
+      if(!account){
+        /* Cancelling is a legitimate answer, not a failure. The offline draft is
+           the source of truth until a submission succeeds, so callers report
+           this quietly. */
+        const error = new Error("Database submission cancelled. Your local draft is unchanged.");
+        error.cancelled = true;
         throw error;
       }
-      return result;
+      return session().json(path, options);
     },
     submit(path, payload){
       return this.request(path, {method: "POST", body: JSON.stringify(payload)});
@@ -376,5 +450,10 @@
   };
 
   window.AlphaMath = AlphaMath;
-  document.addEventListener("DOMContentLoaded",() => AlphaMath.initMathFields());
+  document.addEventListener("DOMContentLoaded",() => {
+    AlphaMath.initMathFields();
+    /* Painted on every page that asks for it, so no learner-facing screen can be
+       ambiguous about whose saved work it is showing. */
+    AlphaMath.learner.show();
+  });
 })();

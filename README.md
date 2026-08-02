@@ -1,99 +1,48 @@
 ---
-title: "AlphaMath CSEC Mathematics — Sanitized Reviewer Demonstration"
-status: "review-ready-with-optional-evidence-api"
-version: "review-1.1.1-20260730"
-created: "2026-07-30"
-privacy: "sanitized public demonstration"
+title: "AlphaMath — Sanitized Reviewer Demonstration"
+status: "pages-only; no evidence API is shipped"
+built_by: "tools/build-review-demo.mjs (Marion Sydney Enterprises workspace)"
+built_at: "2026-08-02"
 ---
 
-# AlphaMath CSEC Mathematics — Sanitized Reviewer Demonstration
+# AlphaMath — Sanitized Reviewer Demonstration
 
-This repository contains the static reviewer interface plus an optional Node evidence API for PostgreSQL.
+The AlphaMath⁺ landing page is the front door; the two suites sit beneath it:
 
-## Privacy and content boundary
+- **[CSEC Mathematics](csec-maths/index.html)**
+- **[CSEC Additional Mathematics](add-maths/index.html)**
 
-- No real student identity, roster mapping, submitted response, or saved learner record is committed.
-- `REVIEW-DEMO` is a fictional interface identifier.
-- Interactive work remains in the reviewer’s browser unless a tutor explicitly connects the evidence API and submits it.
-- PostgreSQL credentials never enter browser code.
-- The tutor access token is entered at run time and retained only for the current browser tab.
-- The tutorial and simulated exam use tutor-authored bridge questions only.
-- Reproduced CSEC past-paper questions are intentionally excluded.
-- CSEC® and CXC® are referenced only to describe curriculum alignment. This demonstration is not affiliated with or endorsed by CXC.
+## What this is, exactly
 
-## Evidence workflow
+A **Tier-1 static tour**: every page is clickable and the offline-first
+instruments — intake, tutorials, simulated exams, pathways — work in full,
+because they run in your browser and keep their working state there.
 
-1. Intake records self-assessed topic states and confidence-drop notes.
-2. Tutorial practice remains a local draft until a named tutor reviews at least one attempted item.
-3. A simulated exam must be submitted and locked before it can be stored or reviewed.
-4. Tutor reviews record item outcomes, feedback, verified syllabus codes, and an explicit overall decision.
-5. The dashboard reads the learner’s linked record from PostgreSQL.
-6. Completion never creates mastery. Only a named tutor can submit `mastery_confirmed`.
+**No evidence API is shipped with this demonstration.** Sign-in surfaces
+render, and they cannot connect to anything: the API source is not published
+here, and the client's `apiBase` is empty. So the connected features — the
+tutor workspace, marked work, the admin console, parent progress, *Tell your
+tutor*, and set-password links — are visible as interface, and no request they
+make can reach a server.
 
-## Static pages
+## The content boundary
 
-- `index.html` — review entry point
-- `intake.html` — syllabus-aligned intake and explicit database submission
-- `learning-path.html` — illustrative mastery pathway
-- `tutorial.html` — tutorial plus human-review checkpoint
-- `simulated-exam.html` — locked exam attempt plus human-review checkpoint
-- `dashboard.html` — PostgreSQL-backed learner evidence view
-- `math-input.html` — local math-entry prototype
+- **No real learner work.** Issued tutorials and exams belong to a learner and
+  are excluded; the cards that opened them say so where they stood.
+- **No real identifiers.** `REVIEW-DEMO` is a fictional interface identifier
+  standing in for the subject-scoped id used in the live system. No account
+  ids, no partner school, no contributor names, no development origins.
+- **No secrets, and no server.** The API source, its configuration, its tests,
+  and its tooling are not part of this export.
 
-## Intake formula cards
+Each of those is re-scanned in the built output and the build fails if any
+survives — this file describes a boundary the tool enforces rather than a
+promise a person made.
 
-Formula-bearing intake topics use a consistent popover structure:
+## What the interface will not do
 
-1. a short **In plain language** explanation; then
-2. a **Standard formulas** panel with one typeset relationship per row.
-
-KaTeX and its fonts are bundled under `assets/vendor/katex/`, so formulas render without a CDN. Concept-only topics do not display a formula panel, and topics for which the syllabus requires comparison rather than calculation state that boundary explicitly.
-
-## Local database and API
-
-Prerequisites: Node 20+ and PostgreSQL.
-
-```sh
-createdb alphamath
-npm install
-DATABASE_URL=postgresql://localhost/alphamath npm run db:migrate
-```
-
-Generate a long token locally, then start the API without committing the value:
-
-```sh
-export DATABASE_URL=postgresql://localhost/alphamath
-export ALPHAMATH_API_TOKEN="$(openssl rand -hex 32)"
-export ALLOWED_ORIGINS=http://127.0.0.1:8765,https://barbadosmike.github.io
-npm start
-```
-
-Serve the static pages separately:
-
-```sh
-python3 -m http.server 8765 --bind 127.0.0.1
-```
-
-Open `http://127.0.0.1:8765/dashboard.html`, enter the API address, and enter the token created in the same terminal session.
-
-## Hosted deployment
-
-GitHub Pages can host only the static files. Deploy `server/` to a Node-capable host with:
-
-- `DATABASE_URL`
-- `ALPHAMATH_API_TOKEN`
-- `ALLOWED_ORIGINS=https://barbadosmike.github.io`
-- `PORT` supplied by the host
-
-Then set `apiBase` in `assets/js/runtime-config.js` to the HTTPS API origin. Do not place the token or a database connection string in that file.
-
-For real student use, replace the shared tutor-token mechanism with per-user authentication and role-based authorization before collecting personally identifiable information.
-
-## Verification
-
-```sh
-npm test
-node ../alphamath-review-qa.mjs
-```
-
-The automated contract tests cover intake submission, tutorial review, locked exam submission, exam review, dashboard aggregation, CORS, and authentication.
+No screen decides mastery. Every outcome shown in the live system is a named
+tutor's judgment, and learner-facing pages carry subject-scoped identifiers
+rather than names. CSEC® and CXC® are referenced only to describe curriculum
+alignment; this demonstration is not affiliated with or endorsed by CXC, and
+reproduced past-paper questions are deliberately excluded.

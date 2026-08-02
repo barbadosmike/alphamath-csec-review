@@ -1,0 +1,62 @@
+/* ============================================================================
+   AlphaMath — CSEC Mathematics ink palette
+   SINGLE SOURCE OF TRUTH for the CSEC Maths purple family.
+
+   Consumed by:
+     assets/css/alphamath.css  — @import at the top of the file
+     CSEC Maths Intake Form.html — <link> before its inline <style>
+
+   The intake form is a headless doctype+html+meta shell with one inline <style>
+   and does not use alphamath.css. Both consumers therefore read this file, so a
+   palette change is one edit in one place.
+
+   Do not redeclare these tokens in a page's inline <style>: an inline block wins
+   over this stylesheet and reintroduces drift. That is not hypothetical — before
+   this file existed, alphamath.css sat on Marion Sydney Classic #552583 while the
+   intake form carried #140B2C under its own --wisteria/--amethyst vocabulary, and
+   the suite rendered as two documents. The intake also declared its tokens twice,
+   at different values, in the same file.
+
+   PROVENANCE — read before changing a value.
+   Every value is column 1 of the ten-step ramp in
+   Assets/Corporate Identity/MSE_Approved_Color_Schemes.md
+   §9 Royal Purple Gradient Palette #1 (source: icolorpalette.com/p/577764,
+   "cool, muted, low-chroma — violet through taupe"). Taking one column of one
+   ramp is deliberate: every token is then a step of a single coherent gradient
+   rather than an assembly of separately chosen shades.
+
+   WHY THIS FAMILY AND NOT ADD MATHS' — CEO decision 2026-07-31. The two
+   syllabuses are different subjects and should be visually distinct. CSEC
+   Mathematics sits on a lighter near-black violet than the Additional
+   Mathematics ground:
+
+     CSEC Maths      #221A2D   16.75 : 1 against white
+     Add Maths       #140B2C   18.85 : 1 against white   (CDR-0146)
+     CIEDE2000 separation 6.56 — clearly distinct, not a near-duplicate.
+
+   NAMING. #221A2D appears in the register only as a cell in §9's ramp table; it
+   is not a named §2 shade. Per the rule established for the Additional
+   Mathematics palette — a token may carry a §2 NAME only if it carries the §2
+   VALUE, and derived values get derived names — every token here takes this
+   file's own idiom and claims nothing from §2. If this ground is to become named
+   document chrome it needs a §2 entry under a CDR, as #140B2C has. Flagged, not
+   assumed.
+
+   MEASURED, not asserted. Ratios are WCAG 2.1; this is material for minors, so
+   1.4.3 (4.5:1 body text) and 1.4.11 (3:1 component boundaries) both bind.
+
+   Gold, greys and the semantic ramps are NOT part of this family and stay with
+   their consuming stylesheet.
+   ============================================================================ */
+
+/* One vocabulary, shared with alphamath.css and the intake form, and identical in
+   name to the Additional Mathematics palette so the two builds differ in values
+   only — never in the tokens their stylesheets reference. */
+:root{
+  --purple:#221A2D;       /* ramp step 10 — main chrome, links, accents; 16.75:1 on white */
+  --purple-deep:#332743;  /* ramp step  9 — header/table chrome carrying white text; 13.89:1 */
+  --purple-mid:#674E87;   /* ramp step  6 — mid violet accent, buttons; 6.96:1 on white     */
+  --purple-line:#9D87B9;  /* ramp step  3 — component borders; 3.18:1, clears 1.4.11's 3:1  */
+  --purple-soft:#C2B4D4;  /* ramp step  1 — light wash behind dark ink; 8.19:1 against #14213d */
+  --purple-20:#160B1C;    /* §9 #1 col-4 source, "near-black violet" — pressed/hover below main */
+}

@@ -3,45 +3,314 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="color-scheme" content="light">
-  <title>AlphaMath CSEC Mathematics — REVIEW-DEMO Redesign</title>
-  <link rel="stylesheet" href="assets/css/alphamath.css">
+  <meta name="color-scheme" content="dark">
+  <!-- Deliberately NO robots meta: this is the public face (CEO, 2026-07-31).
+       The suites it links to keep noindex,nofollow — that soft boundary is the
+       "not public" line until deployment puts real hosting in front of it. -->
+  <meta name="description" content="AlphaMath⁺ — mastery-based CSEC and CAPE mathematics tutoring: syllabus-derived pathways, tutor-marked evidence, and a human decision behind every mastery call.">
+  <title>AlphaMath⁺ — Mastery-based CSEC &amp; CAPE Mathematics</title>
+  <style>
+    /*
+     * Palette: the registered Executive Boardroom scheme
+     * (Assets/Corporate Identity/MSE_Approved_Color_Schemes.md) — Gold #E6C56E,
+     * Deep Gold #B89955, Mid Neutral #4A4E57, Deep Ink #23262F.
+     * MEASURED on #23262F: gold 9.05:1 · deep gold 5.56:1 · white 15.11:1 ·
+     * soft #EDEAE2 12.57:1. Mid Neutral is 1.81:1 and is therefore used ONLY for
+     * borders and fills, never text.
+     *
+     * Storm layers: the registered PURPLE RAIN palette (register §8, supplied
+     * import — licence determination for §7–§9 remains an open register item):
+     * #120348 · #3A2081 · #2E2C9A · #EEC8ED · #E7E4F9. Text grounds are NOT
+     * changed by the storm; it exists only as bounded-alpha overlays, and the
+     * worst cases are MEASURED, not assumed:
+     *   ambient (royal .16 + deep .14 over ink) → #282649:
+     *     deep-gold fine text 5.28 · soft 11.93 · white 14.35
+     *   flash peak (pale .30 over ambient) → #615F7E:
+     *     white wordmark 6.09 (large, needs 3) · gold PLUS 3.65 (large, needs 3)
+     *     · soft tagline 5.07 (needs 4.5)
+     *
+     * FLASH SAFETY (WCAG 2.3.1, three flashes or below threshold): one soft
+     * double-pulse every ~9.5s — never more than two dim pulses in any second,
+     * alpha capped at .30 over a dark ground, and the flash layer's resting
+     * opacity is 0 with its animation defined ONLY inside the
+     * prefers-reduced-motion: no-preference block, so reduced-motion users get a
+     * still violet ambience and no flash at all.
+     */
+    @font-face{font-family:"Lexend";src:url("assets/fonts/lexend-variable.woff2") format("woff2");font-weight:100 900;font-display:swap}
+    @font-face{font-family:"Lora";src:url("assets/fonts/lora-regular.woff2") format("woff2");font-weight:400;font-display:swap}
+    @font-face{font-family:"Lora";src:url("assets/fonts/lora-bold.woff2") format("woff2");font-weight:700;font-display:swap}
+    @font-face{font-family:"Lora";src:url("assets/fonts/lora-italic.woff2") format("woff2");font-style:italic;font-weight:400;font-display:swap}
+    @font-face{font-family:"Lora";src:url("assets/fonts/lora-bolditalic.woff2") format("woff2");font-style:italic;font-weight:700;font-display:swap}
+
+    :root{
+      --gold:#E6C56E; --gold-deep:#B89955; --neutral:#4A4E57; --ink:#23262F;
+      --ink-2:#1B1E25; --soft:#EDEAE2;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      font:16px/1.6 "Lexend",ui-sans-serif,"Segoe UI",Roboto,Arial,sans-serif;
+      background:var(--ink); color:var(--soft);
+      -webkit-font-smoothing:antialiased;
+    }
+    a{color:var(--gold)}
+    .skip-link{position:absolute;left:-9999px;top:0;background:var(--gold);color:var(--ink);padding:10px 14px;font-weight:700;border-radius:0 0 8px 0;z-index:10}
+    .skip-link:focus{left:0}
+
+    /* ---------- hero ---------- */
+    .hero{
+      position:relative; overflow:hidden;
+      padding:clamp(56px,12vh,120px) 20px clamp(48px,9vh,96px);
+      text-align:center;
+      /* Grounds unchanged — every text ratio above was measured against them.
+         The gold halo narrows to sit tight behind the wordmark; the weather is
+         Purple Rain, layered over it, never replacing it. */
+      background:
+        radial-gradient(620px 300px at 50% 4%, rgba(230,197,110,.12), transparent 65%),
+        linear-gradient(180deg, var(--ink-2), var(--ink) 65%);
+    }
+    /* Still air: the drifting storm ambience. A separate layer so reduced-motion
+       removes the MOTION and keeps the composition — statically visible either
+       way. Royal #2E2C9A and deep violet #3A2081, at the alphas the contrast
+       comment measured (.16 / .14). */
+    .hero::before{
+      content:""; position:absolute; inset:-40%;
+      background:
+        radial-gradient(closest-side at 30% 38%, rgba(46,44,154,.16), transparent 70%),
+        radial-gradient(closest-side at 74% 58%, rgba(58,32,129,.14), transparent 70%),
+        radial-gradient(closest-side at 55% 96%, rgba(18,3,72,.30), transparent 72%);
+      pointer-events:none;
+    }
+    /* The lightning itself. Sheet-flash radials confined to the TOP band, well
+       above the tagline and fine print, plus one thin diagonal bolt in the upper
+       right — pale lavender #E7E4F9 with a pink #EEC8ED fringe and a royal
+       after-glow. Resting opacity is 0: without the animation (which lives only
+       inside the reduced-motion block below) this layer simply never appears. */
+    .hero::after{
+      content:""; position:absolute; inset:0; pointer-events:none; opacity:0;
+      background:
+        radial-gradient(42% 26% at 16% 6%, rgba(231,228,249,.55), rgba(46,44,154,.18) 55%, transparent 75%),
+        radial-gradient(34% 22% at 82% 3%, rgba(238,200,237,.42), rgba(58,32,129,.16) 55%, transparent 75%),
+        linear-gradient(107deg, transparent 61%, rgba(231,228,249,.34) 63.4%, rgba(238,200,237,.16) 64.2%, transparent 66.5%);
+    }
+    .wordmark{
+      margin:0; font-weight:800; letter-spacing:.01em;
+      font-size:clamp(44px,9vw,104px); line-height:1.05; color:#fff;
+    }
+    .wordmark .alpha{font-family:"Lexend",sans-serif}
+    .wordmark .math{font-family:"Lora",serif;font-style:italic;font-weight:700;letter-spacing:0}
+    .wordmark .plus{
+      font-family:"Lexend",sans-serif;
+      vertical-align:super; font-size:.44em; font-weight:800; margin-left:.06em;
+      background:radial-gradient(120% 130% at 30% 25%, var(--gold) 0%, var(--gold-deep) 55%, var(--neutral) 100%);
+      -webkit-background-clip:text; background-clip:text;
+      -webkit-text-fill-color:transparent; color:var(--gold); /* fallback wins where clip is unsupported */
+    }
+    .tagline{
+      max-width:44rem;margin:18px auto 0;font-size:clamp(17px,2.2vw,21px);color:var(--soft)
+    }
+    .tagline em{font-family:"Lora",serif}
+    .cta-row{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:30px}
+    .button{
+      display:inline-flex;align-items:center;min-height:48px;padding:10px 22px;border-radius:10px;
+      font-weight:750;text-decoration:none;border:1px solid transparent;
+    }
+    .button.primary{background:var(--gold);color:var(--ink)}
+    .button.primary:hover{background:#EFD289}
+    .button.ghost{border-color:var(--gold-deep);color:var(--soft)}
+    .button.ghost:hover{border-color:var(--gold);color:#fff}
+    .hero .fine{margin:26px auto 0;font-size:13.5px;color:var(--gold-deep);max-width:40rem}
+
+    @media (prefers-reduced-motion: no-preference){
+      .hero::before{animation:drift 26s ease-in-out infinite alternate}
+      /* Subdued lightning: a double-pulse (bright, dim echo) lasting ~0.8s, then
+         ~8.7s of quiet — at most two dim pulses in any one-second window, far
+         inside WCAG 2.3.1's three-per-second ceiling. Peak opacity .30 is the
+         alpha the contrast comment's flash-peak numbers were measured at. */
+      .hero::after{animation:storm 9.5s ease-out infinite}
+      .wordmark,.tagline,.cta-row,.hero .fine{animation:rise .9s ease-out both}
+      .tagline{animation-delay:.12s}.cta-row{animation-delay:.24s}.hero .fine{animation-delay:.36s}
+      .wordmark .plus{animation:glint 7s ease-in-out infinite;background-size:220% 220%}
+      @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+      @keyframes drift{from{transform:translate3d(-2.5%,-1.5%,0) scale(1)}to{transform:translate3d(2.5%,2%,0) scale(1.06)}}
+      @keyframes glint{0%,100%{background-position:20% 20%}50%{background-position:80% 75%}}
+      @keyframes storm{
+        0%, 84%   {opacity:0}
+        85%       {opacity:.30}
+        86.5%     {opacity:.08}
+        88%       {opacity:.22}
+        92%, 100% {opacity:0}
+      }
+    }
+
+    /* ---------- subjects carousel ---------- */
+    .subjects{max-width:1120px;margin:0 auto;padding:44px 20px 64px}
+    .subjects h2{font-family:"Lora",serif;font-size:clamp(24px,3.4vw,34px);margin:0 0 6px;color:#fff}
+    .subjects .lede{margin:0 0 20px;color:var(--soft)}
+    .rail-shell{position:relative}
+    .rail{
+      display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;
+      padding:6px 2px 14px;scrollbar-width:thin;scrollbar-color:var(--gold-deep) transparent;
+    }
+    .subject{
+      flex:0 0 min(82vw,330px);scroll-snap-align:start;
+      border:1px solid var(--neutral);border-radius:14px;padding:18px;
+      background:linear-gradient(180deg, rgba(74,78,87,.28), rgba(74,78,87,.12));
+    }
+    .subject h3{margin:6px 0 8px;font-size:19px;color:#fff}
+    .subject p{margin:0;font-size:14.5px;color:var(--soft)}
+    .subject .level{font-size:12.5px;font-weight:750;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-deep)}
+    .subject .enter{display:inline-flex;margin-top:14px;min-height:44px;align-items:center;padding:8px 16px;
+      border-radius:9px;background:var(--gold);color:var(--ink);font-weight:750;text-decoration:none}
+    .subject .enter:hover{background:#EFD289}
+    /* "Coming soon" is a muted CARD plus an explicit badge — never transparent
+       text, which is a contrast failure wearing a style. */
+    .subject.soon{border-style:dashed;background:linear-gradient(180deg, rgba(74,78,87,.14), rgba(74,78,87,.05))}
+    .badge{display:inline-flex;align-items:center;min-height:24px;padding:2px 10px;border-radius:999px;
+      font-size:12px;font-weight:750}
+    .badge.live{background:var(--gold);color:var(--ink)}
+    .badge.soon{border:1px solid var(--gold-deep);color:var(--gold)}
+    .rail-nav{display:flex;gap:8px;justify-content:flex-end;margin-top:4px}
+    .rail-nav button{
+      min-width:48px;min-height:44px;border-radius:9px;border:1px solid var(--gold-deep);
+      background:transparent;color:var(--gold);font-size:19px;font-weight:700;cursor:pointer
+    }
+    .rail-nav button:hover{border-color:var(--gold);color:#fff}
+    .rail-nav button:focus-visible,.button:focus-visible,.subject .enter:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+
+    footer{border-top:1px solid var(--neutral);padding:26px 20px 34px;text-align:center;color:var(--soft);font-size:13.5px}
+    footer .gold{color:var(--gold-deep)}
+  </style>
 </head>
-<body >
-<aside class="review-notice" role="note">
-  <strong>Sanitized reviewer demonstration</strong>
-  <span>No real student identity, submitted response, roster mapping, or reproduced CSEC past-paper question is included. Entries stay in this browser unless a tutor explicitly connects the evidence API.</span>
-</aside>
-  <a class="skip-link" href="#main">Skip to main content</a>
-  <header class="site-head">
-    <div class="head-inner">
-      <p class="brand-line"><span class="brand-mark" aria-hidden="true">α</span> AlphaMath · CSEC Mathematics</p>
-      <h1>A field guide for building real mathematical confidence</h1>
-      <p class="lede">A reviewer demonstration of personalized, mastery-based learning aligned with syllabus objectives and tutor-reviewed evidence.</p>
-      <div class="head-meta"><span>Reviewer demo</span><span>CSEC Mathematics</span><span>June 2027</span><span>Offline-first</span></div>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<main id="main">
+  <section class="hero" aria-labelledby="brand">
+    <h1 id="brand" class="wordmark"><span class="alpha">ALPHA</span><span class="math">MATH</span><span class="plus">PLUS</span></h1>
+    <p class="tagline">Mastery-based <em>CSEC</em> and <em>CAPE</em> mathematics tutoring — syllabus-derived pathways, tutor-marked evidence, and a <em>human</em> decision behind every mastery call.</p>
+    <div class="cta-row">
+      <!-- Suite paths, written by tools/build-review-demo.mjs. -->
+      <a class="button primary" href="csec-maths/index.html">Enter CSEC Mathematics</a>
+      <a class="button primary" href="add-maths/index.html">Enter Additional Mathematics</a>
+      <a class="button ghost" href="#subjects">See every subject</a>
     </div>
-  </header>
-  <nav class="suite-nav" aria-label="AlphaMath suite"><div class="nav-inner"><a href="index.html" aria-current="page">Suite home</a><a href="intake.html" >Intake</a><a href="learning-path.html" >Learning path</a><a href="tutorial.html" >Tutorial</a><a href="simulated-exam.html" >Simulated exam</a><a href="dashboard.html">Dashboard</a></div></nav>
-  <main id="main" class="shell">
-  <div class="callout info prose">
-    <p class="eyebrow">Sanitized review build</p>
-    <h2 style="margin-top:0">A connected path, not a pile of worksheets</h2>
-    <p>The suite demonstrates how intake evidence can inform short prerequisite-repair sessions while every mastery decision remains with a human tutor.</p>
-  </div>
-  <section aria-labelledby="student-tools">
-    <h2 id="student-tools">Student tools</h2>
-    <div class="hub-grid">
-      <a class="hub-card" href="intake.html"><span class="card-icon">01</span><h3>Intake field guide</h3><p>Review 144 syllabus topics with Confident, Needs practice, and Not started states.</p><span class="go">Open intake →</span></a>
-      <a class="hub-card" href="tutorial.html"><span class="card-icon">02</span><h3>Foundation pathway</h3><p>Short sessions for fractions, decimals, percentages, and applied percentage reasoning.</p><span class="go">Start learning →</span></a>
-      <a class="hub-card" href="simulated-exam.html"><span class="card-icon">03</span><h3>Simulated exam</h3><p>Autosaved timed practice with question navigation, review flags, and tutor-marked method.</p><span class="go">Open exam →</span></a>
-      <a class="hub-card" href="learning-path.html"><span class="card-icon">04</span><h3>Learning path</h3><p>See the verified priority sequence, evidence requirements, and what comes next.</p><span class="go">View path →</span></a>
-      <a class="hub-card" href="math-input.html"><span class="card-icon">05</span><h3>Math-input prototype</h3><p>Preview handwritten work locally and confirm the final expression in an editable math field.</p><span class="go">Try prototype →</span></a>
-      <a class="hub-card" href="dashboard.html"><span class="card-icon">06</span><h3>Evidence dashboard</h3><p>Read linked intake, tutor-reviewed tutorial, and simulated-exam evidence from PostgreSQL.</p><span class="go">Open dashboard →</span></a>
+    <p class="fine">An after-school programme of Marion Sydney Enterprises. Learner pages are offline-first; evidence is tutor-marked; nothing automated decides mastery.</p>
+  </section>
+
+  <section id="subjects" class="subjects" aria-labelledby="subjects-title">
+    <h2 id="subjects-title">Subjects taught</h2>
+    <p class="lede">Two suites are live today. The rest of the catalogue is in preparation, syllabus first.</p>
+    <div class="rail-shell">
+      <div class="rail" role="list" aria-label="AlphaMath subjects" tabindex="0">
+        <article class="subject" role="listitem">
+          <span class="badge live">Available now</span>
+          <h3>CSEC Mathematics</h3>
+          <p class="level">CXC · CSEC</p>
+          <p>Four modules, 144 syllabus codes — number theory and consumer arithmetic through algebra, geometry, trigonometry, statistics and vectors.</p>
+          <a class="enter" href="csec-maths/index.html">Enter suite</a>
+        </article>
+        <article class="subject" role="listitem">
+          <span class="badge live">Available now</span>
+          <h3>CSEC Additional Mathematics</h3>
+          <p class="level">CXC · CSEC</p>
+          <p>Four sections, 85 syllabus codes — algebra &amp; functions, coordinate geometry &amp; trigonometry, calculus, probability &amp; statistics.</p>
+          <a class="enter" href="add-maths/index.html">Enter suite</a>
+        </article>
+        <article class="subject soon" role="listitem">
+          <span class="badge soon">Coming soon</span>
+          <h3>CSEC Biology</h3>
+          <p class="level">CXC · CSEC</p>
+          <p>Syllabus-aligned tracks in preparation.</p>
+        </article>
+        <article class="subject soon" role="listitem">
+          <span class="badge soon">Coming soon</span>
+          <h3>CSEC Chemistry</h3>
+          <p class="level">CXC · CSEC</p>
+          <p>Syllabus-aligned tracks in preparation.</p>
+        </article>
+        <article class="subject soon" role="listitem">
+          <span class="badge soon">Coming soon</span>
+          <h3>CSEC Industrial Technology</h3>
+          <p class="level">CXC · CSEC</p>
+          <p>Syllabus-aligned tracks in preparation.</p>
+        </article>
+        <article class="subject soon" role="listitem">
+          <span class="badge soon">Coming soon</span>
+          <h3>CSEC Information Technology</h3>
+          <p class="level">CXC · CSEC</p>
+          <p>Syllabus-aligned tracks in preparation.</p>
+        </article>
+        <article class="subject soon" role="listitem">
+          <span class="badge soon">Coming soon</span>
+          <h3>CSEC Physics</h3>
+          <p class="level">CXC · CSEC</p>
+          <p>Syllabus-aligned tracks in preparation.</p>
+        </article>
+        <article class="subject soon" role="listitem">
+          <span class="badge soon">Coming soon</span>
+          <h3>CSEC Technical Drawing</h3>
+          <p class="level">CXC · CSEC</p>
+          <p>Syllabus-aligned tracks in preparation.</p>
+        </article>
+        <article class="subject soon" role="listitem">
+          <span class="badge soon">Coming soon</span>
+          <h3>CAPE Integrated Mathematics</h3>
+          <p class="level">CXC · CAPE</p>
+          <p>Syllabus-aligned tracks in preparation.</p>
+        </article>
+        <article class="subject soon" role="listitem">
+          <span class="badge soon">Coming soon</span>
+          <h3>CAPE Pure Mathematics · Unit 1</h3>
+          <p class="level">CXC · CAPE</p>
+          <p>Syllabus-aligned tracks in preparation.</p>
+        </article>
+        <article class="subject soon" role="listitem">
+          <span class="badge soon">Coming soon</span>
+          <h3>CAPE Pure Mathematics · Unit 2</h3>
+          <p class="level">CXC · CAPE</p>
+          <p>Syllabus-aligned tracks in preparation.</p>
+        </article>
+        <article class="subject soon" role="listitem">
+          <span class="badge soon">Coming soon</span>
+          <h3>CAPE Applied Mathematics · Unit 1</h3>
+          <p class="level">CXC · CAPE</p>
+          <p>Syllabus-aligned tracks in preparation.</p>
+        </article>
+        <article class="subject soon" role="listitem">
+          <span class="badge soon">Coming soon</span>
+          <h3>CAPE Applied Mathematics · Unit 2</h3>
+          <p class="level">CXC · CAPE</p>
+          <p>Syllabus-aligned tracks in preparation.</p>
+        </article>
+      </div>
+      <div class="rail-nav">
+        <button type="button" data-rail-prev aria-label="Previous subjects">←</button>
+        <button type="button" data-rail-next aria-label="Next subjects">→</button>
+      </div>
     </div>
   </section>
 </main>
-  <div id="suite-live-region" class="sr-only" aria-live="polite" aria-atomic="true"></div>
-  <script src="assets/js/runtime-config.js" defer></script>
-  <script src="assets/js/suite.js" defer></script>
+
+<footer>
+  <p><span class="gold">AlphaMath⁺</span> · an after-school programme of Marion Sydney Enterprises — strategy, digital delivery, and financing capacity.</p>
+</footer>
+
+<script>
+/* Progressive enhancement only: the rail scrolls natively (touch, wheel,
+   keyboard on the focusable rail); these buttons are a convenience. Smooth
+   scrolling defers to prefers-reduced-motion. */
+(function(){
+  "use strict";
+  const rail = document.querySelector(".rail");
+  if(!rail) return;
+  const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const step = () => Math.max(rail.clientWidth * 0.8, 260);
+  document.querySelector("[data-rail-prev]")?.addEventListener("click", () =>
+    rail.scrollBy({left: -step(), behavior: still ? "auto" : "smooth"}));
+  document.querySelector("[data-rail-next]")?.addEventListener("click", () =>
+    rail.scrollBy({left: step(), behavior: still ? "auto" : "smooth"}));
+})();
+</script>
 </body>
 </html>

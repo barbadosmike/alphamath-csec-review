@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="color-scheme" content="light">
-  <title>AlphaMath CSEC Additional Mathematics — REVIEW-DEMO</title>
+  <title>AlphaMath — CSEC Additional Mathematics Suite</title>
   <link rel="stylesheet" href="assets/css/alphamath.css">
 </head>
 <body >
@@ -21,27 +21,36 @@
       <div class="head-meta"><span>Reviewer demo</span><span>CSEC Additional Mathematics</span><span>June 2027</span><span>Offline-first</span></div>
     </div>
   </header>
-  <nav class="suite-nav" aria-label="AlphaMath suite"><div class="nav-inner"><a href="index.html" aria-current="page">Suite home</a><a href="intake.html" >Intake</a><a href="learning-path.html" >Learning path</a><a href="tutorial.html" >Tutorial</a><a href="simulated-exams.html">Simulated exams</a><a href="dashboard.html">Dashboard</a></div></nav>
+  <nav class="suite-nav" aria-label="AlphaMath suite"><div class="nav-inner"><a href="index.html" aria-current="page">Suite home</a><a href="students.html">Students</a><a href="pathways.html">Pathways</a><a href="tutors.html">Tutors</a><a href="parents.html">Parents</a><a href="admin-console.html">Admin</a></div></nav>
   <main id="main" class="shell">
   <div class="callout info prose">
     <p class="eyebrow">Sanitized review build</p>
     <h2 style="margin-top:0">A connected path, not a pile of worksheets</h2>
     <p>The suite demonstrates how intake evidence separates “not yet taught” coverage from a genuine practice need, then builds short algebra-spine sessions while every mastery decision remains with a human tutor.</p>
   </div>
-  <section aria-labelledby="student-tools">
-    <h2 id="student-tools">Student tools</h2>
+  <section class="panel" aria-labelledby="learner-title" style="margin-bottom:22px">
+    <p class="eyebrow">Active learner</p>
+    <h2 id="learner-title">Whose work is this device showing?</h2>
+    <p class="fine">Every page below saves to this browser under the selected learner ID. Choosing here is a convenience for shared laptops — it is not a sign-in and grants no access to anyone's records.</p>
+    <div data-learner-select></div>
+  </section>
+
+  <section aria-labelledby="suite-sections">
+    <h2 id="suite-sections">The suite</h2>
     <div class="hub-grid">
-      <a class="hub-card" href="intake.html"><span class="card-icon">01</span><h3>Intake field guide</h3><p>Review 85 syllabus-coded topics with Confident, Needs practice, and Not started states.</p><span class="go">Open intake →</span></a>
-      <a class="hub-card" href="tutorial.html"><span class="card-icon">02</span><h3>Quadratics pathway</h3><p>Short sessions that connect completed-square form, turning points, range, roots, and graph structure.</p><span class="go">Start learning →</span></a>
-      <a class="hub-card" href="simulated-exams.html"><span class="card-icon">03</span><h3>Simulated exams</h3><p>Choose from the available timed assessments, with autosave, review flags, and tutor-marked method.</p><span class="go">Choose an exam →</span></a>
-      <a class="hub-card" href="learning-path.html"><span class="card-icon">04</span><h3>Learning path</h3><p>See the verified priority sequence, evidence requirements, and what comes next.</p><span class="go">View path →</span></a>
-      <a class="hub-card" href="math-input.html"><span class="card-icon">05</span><h3>Math-input prototype</h3><p>Preview handwritten work locally and confirm the final expression in an editable math field.</p><span class="go">Try prototype →</span></a>
-      <a class="hub-card" href="dashboard.html"><span class="card-icon">06</span><h3>Evidence dashboard</h3><p>Read linked intake, tutor-reviewed tutorial, and simulated-exam evidence from PostgreSQL.</p><span class="go">Open dashboard →</span></a>
+      <a class="hub-card" href="parents.html"><span class="card-icon">01</span><h3>Parents</h3><p>Register your child, follow their recorded progress, and see enrolment details.</p><span class="go">For parents →</span></a>
+      <a class="hub-card" href="students.html"><span class="card-icon">02</span><h3>Students</h3><p>Intake, instructional plan, tutorials, simulated exams and marked work — the learner's whole session.</p><span class="go">For students →</span></a>
+      <a class="hub-card" href="tutors.html"><span class="card-icon">03</span><h3>Tutors</h3><p>Sign in to the workspace, mark submitted attempts, or request a tutor account.</p><span class="go">For tutors →</span></a>
+      <a class="hub-card" href="admin-console.html"><span class="card-icon">04</span><h3>Admin</h3><p>Approve account requests, register learners, and manage tutor and parent links.</p><span class="go">Open console →</span></a>
+      <a class="hub-card" href="pathways.html"><span class="card-icon">05</span><h3>Pathways</h3><p>Every subject taught or in preparation, and the syllabus-derived tracks inside each.</p><span class="go">Browse pathways →</span></a>
+      <a class="hub-card" href="math-input.html"><span class="card-icon">06</span><h3>Become a Beta tester</h3><p>Try the handwriting-to-math confirmation prototype and help shape what ships next.</p><span class="go">Try the prototype →</span></a>
     </div>
   </section>
 </main>
   <div id="suite-live-region" class="sr-only" aria-live="polite" aria-atomic="true"></div>
   <script src="assets/js/runtime-config.js" defer></script>
   <script src="assets/js/suite.js" defer></script>
+  <script src="assets/js/auth.js" defer></script>
+  <script src="assets/js/learner-select.js" defer></script>
 </body>
 </html>

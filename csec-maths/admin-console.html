@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>AlphaMath — Admin Console — CSEC Mathematics</title>
+  <link rel="stylesheet" href="assets/css/alphamath.css">
+</head>
+<body >
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-head">
+    <div class="head-inner">
+      <p class="brand-line"><span class="brand-mark" aria-hidden="true">α</span> AlphaMath · CSEC Mathematics</p>
+      <h1>Admin console</h1>
+      <p class="lede">Accounts, learner records, tutor assignments and parent links, held in the evidence database.</p>
+      <div class="head-meta"><span>Working as <strong data-active-learner>—</strong></span><span>Live from PostgreSQL</span><span>Administrator role required</span><span>Every action is attributed</span></div>
+    </div>
+  </header>
+  <nav class="suite-nav" aria-label="AlphaMath suite"><div class="nav-inner"><a href="index.html" >Suite home</a><a href="students.html" >Students</a><a href="pathways.html" >Pathways</a><a href="tutors.html" >Tutors</a><a href="parents.html" >Parents</a><a href="admin-console.html" aria-current="page">Admin</a></div></nav>
+  <main id="main" class="shell">
+  <div data-auth-gate></div>
+  <p class="fine" data-console-status role="status" aria-live="polite"></p>
+
+  <div data-console hidden>
+    <section class="panel" aria-labelledby="pending-title">
+      <div class="review-heading">
+        <div>
+          <p class="eyebrow">Approvals · <span data-pending-count>0</span> waiting</p>
+          <h2 id="pending-title">Accounts requesting access</h2>
+        </div>
+        <button type="button" class="secondary" data-sign-out>Sign out</button>
+      </div>
+      <p class="fine">Signed in as <span data-signed-in></span>. Approving grants a tutor account that can read the evidence of every learner assigned to it. A request holds its own password — you never see or set it.</p>
+      <div data-pending></div>
+    </section>
+
+    <section class="panel" aria-labelledby="accounts-title" style="margin-top:22px">
+      <p class="eyebrow">Accounts</p>
+      <h2 id="accounts-title">Active accounts</h2>
+      <p class="fine">Suspending an account revokes every live session it holds — permanently, in the same act — and blocks sign-in. Assignments are kept, so reinstating restores the tutor's roster; their old sessions are never restored.</p>
+      <div data-accounts></div>
+      <div data-password-link-panel class="callout info" hidden style="margin-top:16px"></div>
+    </section>
+
+    <section class="panel" aria-labelledby="learners-title" style="margin-top:22px">
+      <p class="eyebrow">Learners · <span data-learner-count>0</span> registered</p>
+      <h2 id="learners-title">Learner records</h2>
+      <div data-learners></div>
+      <form class="stack" data-register-form style="margin-top:18px">
+        <h3>Register a learner</h3>
+        <p class="fine">The learner ID is the subject-scoped identifier the whole system runs on — <code>M-STU-002</code>, <code>AM-STU-002</code>. Name, school and email are optional, and the tutor workspace never displays them.</p>
+        <label for="externalId">Learner ID</label>
+        <input id="externalId" name="externalId" required maxlength="60" pattern="[A-Za-z0-9][A-Za-z0-9_.\-]{1,59}"
+               title="Letters, digits, dot, dash or underscore">
+        <label for="displayName">Name (optional)</label>
+        <input id="displayName" name="displayName" maxlength="200" autocomplete="off">
+        <label for="school">School (optional)</label>
+        <input id="school" name="school" maxlength="300" autocomplete="off">
+        <label for="email">Email (optional)</label>
+        <input id="email" name="email" type="email" maxlength="320" autocomplete="off">
+        <button type="submit">Register learner</button>
+      </form>
+    </section>
+
+    <section class="panel" aria-labelledby="assign-title" style="margin-top:22px">
+      <p class="eyebrow">Assignments</p>
+      <h2 id="assign-title">Assign a learner to a tutor</h2>
+      <p class="fine">An assignment is what lets a tutor read that learner's evidence — the server re-checks it on every request. Nothing else grants access.</p>
+      <form class="stack" data-assign-form>
+        <label for="assignTutor">Tutor</label>
+        <select id="assignTutor" name="assignTutor" required></select>
+        <label for="assignLearner">Learner</label>
+        <select id="assignLearner" name="assignLearner" required></select>
+        <label class="checkline"><input type="checkbox" id="assignActive" name="assignActive" checked> Assignment is active</label>
+        <button type="submit">Save assignment</button>
+      </form>
+    </section>
+
+    <section class="panel" aria-labelledby="parent-link-title" style="margin-top:22px">
+      <p class="eyebrow">Parent links</p>
+      <h2 id="parent-link-title">Link a parent to a learner</h2>
+      <p class="fine">The link is what lets a parent read that child's progress — the server re-checks it on every request, exactly as it does tutor assignments. Parents cannot link themselves.</p>
+      <form class="stack" data-parent-link-form>
+        <label for="linkParent">Parent</label>
+        <select id="linkParent" name="linkParent" required></select>
+        <label for="linkLearner">Learner</label>
+        <select id="linkLearner" name="linkLearner" required></select>
+        <label class="checkline"><input type="checkbox" id="linkActive" name="linkActive" checked> Link is active</label>
+        <button type="submit">Save link</button>
+      </form>
+    </section>
+  </div>
+</main>
+  <div id="suite-live-region" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+  <script src="assets/js/runtime-config.js" defer></script>
+  <script src="assets/js/suite.js" defer></script>
+  <script src="assets/js/auth.js" defer></script>
+  <script src="assets/js/admin-console.js" defer></script>
+</body>
+</html>

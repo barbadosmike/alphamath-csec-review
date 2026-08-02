@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>AlphaMath — Student Registration — CSEC Mathematics</title>
+  <link rel="stylesheet" href="assets/css/alphamath.css">
+</head>
+<body >
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-head">
+    <div class="head-inner">
+      <p class="brand-line"><span class="brand-mark" aria-hidden="true">α</span> AlphaMath · CSEC Mathematics</p>
+      <h1>Student registration</h1>
+      <p class="lede">Create the subject-scoped learner record that intake, tutorials, exams and marked work all attach to.</p>
+      <div class="head-meta"><span>Working as <strong data-active-learner>—</strong></span><span>Administrator role required</span><span>Subject-scoped ID</span><span>Identity fields optional</span></div>
+    </div>
+  </header>
+  <nav class="suite-nav" aria-label="AlphaMath suite"><div class="nav-inner"><a href="index.html" >Suite home</a><a href="students.html" >Students</a><a href="pathways.html" >Pathways</a><a href="tutors.html" >Tutors</a><a href="parents.html" aria-current="page">Parents</a><a href="admin-console.html" >Admin</a></div></nav>
+  <main id="main" class="shell">
+  <div data-auth-gate></div>
+  <p class="fine" data-register-status role="status" aria-live="polite"></p>
+
+  <div data-register hidden>
+    <div class="callout info prose">
+      <p><strong>The learner ID is the identifier, not the name.</strong> Every screen a tutor uses in a classroom shows this ID and never the child's name, so choose it to be stable and meaningful to staff — <code>AM-STU-002</code>. Name, school and email are optional; the system works fully without them.</p>
+    </div>
+
+    <section class="panel" aria-labelledby="register-title">
+      <div class="review-heading">
+        <div>
+          <p class="eyebrow">New learner</p>
+          <h2 id="register-title">Student details</h2>
+        </div>
+        <button type="button" class="secondary" data-sign-out>Sign out</button>
+      </div>
+      <form class="stack" data-register-form>
+        <label for="externalId">Learner ID</label>
+        <input id="externalId" name="externalId" required maxlength="60"
+               pattern="[A-Za-z0-9][A-Za-z0-9_.-]{1,59}" autocomplete="off"
+               title="Letters, digits, dot, dash or underscore">
+        <label for="displayName">Name (optional)</label>
+        <input id="displayName" name="displayName" maxlength="200" autocomplete="off">
+        <label for="school">School (optional)</label>
+        <input id="school" name="school" maxlength="300" autocomplete="off">
+        <label for="email">Email (optional)</label>
+        <input id="email" name="email" type="email" maxlength="320" autocomplete="off">
+        <button type="submit">Register student</button>
+      </form>
+    </section>
+
+    <section class="panel" aria-labelledby="existing-title" style="margin-top:22px">
+      <p class="eyebrow">Already registered</p>
+      <h2 id="existing-title">Learner records</h2>
+      <div data-learners></div>
+      <p class="fine">To let a tutor see a learner's work, assign them in the <a href="admin-console.html">admin console</a>.</p>
+    </section>
+  </div>
+</main>
+  <div id="suite-live-region" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+  <script src="assets/js/runtime-config.js" defer></script>
+  <script src="assets/js/suite.js" defer></script>
+  <script src="assets/js/auth.js" defer></script>
+</body>
+</html>

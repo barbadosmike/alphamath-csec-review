@@ -4,7 +4,13 @@
   const contentGlobal = document.body.dataset.contentGlobal || "ALPHAMATH_REVIEW_TUTORIAL";
   const source = window[contentGlobal] || [];
   const allQuestions = source.flatMap(section => section.items || []);
-  const studentId = document.body.dataset.studentId || "REVIEW-DEMO";
+  /* The active learner decides the storage namespace below, so it decides whose
+     draft this page reads and writes. AlphaMath.learner.current() resolves
+     ?learner= → stored selection → this page's data-student-id; the literal
+     fallback that used to sit here made every page a single-learner demo.
+     "unassigned" is deliberately not a real id: a page that cannot say who it is
+     for must not write into someone else's namespace. */
+  const studentId = (window.AlphaMath && AlphaMath.learner.current()) || "unassigned";
   const templateMode = document.body.dataset.template === "true";
   const storageKey = templateMode
     ? "alphamath:addmaths:study-template:v2"
@@ -181,7 +187,7 @@
               <label for="answer-${index}">My answer</label>
               <math-field id="answer-${index}" data-answer="${index}" aria-label="Answer for question ${AlphaMath.escapeHTML(question.label || index+1)}">${AlphaMath.escapeHTML(q.answer)}</math-field>
             </div>
-            <button type="button" class="secondary" data-draw-toggle="${index}" aria-expanded="${q.drawing ? "true" : "false"}">Draw working</button>
+            <button type="button" class="secondary" data-draw-toggle="${index}" aria-expanded="${q.drawing ? "true" : "false"}">Sketchpad</button>
           </div>
           <div class="draw-panel" data-draw-panel="${index}" ${q.drawing ? "" : "hidden"}></div>
           <div class="question-actions">
@@ -257,7 +263,7 @@
       const panel = card.querySelector("[data-draw-panel]");
       AlphaMath.createDrawingPad(panel,{
         state:qState(index),
-        label:`Drawing area for question ${allQuestions[index].label || index+1}`,
+        label:`Sketchpad for question ${allQuestions[index].label || index+1}`,
         onSave(){ save(); }
       });
     });

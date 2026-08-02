@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="robots" content="noindex,nofollow">
+  <title>AlphaMath — Parents — CSEC Additional Mathematics</title>
+  <link rel="stylesheet" href="assets/css/alphamath.css">
+</head>
+<body>
+<aside class="review-notice" role="note">
+  <strong>Parents · signed-in access for progress</strong>
+  <span>A parent reads the progress of their own linked child and no other. The server re-checks that link on every request — exactly as it does for tutors.</span>
+</aside>
+<a class="skip-link" href="#main">Skip to main content</a>
+<header class="site-head">
+  <div class="head-inner">
+    <p class="brand-line"><span class="brand-mark" aria-hidden="true">α</span> AlphaMath · CSEC Additional Mathematics</p>
+    <h1>Parents</h1>
+    <p class="lede">Register your child, follow their recorded progress, and see exactly what the evidence does and does not yet show.</p>
+    <div class="head-meta"><span>Linked child only</span><span>No automated mastery decision</span><span>Payment at enrolment</span></div>
+  </div>
+</header>
+
+<nav class="suite-nav" aria-label="AlphaMath suite">
+  <div class="nav-inner">
+    <a href="index.html">Suite home</a>
+    <a href="students.html">Students</a>
+    <a href="pathways.html">Pathways</a>
+    <a href="tutors.html">Tutors</a>
+    <a href="parents.html" aria-current="page">Parents</a>
+    <a href="admin-console.html">Admin</a>
+  </div>
+</nav>
+
+<main id="main" class="shell">
+  <div class="callout info prose">
+    <p><strong>How it works.</strong> You request a parent account below and choose your own password. An administrator reviews the request, completes your child's registration, and links the two — enrolment isn't self-service, because the link is what authorises you to read a child's progress, and nobody should be able to grant themselves that. Once linked, your child's progress appears here whenever you sign in.</p>
+  </div>
+
+  <section class="panel" aria-labelledby="request-title">
+    <p class="eyebrow">New parents</p>
+    <h2 id="request-title">Request a parent account</h2>
+    <form class="stack" data-parent-signup>
+      <label for="externalId">Parent ID</label>
+      <input id="externalId" name="externalId" required maxlength="60"
+             pattern="[A-Za-z0-9][A-Za-z0-9_.\-]{1,59}" autocomplete="username"
+             title="Letters, digits, dot, dash or underscore">
+      <p class="fine">The identifier you will sign in with — ask your coordinator which to use.</p>
+      <label for="displayName">Full name</label>
+      <input id="displayName" name="displayName" required maxlength="200" autocomplete="name">
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" required maxlength="320" autocomplete="email">
+      <label for="password">Choose a password</label>
+      <input id="password" name="password" type="password" required minlength="12" autocomplete="new-password">
+      <p class="fine">At least 12 characters. It is encrypted before it is stored — approval never involves anyone handling your password.</p>
+      <label for="confirm">Confirm password</label>
+      <input id="confirm" name="confirm" type="password" required minlength="12" autocomplete="new-password">
+      <button type="submit">Send request</button>
+    </form>
+    <p class="fine" data-signup-status role="status" aria-live="polite"></p>
+  </section>
+
+  <section class="panel" aria-labelledby="progress-title" style="margin-top:22px">
+    <div class="review-heading">
+      <div>
+        <p class="eyebrow">Already approved</p>
+        <h2 id="progress-title">Your child's progress</h2>
+      </div>
+      <button type="button" class="secondary" data-sign-out hidden>Sign out</button>
+    </div>
+    <div data-parent-gate></div>
+    <p class="fine" data-progress-status role="status" aria-live="polite"></p>
+    <div data-children></div>
+  </section>
+
+  <section aria-labelledby="registration-title" style="margin-top:22px">
+    <h2 id="registration-title" class="sr-only">Registration and enrolment</h2>
+    <div class="grid two">
+      <a class="hub-card" href="register-student.html"><span class="card-icon">①</span><h3>Student registration</h3><p>Your child's learner record — created with an administrator during enrolment, keyed to a subject-scoped ID rather than a name.</p><span class="go">About registration →</span></a>
+      <div class="card">
+        <h3>Enrolment &amp; payment</h3>
+        <p>Payment details are provided at enrolment through MSE's payment processor. <strong>AlphaMath never stores card numbers in its own database</strong> — the evidence store holds your child's learning record, not payment credentials.</p>
+        <p class="fine">Fee schedule and processor details are confirmed at enrolment by the coordinator.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="suite-live-region" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+<script src="assets/js/runtime-config.js" defer></script>
+<script src="assets/js/suite.js" defer></script>
+<script src="assets/js/auth.js" defer></script>
+<script data-page="parents">
+/*
+ * Two independent halves, deliberately: the REQUEST form is unauthenticated (it
+ * is how someone without an account asks for one, and the server answers 202
+ * without revealing whether an id was taken), while the PROGRESS half runs on a
+ * parent session and shows only linked children — the server re-checks the link
+ * on every dashboard request, so nothing here is load-bearing authorization.
+ */
+(function(){
+  "use strict";
+  if(!window.AlphaMath) return;
+  const esc = value => AlphaMath.escapeHTML(String(value == null ? "" : value));
+
+  /* ---- account request ---- */
+  const form = document.querySelector("[data-parent-signup]");
+  const signupStatus = document.querySelector("[data-signup-status]");
+  form?.addEventListener("submit", async event => {
+    event.preventDefault();
+    if(form.password.value !== form.confirm.value){
+      signupStatus.textContent = "The two passwords do not match.";
+      return;
+    }
+    const base = AlphaMath.auth.apiBase();
+    if(!base){
+      signupStatus.textContent = "The evidence API address is not set for this deployment. Ask your coordinator.";
+      return;
+    }
+    signupStatus.textContent = "Sending your request…";
+    try{
+      const response = await fetch(`${base}/v1/signup-requests`, {
+        method: "POST",
+        headers: {"content-type": "application/json"},
+        body: JSON.stringify({
+          externalId: form.externalId.value.trim(),
+          displayName: form.displayName.value.trim(),
+          email: form.email.value.trim(),
+          password: form.password.value,
+          role: "parent"
+        })
+      });
+      const payload = await response.json().catch(() => ({}));
+      if(!response.ok){
+        signupStatus.textContent = payload.error || `The request could not be sent (${response.status}).`;
+        return;
+      }
+      form.reset();
+      signupStatus.textContent = payload.message || "Your request has been recorded.";
+      AlphaMath.announce("Your request has been recorded.");
+    }catch(_error){
+      signupStatus.textContent = "Could not reach the evidence API. Check the address and try again.";
+    }
+  });
+
+  /* ---- progress, for a signed-in parent ---- */
+  const gate = document.querySelector("[data-parent-gate]");
+  const progressStatus = document.querySelector("[data-progress-status]");
+  const childrenMount = document.querySelector("[data-children]");
+  const OUTCOME_LABELS = {
+    continue_practice: "Continue practice",
+    evidence_of_progress: "Evidence of progress",
+    mastery_confirmed: "Mastery confirmed"
+  };
+
+  function renderChild(record){
+    const counts = record.counts || {};
+    const latest = (record.recentEvidence || [])[0];
+    return `<article class="card" style="margin-bottom:14px">
+      <h3>${esc(record.learner?.externalId)}</h3>
+      <div class="metric-grid">
+        <div class="metric-card"><span>Intake</span><strong>${counts.intakeSubmissions ?? 0}</strong><span>submissions recorded</span></div>
+        <div class="metric-card blue"><span>Exam attempts</span><strong>${counts.examAttempts ?? 0}</strong><span>${counts.examReviews ?? 0} marked</span></div>
+        <div class="metric-card gold"><span>Tutorial reviews</span><strong>${counts.tutorialReviews ?? 0}</strong><span>tutor-reviewed checkpoints</span></div>
+        <div class="metric-card green"><span>Latest decision</span><strong>${latest ? esc(OUTCOME_LABELS[latest.outcome] || latest.outcome) : "—"}</strong><span>${latest ? esc(new Date(latest.reviewedAt).toLocaleDateString()) : "no review yet"}</span></div>
+      </div>
+      <p class="fine">Every decision above was made by a named tutor. Nothing on this page is computed by the system, and an absent row means no evidence recorded — not "not started", and never "mastered".</p>
+    </article>`;
+  }
+
+  if(gate && AlphaMath.auth){
+    AlphaMath.auth.requireRole(gate, ["parent"], async () => {
+      const signOut = document.querySelector("[data-sign-out]");
+      signOut.hidden = false;
+      signOut.addEventListener("click", async () => { await AlphaMath.auth.logout(); location.reload(); });
+      progressStatus.textContent = "Loading your linked children…";
+      try{
+        const {children = []} = await AlphaMath.auth.json("/v1/parent/children");
+        if(!children.length){
+          progressStatus.textContent = "";
+          childrenMount.innerHTML = `<div class="callout info"><p>No child is linked to this account yet. Linking is completed by an administrator at enrolment — if you believe this is in error, contact the coordinator.</p></div>`;
+          return;
+        }
+        const records = [];
+        for(const child of children){
+          try{ records.push(await AlphaMath.auth.json(`/v1/learners/${encodeURIComponent(child.externalId)}/dashboard`)); }
+          catch(error){ if(error.signedOut) throw error; }
+        }
+        childrenMount.innerHTML = records.map(renderChild).join("");
+        progressStatus.textContent = "";
+      }catch(error){
+        progressStatus.textContent = error.message;
+        if(error.signedOut) location.reload();
+      }
+    }, {
+      heading: "Parent sign-in",
+      blurb: "Sign in to see your linked child's recorded progress. The server shows you your own child and no other.",
+      identifierLabel: "Email or parent ID",
+      wrongRole: "This account is not a parent account."
+    });
+  }
+})();
+</script>
+</body>
+</html>
