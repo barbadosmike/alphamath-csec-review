@@ -81,18 +81,42 @@
         radial-gradient(closest-side at 55% 96%, rgba(18,3,72,.30), transparent 72%);
       pointer-events:none;
     }
-    /* The lightning itself. Sheet-flash radials confined to the TOP band, well
-       above the tagline and fine print, plus one thin diagonal bolt in the upper
-       right — pale lavender #E7E4F9 with a pink #EEC8ED fringe and a royal
-       after-glow. Resting opacity is 0: without the animation (which lives only
-       inside the reduced-motion block below) this layer simply never appears. */
-    .hero::after{
-      content:""; position:absolute; inset:0; pointer-events:none; opacity:0;
+    /* The SHEET flash — the sky lighting up. Large-area, so this is the layer
+       WCAG 2.3.1's general flash threshold actually cares about, and its alpha
+       stays capped at the .30 the contrast measurements above were taken at.
+       --sx is the strike's side, set per strike by script, so the glow arrives
+       from the same edge the bolt does. Resting opacity 0. */
+    .sky{
+      position:absolute; inset:0; pointer-events:none; opacity:0;
+      --sx:16%;
       background:
-        radial-gradient(42% 26% at 16% 6%, rgba(231,228,249,.55), rgba(46,44,154,.18) 55%, transparent 75%),
-        radial-gradient(34% 22% at 82% 3%, rgba(238,200,237,.42), rgba(58,32,129,.16) 55%, transparent 75%),
-        linear-gradient(107deg, transparent 61%, rgba(231,228,249,.34) 63.4%, rgba(238,200,237,.16) 64.2%, transparent 66.5%);
+        radial-gradient(46% 30% at var(--sx) 4%, rgba(231,228,249,.55), rgba(46,44,154,.18) 55%, transparent 75%),
+        radial-gradient(30% 20% at calc(100% - var(--sx)) 8%, rgba(238,200,237,.30), rgba(58,32,129,.14) 55%, transparent 75%);
     }
+    /* The BOLT. A thin forked path is a tiny fraction of the viewport — far
+       under the 25%-of-a-10°-field the flash threshold is defined over — which
+       is what lets it be genuinely bright and flicker fast while the sheet
+       behind it stays gentle. That split is the whole trick: the drama lives in
+       the small element, the safety budget is spent on the large one. */
+    .bolts{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:0;overflow:visible}
+    /* The weather sits BEHIND the words. The stylesheet's original flash was
+       confined to the top band expressly to keep light off the tagline and fine
+       print; a bolt free to cross the whole hero would put a bright stroke over
+       body copy at the moment it is brightest. Layering solves it without
+       caging the bolt: it can fall the full height, and it falls behind. */
+    .sky,.bolts{z-index:0}
+    .hero > :not(.sky):not(.bolts){position:relative;z-index:1}
+    /* Five strokes, after the Purple Rain reference: a wide violet halo, the
+       filament network twice (blurred, then crisp), then the main channel's
+       glow and its white-hot core. Filaments are hairline and dimmer than the
+       channel — in the reference the eye reads one bright path with a root
+       system around it, not a bundle of equals. */
+    .bolts path{fill:none;stroke-linecap:round;stroke-linejoin:round}
+    .bolts .halo{stroke:rgba(116,96,220,.10);stroke-width:10;filter:blur(13px)}
+    .bolts .filglow{stroke:rgba(238,200,237,.08);stroke-width:1.6;filter:blur(2.8px)}
+    .bolts .fil{stroke:rgba(240,236,255,.18);stroke-width:.55}
+    .bolts .glow{stroke:rgba(231,228,249,.18);stroke-width:3;filter:blur(3.2px)}
+    .bolts .core{stroke:rgba(253,252,255,.34);stroke-width:1}
     .wordmark{
       margin:0; font-weight:800; letter-spacing:.01em;
       font-size:clamp(44px,9vw,104px); line-height:1.05; color:#fff;
@@ -123,24 +147,31 @@
 
     @media (prefers-reduced-motion: no-preference){
       .hero::before{animation:drift 26s ease-in-out infinite alternate}
-      /* Subdued lightning: a double-pulse (bright, dim echo) lasting ~0.8s, then
-         ~8.7s of quiet — at most two dim pulses in any one-second window, far
-         inside WCAG 2.3.1's three-per-second ceiling. Peak opacity .30 is the
-         alpha the contrast comment's flash-peak numbers were measured at. */
-      .hero::after{animation:storm 9.5s ease-out infinite}
+      /* Strikes are no longer a fixed CSS loop — they are scheduled by script at
+         random intervals from a random side. The flash budget is unchanged and
+         now enforced in one place: see the strike() routine at the foot of this
+         page, which caps the SHEET at .30 alpha and two pulses per strike with
+         a minimum 4.5s gap between strikes. Reduced-motion never runs it, so
+         .sky and .bolts stay at their resting opacity of 0. */
       .wordmark,.tagline,.cta-row,.hero .fine{animation:rise .9s ease-out both}
       .tagline{animation-delay:.12s}.cta-row{animation-delay:.24s}.hero .fine{animation-delay:.36s}
       .wordmark .plus{animation:glint 7s ease-in-out infinite;background-size:220% 220%}
       @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
       @keyframes drift{from{transform:translate3d(-2.5%,-1.5%,0) scale(1)}to{transform:translate3d(2.5%,2%,0) scale(1.06)}}
       @keyframes glint{0%,100%{background-position:20% 20%}50%{background-position:80% 75%}}
-      @keyframes storm{
-        0%, 84%   {opacity:0}
-        85%       {opacity:.30}
-        86.5%     {opacity:.08}
-        88%       {opacity:.22}
-        92%, 100% {opacity:0}
-      }
+    }
+    /* The PLUS catching the light. Two things at once: the gradient sweeps
+       across (so the metal appears to turn), and a brief bloom. Kept to the
+       PLUS alone — the wordmark's white letters are text at a measured ratio
+       and are not lit. */
+    .wordmark .plus{transition:filter .28s ease-out}
+    .wordmark .plus.glinting{
+      filter:brightness(1.1) drop-shadow(0 0 5px rgba(231,228,249,.22));
+      animation:glintStrike .5s ease-out !important;
+    }
+    @keyframes glintStrike{
+      0%  {background-position:0% 50%}
+      100%{background-position:100% 50%}
     }
 
     /* ---------- subjects carousel ---------- */
@@ -150,13 +181,30 @@
     .rail-shell{position:relative}
     .rail{
       display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;
-      padding:6px 2px 14px;scrollbar-width:thin;scrollbar-color:var(--gold-deep) transparent;
+      /* Inline padding lets the first and last card reach the centre, which
+         scroll-snap-align:center otherwise makes impossible for them. */
+      padding:6px calc(50% - min(82vw,330px)/2) 14px;
+      scrollbar-width:thin;scrollbar-color:var(--gold-deep) transparent;
+      cursor:grab;
     }
+    .rail:active{cursor:grabbing}
     .subject{
-      flex:0 0 min(82vw,330px);scroll-snap-align:start;
+      flex:0 0 min(82vw,330px);scroll-snap-align:center;
       border:1px solid var(--neutral);border-radius:14px;padding:18px;
       background:linear-gradient(180deg, rgba(74,78,87,.28), rgba(74,78,87,.12));
+      position:relative;
     }
+    /* Slide shadows, after Swiper's coverflow. A face turning away should
+       DARKEN, not go translucent: translucency on a dark ground washes the
+       card out and drops text contrast, where a shadow reads as a surface
+       angled from the light and leaves the text underneath at full strength.
+       pointer-events:none so the overlay can never eat the "Enter suite" tap. */
+    .subject::before,.subject::after{
+      content:"";position:absolute;inset:0;border-radius:14px;
+      pointer-events:none;z-index:2;opacity:0;
+    }
+    .subject::before{background:linear-gradient(to right,rgba(6,8,12,.72),transparent 62%);opacity:var(--shade-l,0)}
+    .subject::after {background:linear-gradient(to left, rgba(6,8,12,.72),transparent 62%);opacity:var(--shade-r,0)}
     .subject h3{margin:6px 0 8px;font-size:19px;color:#fff}
     .subject p{margin:0;font-size:14.5px;color:var(--soft)}
     .subject .level{font-size:12.5px;font-weight:750;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-deep)}
@@ -170,13 +218,36 @@
       font-size:12px;font-weight:750}
     .badge.live{background:var(--gold);color:var(--ink)}
     .badge.soon{border:1px solid var(--gold-deep);color:var(--gold)}
-    .rail-nav{display:flex;gap:8px;justify-content:flex-end;margin-top:4px}
-    .rail-nav button{
-      min-width:48px;min-height:44px;border-radius:9px;border:1px solid var(--gold-deep);
-      background:transparent;color:var(--gold);font-size:19px;font-weight:700;cursor:pointer
+    /* ---------- coverflow depth ----------
+       A progressive layer over the scroll-snap rail, never a replacement: the
+       transform is applied by the script at the foot of this page, so with JS
+       off — or prefers-reduced-motion set — the rail stays exactly the flat,
+       legible thing it already was.
+
+       Deliberately a MODEST tilt (14°) rather than true Cover Flow's steep
+       rotation: these cards carry running text and an "Enter suite" link, and
+       text laid back at 45° is a legibility failure dressed as a style.
+       Perspective lives in each card's own transform rather than on .rail,
+       because a perspective origin on a scrolling container shifts as you
+       scroll and the cards visibly swim. */
+    .subject{transform-origin:center center}
+
+    .rail-hint{margin:2px 0 0;text-align:right;color:var(--soft);opacity:.75}
+    .button:focus-visible,.subject .enter:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+
+    /* The flowing carousel. Applied by script only — without it, and under
+       prefers-reduced-motion, .rail stays the plain scroll-snap rail above:
+       flat, scrollable by touch, wheel and keyboard, and going nowhere on its
+       own. That is the fallback, and it is a complete one. */
+    .rail.is-flow{
+      overflow:hidden;scroll-snap-type:none;padding-left:0;padding-right:0;
+      touch-action:pan-y;user-select:none;
     }
-    .rail-nav button:hover{border-color:var(--gold);color:#fff}
-    .rail-nav button:focus-visible,.button:focus-visible,.subject .enter:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+    .rail.is-flow .subject{
+      scroll-snap-align:none;will-change:transform;
+      transition:none;
+    }
+    .rail.is-flow .subject.is-past{visibility:hidden;pointer-events:none}
 
     footer{border-top:1px solid var(--neutral);padding:26px 20px 34px;text-align:center;color:var(--soft);font-size:13.5px}
     footer .gold{color:var(--gold-deep)}
@@ -187,6 +258,14 @@
 
 <main id="main">
   <section class="hero" aria-labelledby="brand">
+    <div class="sky" data-sky aria-hidden="true"></div>
+    <svg class="bolts" data-bolts viewBox="0 0 1000 420" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+      <path class="halo" data-bolt-main></path>
+      <path class="filglow" data-bolt-branch></path>
+      <path class="fil" data-bolt-branch></path>
+      <path class="glow" data-bolt-main></path>
+      <path class="core" data-bolt-main></path>
+    </svg>
     <h1 id="brand" class="wordmark"><span class="alpha">ALPHA</span><span class="math">MATH</span><span class="plus">PLUS</span></h1>
     <p class="tagline">Mastery-based <em>CSEC</em> and <em>CAPE</em> mathematics tutoring — syllabus-derived pathways, tutor-marked evidence, and a <em>human</em> decision behind every mastery call.</p>
     <div class="cta-row">
@@ -284,10 +363,7 @@
           <p>Syllabus-aligned tracks in preparation.</p>
         </article>
       </div>
-      <div class="rail-nav">
-        <button type="button" data-rail-prev aria-label="Previous subjects">←</button>
-        <button type="button" data-rail-next aria-label="Next subjects">→</button>
-      </div>
+      <p class="fine rail-hint" data-rail-hint hidden>Drag a card, or flick it left or right.</p>
     </div>
   </section>
 </main>
@@ -297,19 +373,315 @@
 </footer>
 
 <script>
-/* Progressive enhancement only: the rail scrolls natively (touch, wheel,
-   keyboard on the focusable rail); these buttons are a convenience. Smooth
-   scrolling defers to prefers-reduced-motion. */
+/*
+ * The storm. Strikes are scheduled here rather than looped in CSS, because
+ * "random" is the one thing a CSS animation cannot be: every visitor to a
+ * keyframed storm sees the identical sequence on the identical cadence.
+ *
+ * FLASH SAFETY (WCAG 2.3.1) — the budget the stylesheet's contrast comment was
+ * measured against is enforced in this routine, and it is the only place that
+ * can now break it:
+ *   · SHEET (.sky) is the large-area layer the general flash threshold is
+ *     defined over. Peak alpha stays at .30 — the value the gold PLUS's 3.65:1
+ *     and the tagline's 5.07:1 were measured at — and each strike gives it at
+ *     most two pulses.
+ *   · BOLT (.bolts) is a thin path covering a tiny fraction of the viewport,
+ *     far below the threshold's 25%-of-a-10°-field, which is what allows it to
+ *     be bright white and flicker quickly. The drama is spent here precisely
+ *     because it is the layer that can afford it.
+ *   · MIN_GAP 4.5s between strikes, so flashes never approach three in any
+ *     one-second window even at the fastest random draw.
+ *   · prefers-reduced-motion returns before anything is scheduled, leaving both
+ *     layers at their resting opacity of 0 — no flash at all, as before.
+ */
+(function(){
+  "use strict";
+  const sky = document.querySelector("[data-sky]");
+  const bolts = document.querySelector("[data-bolts]");
+  const plus = document.querySelector(".wordmark .plus");
+  if(!sky || !bolts) return;
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  const mains = [...bolts.querySelectorAll("[data-bolt-main]")];
+  const branchPaths = [...bolts.querySelectorAll("[data-bolt-branch]")];
+  /* Rarer as well as dimmer: distant weather, not a storm overhead. */
+  const MIN_GAP = 9000, MAX_GAP = 20000;
+  /* A breath of light on the sky, far under the measured .30. */
+  const SHEET_PEAK = .07;
+  const rand = (a, b) => a + Math.random() * (b - a);
+
+  /* Midpoint-quadratic smoothing: the path bends THROUGH each jag instead of
+     cornering at it. The wander that makes it lightning survives; the hard
+     vertex angles that made it read as a polyline do not. */
+  const smooth = pts => {
+    if(pts.length < 3) return pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ");
+    let d = `M${pts[0][0].toFixed(1)} ${pts[0][1].toFixed(1)}`;
+    for(let i = 1; i < pts.length - 1; i++){
+      const mx = (pts[i][0] + pts[i + 1][0]) / 2, my = (pts[i][1] + pts[i + 1][1]) / 2;
+      d += ` Q${pts[i][0].toFixed(1)} ${pts[i][1].toFixed(1)} ${mx.toFixed(1)} ${my.toFixed(1)}`;
+    }
+    const last = pts[pts.length - 1];
+    return d + ` L${last[0].toFixed(1)} ${last[1].toFixed(1)}`;
+  };
+
+  /* The bolt, after the Purple Rain reference image: ONE bright, mostly
+     vertical main channel, and a ROOT SYSTEM of fine filaments leaving it —
+     each branch jagged, each able to sub-branch, thinning with depth. The eye
+     should read a single luminous path with dozens of hairline tributaries,
+     which is what the reference shows and a lone fork does not.
+
+     fromLeft decides which side the channel enters by and which way it leans,
+     and the sheet glow (--sx) is centred on the same side, so the light and
+     its source agree. Filaments stay hairline (.85px core) so the layer's
+     luminous AREA remains a small fraction of the viewport — the fact the
+     flash-safety comment above relies on. */
+  function drawBolt(fromLeft){
+    const startX = fromLeft ? rand(120, 320) : rand(680, 880);
+    const drift  = (fromLeft ? 1 : -1) * rand(80, 240);   // leans toward centre
+    const top = rand(-16, 4), bottom = rand(330, 405);
+    const steps = Math.round(rand(8, 12));
+    const pts = [];
+    for(let i = 0; i <= steps; i++){
+      const t = i / steps;
+      pts.push([
+        startX + drift * t + rand(-34, 34) * Math.sin(t * Math.PI),
+        top + (bottom - top) * t + rand(-8, 8)
+      ]);
+    }
+    const dMain = smooth(pts);
+
+    /* Filaments: recursive, depth-limited, probability decaying with depth so
+       the network stays a network rather than a thicket. Angle deviation is
+       kept modest — sharp swings are what made branches read as zigzags. */
+    const segs = [];
+    const grow = (x, y, angle, len, depth) => {
+      const bpts = [[x, y]];
+      const parts = Math.round(rand(2, 4));
+      for(let i = 0; i < parts; i++){
+        angle += rand(-.38, .38);
+        const seg = len * rand(.55, .95);
+        x += Math.cos(angle) * seg;
+        y += Math.sin(angle) * seg;
+        bpts.push([x, y]);
+        if(depth < 3 && Math.random() < .5 - depth * .12){
+          grow(x, y, angle + rand(.4, 1.0) * (Math.random() < .5 ? 1 : -1),
+               len * rand(.4, .6), depth + 1);
+        }
+        len *= .8;
+      }
+      segs.push(smooth(bpts));
+    };
+    /* Density a step below the reference image on purpose: this plays behind
+       the wordmark on every strike, not in a photograph viewed for itself. */
+    const spawnCount = Math.round(rand(6, 9));
+    for(let s = 0; s < spawnCount; s++){
+      const p = pts[Math.max(1, Math.min(steps - 1, Math.round(rand(1, steps - 1))))];
+      const side = Math.random() < .5 ? 1 : -1;
+      grow(p[0], p[1], Math.PI / 2 + side * rand(.35, 1.15), rand(45, 95), 1);
+    }
+
+    for(const p of mains) p.setAttribute("d", dMain);
+    for(const p of branchPaths) p.setAttribute("d", segs.join(" "));
+    sky.style.setProperty("--sx", (fromLeft ? rand(10, 26) : rand(74, 90)).toFixed(1) + "%");
+  }
+
+  function strike(){
+    const fromLeft = Math.random() < .5;
+    drawBolt(fromLeft);
+
+    /* Bolt: a hard leading edge and a quick stuttering decay — the small-area
+       layer, so this is where the flicker lives. */
+    /* Just perceptible: a thing you catch out of the corner of your eye and
+       are not certain you saw, until it happens again. */
+    const flickers = Math.random() < .5
+      ? [0, .22, .05, .16, .02, .1, 0]
+      : [0, .22, .03, .13, 0];
+    bolts.animate(
+      flickers.map(o => ({opacity: o})),
+      {duration: rand(420, 760), easing: "linear"}
+    );
+
+    /* Sheet: two soft pulses, capped. Slower than the bolt, the way a sky holds
+       light after the strike has gone. */
+    sky.animate(
+      [{opacity: 0}, {opacity: SHEET_PEAK}, {opacity: .07},
+       {opacity: SHEET_PEAK * .6}, {opacity: 0}],
+      {duration: rand(900, 1300), easing: "ease-out"}
+    );
+
+    if(plus){
+      plus.classList.remove("glinting");
+      void plus.offsetWidth;              // restart the sweep
+      plus.classList.add("glinting");
+      setTimeout(() => plus.classList.remove("glinting"), 520);
+    }
+    setTimeout(strike, rand(MIN_GAP, MAX_GAP));
+  }
+
+  setTimeout(strike, rand(900, 2200));
+})();
+</script>
+<script>
+/*
+ * Subjects coverflow — a flowing, endlessly cycling rail you steer by hand.
+ *
+ * PROGRESSIVE ENHANCEMENT, and the fallback is the point: everything below is
+ * skipped under prefers-reduced-motion and if the script never runs. In either
+ * case .rail stays exactly what the CSS above makes it — a plain scroll-snap
+ * rail, flat and fully readable, scrollable by touch, wheel and keyboard, and
+ * going nowhere on its own.
+ *
+ * WHERE THE CONTROLS WENT (CEO decision, 2026-08-02). The arrows and the
+ * play/pause button are gone by request; the card itself is now the control.
+ * Auto-moving content still needs a way to stop, so every input modality keeps
+ * one, and none of them is a button:
+ *   · pointer — hovering the rail holds it; grabbing a card stops it outright
+ *   · keyboard — focus anywhere in the rail holds it, and the focused card
+ *     flows to the centre, which is what the arrows used to do
+ *   · touch — a finger down is a grab, which stops it
+ *   · reduced motion — it never starts, and the rail is the static fallback
+ *
+ * Geometry follows Swiper's coverflow (rotate/depth/slideShadows), tilt bounded
+ * at 32° because these cards carry running text and a link.
+ */
 (function(){
   "use strict";
   const rail = document.querySelector(".rail");
   if(!rail) return;
-  const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const step = () => Math.max(rail.clientWidth * 0.8, 260);
-  document.querySelector("[data-rail-prev]")?.addEventListener("click", () =>
-    rail.scrollBy({left: -step(), behavior: still ? "auto" : "smooth"}));
-  document.querySelector("[data-rail-next]")?.addEventListener("click", () =>
-    rail.scrollBy({left: step(), behavior: still ? "auto" : "smooth"}));
+  const cards = [...rail.querySelectorAll(".subject")];
+  if(cards.length < 2) return;
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  const N = cards.length;
+  const TILT = 32, DEPTH = 120, SHADE = .85, VISIBLE = 3.2;
+  const DWELL = 3600;      // rest on a card long enough to read it
+  const GLIDE = .09;       // easing factor per frame toward the target
+  const RESUME = 2500;     // idle after a drag before the flow resumes
+
+  rail.classList.add("is-flow");
+  document.querySelector("[data-rail-hint]")?.removeAttribute("hidden");
+
+  let pos = 0, target = 0, span = 0, held = false, dragging = false, onScreen = true;
+  let nextAt = performance.now() + DWELL, resumeAt = 0;
+
+  const measure = () => {
+    const first = cards[0].getBoundingClientRect();
+    span = first.width + 14;                      // card + the rail's gap
+    rail.style.height = Math.max(...cards.map(c => c.offsetHeight)) + 20 + "px";
+  };
+
+  /* Shortest signed distance from the centre, wrapped: this is what makes the
+     last card (CAPE Applied Maths Unit 2) sit immediately left of the first
+     (CSEC Mathematics) rather than twelve places away. */
+  const wrap = d => ((d % N) + N + N / 2) % N - N / 2;
+
+  const render = () => {
+    const mid = rail.clientWidth / 2;
+    for(let i = 0; i < N; i++){
+      const card = cards[i];
+      const d = wrap(i - pos);
+      if(Math.abs(d) > VISIBLE){ card.classList.add("is-past"); continue; }
+      card.classList.remove("is-past");
+      const t = Math.max(-1, Math.min(1, d));
+      const away = Math.abs(t);
+      // natural flex position -> desired slot, as a translation
+      const x = mid + d * span - (card.offsetLeft + card.offsetWidth / 2);
+      card.style.transform =
+        `translateX(${x.toFixed(1)}px) perspective(1400px) ` +
+        `rotateY(${(-t * TILT).toFixed(2)}deg) translateZ(${(-away * DEPTH).toFixed(1)}px)`;
+      card.style.zIndex = String(100 - Math.round(away * 100));
+      card.style.setProperty("--shade-l", t < 0 ? (away * SHADE).toFixed(3) : "0");
+      card.style.setProperty("--shade-r", t > 0 ? (away * SHADE).toFixed(3) : "0");
+    }
+  };
+
+  const frame = now => {
+    if(!dragging){
+      const moving = Math.abs(target - pos) > .0005;
+      if(moving) pos += (target - pos) * GLIDE;
+      else{
+        pos = target;
+        const idle = !held && onScreen && now >= resumeAt;
+        if(idle && now >= nextAt){ target = Math.round(pos) + 1; nextAt = now + DWELL; }
+        else if(!idle) nextAt = now + DWELL;
+      }
+    }
+    render();
+    requestAnimationFrame(frame);
+  };
+
+  // ---- grab, drag, flick -------------------------------------------------
+  let startX = 0, startPos = 0, lastX = 0, lastT = 0, velocity = 0, moved = 0;
+
+  rail.addEventListener("pointerdown", event => {
+    if(event.button !== 0) return;
+    dragging = true; moved = 0; velocity = 0;
+    startX = lastX = event.clientX; startPos = pos; lastT = performance.now();
+    rail.setPointerCapture(event.pointerId);
+    rail.style.cursor = "grabbing";
+  });
+
+  rail.addEventListener("pointermove", event => {
+    if(!dragging) return;
+    const dx = event.clientX - startX;
+    moved = Math.max(moved, Math.abs(dx));
+    pos = target = startPos - dx / span;
+    const now = performance.now(), dt = now - lastT;
+    if(dt > 0){ velocity = (event.clientX - lastX) / dt; lastX = event.clientX; lastT = now; }
+  });
+
+  const release = event => {
+    if(!dragging) return;
+    dragging = false;
+    rail.style.cursor = "";
+    try{ rail.releasePointerCapture(event.pointerId); }catch(_e){}
+    /* A flick throws further than a drag: velocity is px/ms, so scale it into
+       cards and let the glide settle onto a whole one. */
+    const thrown = -velocity * 180 / span;
+    target = Math.round(pos + Math.max(-4, Math.min(4, thrown)));
+    resumeAt = performance.now() + RESUME;
+    nextAt = resumeAt + DWELL;
+  };
+  rail.addEventListener("pointerup", release);
+  rail.addEventListener("pointercancel", release);
+
+  /* A drag must not also open the card it started on. */
+  rail.addEventListener("click", event => {
+    if(moved > 8){ event.preventDefault(); event.stopPropagation(); moved = 0; }
+  }, true);
+
+  // ---- the pause mechanisms that replace the removed button --------------
+  /* Hover holds it, but only once the visitor has actually MOVED a pointer over
+     the rail. A cursor that merely happens to be resting there when the page
+     loads has expressed no intent, and treating it as a hover meant the flow
+     never started at all — which is the one thing this is required to do. */
+  let stillness = 0;
+  const STILL_MS = 2000;
+  rail.addEventListener("pointermove", () => {
+    if(dragging) return;
+    held = true;
+    clearTimeout(stillness);
+    /* Released after two seconds of a motionless pointer. A cursor parked over
+       the rail — including one parked there before the page even loaded — is
+       not someone reading, and holding for it stops the flow permanently. */
+    stillness = setTimeout(() => { held = false; }, STILL_MS);
+  });
+  rail.addEventListener("mouseleave", () => { clearTimeout(stillness); held = false; });
+  let focusHeld = false;
+  rail.addEventListener("focusin", event => {
+    focusHeld = held = true;
+    const card = event.target.closest(".subject");
+    if(card) target = Math.round(pos) + wrap(cards.indexOf(card) - pos);
+  });
+  rail.addEventListener("focusout", () => { focusHeld = false; held = false; });
+
+  new IntersectionObserver(e => { onScreen = e[0].isIntersecting; }, {threshold: .2})
+    .observe(rail);
+  addEventListener("resize", () => { measure(); render(); });
+
+  measure();
+  render();
+  requestAnimationFrame(frame);
 })();
 </script>
 </body>
