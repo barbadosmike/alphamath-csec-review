@@ -20,7 +20,7 @@
   <nav class="suite-nav" aria-label="AlphaMath suite"><div class="nav-inner"><a href="index.html" >Suite home</a><a href="students.html" >Students</a><a href="pathways.html" >Pathways</a><a href="tutors.html" >Tutors</a><a href="parents.html" aria-current="page">Parents</a><a href="admin-console.html" >Admin</a></div></nav>
   <main id="main" class="shell">
   <div class="callout info prose">
-    <p><strong>How it works.</strong> You request a parent account below and choose your own password. An administrator reviews the request, completes your child's registration, and links the two — enrolment isn't self-service, because the link is what authorises you to read a child's progress, and nobody should be able to grant themselves that. Once linked, your child's progress appears here whenever you sign in.</p>
+    <p><strong>How it works.</strong> You request a parent account below and choose your own password. An administrator reviews the request, completes your child's registration, and links the two — enrolment <strong>isn't self-service</strong>, because the link is what <strong>authorises</strong> you to read a child's progress, and <strong>nobody should be able to grant themselves that</strong>. Once linked, your child's progress appears here whenever you sign in.</p>
   </div>
 
   <section class="panel" aria-labelledby="request-title">
@@ -62,7 +62,15 @@
   <section aria-labelledby="registration-title" style="margin-top:22px">
     <h2 id="registration-title" class="sr-only">Registration and enrolment</h2>
     <div class="grid two">
-      <a class="hub-card" href="register-student.html"><span class="card-icon">①</span><h3>Student registration</h3><p>Your child's learner record — created with an administrator during enrolment, keyed to a subject-scoped ID rather than a name.</p><span class="go">About registration →</span></a>
+      <!-- Not a link: registration is performed BY an administrator, and this
+           card previously pointed at register-student.html — their console
+           tool, behind a role gate a parent can never pass. A card that offers
+           a door to a room you are not admitted to is worse than no card. -->
+      <div class="card">
+        <h3>Student registration</h3>
+        <p>Your child's learner record is <strong>created by an administrator</strong> during enrolment — you do not fill it in yourself. It is keyed to a <strong>subject-scoped ID</strong> rather than a name, which is what lets the tutor surfaces show progress without showing who the child is.</p>
+        <p class="fine">Registration happens before your account is linked to your child. Your coordinator confirms both IDs with you once enrolment is complete.</p>
+      </div>
       <div class="card">
         <h3>Enrolment &amp; payment</h3>
         <p>Payment details are provided at enrolment through MSE's payment processor. <strong>AlphaMath never stores card numbers in its own database</strong> — the evidence store holds your child's learning record, not payment credentials.</p>

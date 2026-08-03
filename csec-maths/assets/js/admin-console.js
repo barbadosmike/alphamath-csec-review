@@ -125,20 +125,26 @@
               ? `<span class="fine">has account</span>`
               : `<details class="provision">
                   <summary>Provision account…</summary>
-                  <form data-provision-form data-learner="${esc(learner.externalId)}" class="stack">
-                    <p class="fine">The learner signs in with their <strong>learner ID</strong>. Hand the
-                    keyboard to the learner for the password — they choose it, you never see it,
-                    and it is stored only as a hash.</p>
-                    <label>Password (typed by the learner)
-                      <input name="password" type="password" autocomplete="new-password" required minlength="12"></label>
-                    <label>Repeat it
-                      <input name="confirm" type="password" autocomplete="new-password" required minlength="12"></label>
-                    <button type="submit">Create ${esc(learner.externalId)}'s account</button>
-                  </form>
-                  <p class="fine" style="margin-top:10px">Learner remote (the teleconference ceremony, SOP-OPS-004 §3)?
-                  Create the account with a <strong>set-password link</strong> instead — it is born unusable,
-                  and the learner opens the link on <em>their</em> device and types the password there.</p>
-                  <button type="button" class="secondary" data-provision-link="${esc(learner.externalId)}">Provision with set-password link</button>
+                  <p class="fine">The learner signs in with their <strong>learner ID</strong>.
+                  Either way below, <strong>the learner types their own password and you never
+                  see it</strong> — only the keyboard changes.</p>
+                  <p class="fine"><strong>Default: the learner is remote</strong> (SOP-OPS-004 §3).
+                  Create the account with a <strong>set-password link</strong>: it is born unusable,
+                  and the learner opens the link on <em>their own device</em> and sets the password
+                  there. Convey the link in the call's chat, never by dictation.</p>
+                  <button type="button" data-provision-link="${esc(learner.externalId)}">Provision ${esc(learner.externalId)} with a set-password link</button>
+                  <details style="margin-top:14px">
+                    <summary>Or: the learner is here at this keyboard</summary>
+                    <form data-provision-form data-learner="${esc(learner.externalId)}" class="stack">
+                      <p class="fine">Hand the keyboard to the learner for the password — they
+                      choose it, you never see it, and it is stored only as a hash.</p>
+                      <label>Password (typed by the learner)
+                        <input name="password" type="password" autocomplete="new-password" required minlength="12"></label>
+                      <label>Repeat it
+                        <input name="confirm" type="password" autocomplete="new-password" required minlength="12"></label>
+                      <button type="submit">Create ${esc(learner.externalId)}'s account</button>
+                    </form>
+                  </details>
                 </details>`}</td>
           </tr>`).join("")}</tbody></table></div>`
       : `<div class="callout info"><p>No learners are registered yet.</p></div>`;
@@ -229,11 +235,24 @@
       const panel = mount("[data-password-link-panel]");
       const link = new URL("set-password.html", location.href);
       link.hash = "t=" + body.setPasswordToken;
+      /* The link is only ever as reachable as the console that minted it. From a
+         console running on localhost it names the RECIPIENT's machine, not this
+         one, so a remote learner opens nothing — the token is real, the address
+         is not. Say so at the moment of issue rather than letting a ceremony
+         fail on a call. Closing this needs the pages and the API deployed
+         (Deployment Work Package §3.2), not a change here. */
+      const unreachable = /^(localhost|127\.0\.0\.1|\[::1\])$/i.test(location.hostname);
       panel.hidden = false;
       panel.innerHTML = `
         <p><strong>One-time set-password link for ${esc(id)}</strong> — shown once, never stored,
         works once, expires ${esc(new Date(body.tokenExpiresAt).toLocaleTimeString())}. Reissuing replaces it.</p>
         <p><code>${esc(link.href)}</code></p>
+        ${unreachable ? `<p class="fine"><strong>⚠ This link will not work for a remote learner.</strong>
+        It was minted from <code>${esc(location.hostname)}</code>, which on their device means
+        <em>their</em> machine, not yours. The token is valid; the address is not reachable from
+        anywhere else. A remote ceremony needs the suite and the evidence API deployed to a real
+        host (Deployment Work Package §3.2). Until then, provision with the learner at this
+        keyboard.</p>` : ""}
         <p class="fine">The ceremony rule: the holder opens it on <em>their</em> device and types the
         password there — you never see or handle it. After they say "done":
         <button type="button" class="secondary" data-link-status="${esc(id)}">Check link status</button>

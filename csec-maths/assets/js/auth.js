@@ -32,11 +32,24 @@
     async login(identifier, password){
       const base = apiBase();
       if(!base) throw new Error("Set the evidence API address before signing in.");
-      const response = await fetch(`${base}/v1/auth/login`, {
-        method: "POST",
-        headers: {"content-type": "application/json"},
-        body: JSON.stringify({identifier, password})
-      });
+      let response;
+      try{
+        response = await fetch(`${base}/v1/auth/login`, {
+          method: "POST",
+          headers: {"content-type": "application/json"},
+          body: JSON.stringify({identifier, password})
+        });
+      }catch(_networkError){
+        /* The address is wrong, or nothing is listening on it — the request
+           never reached a server, so no password was ever examined. Said
+           plainly, because the old message ("Sign-in failed") sent people to
+           check a credential that was never the problem. The address is
+           REMEMBERED per browser, so a bad one keeps failing silently until
+           it is corrected here. */
+        throw new Error(
+          `Could not reach the evidence API at ${base} — check the address ` +
+          `(a local API is usually http://, not https://). Your password was not checked.`);
+      }
       const payload = await response.json().catch(() => ({}));
       if(!response.ok){
         // Surface the server's generic message; do not add detail the server
@@ -86,7 +99,16 @@
     },
 
     async json(path, options){
-      const response = await auth.fetch(path, options);
+      let response;
+      try{
+        response = await auth.fetch(path, options);
+      }catch(_networkError){
+        /* Same distinction as login(): unreachable is not unauthorised. Without
+           this, an API that stopped between sign-in and this call surfaces as a
+           bare "Failed to fetch" on whichever screen the reader was using. */
+        throw new Error(`Could not reach the evidence API at ${apiBase()}. It may have stopped, ` +
+                        `or the address may be wrong.`);
+      }
       if(response.status === 401){
         sessionStorage.removeItem(TOKEN_KEY);
         throw Object.assign(new Error("Your session has ended. Sign in again."), {signedOut: true});
@@ -109,8 +131,13 @@
             <h2>${AlphaMath.escapeHTML(copy.heading || "Tutor sign-in")}</h2>
             <p class="fine">${AlphaMath.escapeHTML(copy.blurb || "Marking uses your own account. The evidence API records the authenticated reviewer, so a review is always attributable to a named person.")}</p>
             <label for="apiBase">Evidence API address</label>
-            <input id="apiBase" name="apiBase" inputmode="url" placeholder="https://…"
+            <!-- The placeholder shows the LOCAL form, because that is the only
+                 deployment that exists today and "https://…" sent people to an
+                 HTTPS port the API does not listen on. Remembered per browser
+                 once entered, so a wrong value here is sticky. -->
+            <input id="apiBase" name="apiBase" inputmode="url" placeholder="the evidence API address"
                    value="${AlphaMath.escapeHTML(apiBase())}" required>
+            <p class="fine">This demonstration ships no evidence API, so sign-in cannot connect. Every offline instrument on these pages works without one.</p>
             <label for="identifier">${AlphaMath.escapeHTML(copy.identifierLabel || "Email or tutor ID")}</label>
             <input id="identifier" name="identifier" autocomplete="username" required>
             <label for="password">Password</label>
@@ -217,7 +244,10 @@
             <h2 style="margin-top:0">Sign in to save</h2>
             <p class="fine">Your work is already saved on this device. Signing in records it in the AlphaMath database under your own account — the database keeps the name of whoever saved it.</p>
             <label for="alphamathDialogApiBase">Evidence API address</label>
-            <input id="alphamathDialogApiBase" name="apiBase" type="url" inputmode="url" placeholder="https://api.example.org" required>
+            <!-- type="url" would reject a bare host; inputmode alone is enough,
+                 and the placeholder shows the local form for the same reason as
+                 the sign-in card above. -->
+            <input id="alphamathDialogApiBase" name="apiBase" inputmode="url" placeholder="the evidence API address" required>
             <label for="alphamathDialogIdentifier" style="margin-top:12px">Email or ID</label>
             <input id="alphamathDialogIdentifier" name="identifier" autocomplete="username" required>
             <label for="alphamathDialogPassword" style="margin-top:12px">Password</label>

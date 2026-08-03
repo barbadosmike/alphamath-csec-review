@@ -611,20 +611,41 @@
   };
 
   // ---- grab, drag, flick -------------------------------------------------
-  let startX = 0, startPos = 0, lastX = 0, lastT = 0, velocity = 0, moved = 0;
+  /* DRAG_SLOP does two jobs and they must be the SAME number: below it the
+     gesture is a click and the card's link must open; above it the gesture is a
+     drag, the click is cancelled — and only then do we take pointer capture.
+
+     Capturing on pointerdown, which this did until 2026-08-02, silently broke
+     every link on the rail. With capture active the browser retargets pointerup
+     AND the compatibility mouseup to the capturing element, so the click is
+     computed against the rail rather than the anchor and the navigation default
+     never fires. Proven on the live page: pointerdown hit ARTICLE.subject while
+     pointerup, mouseup and click all landed on DIV.rail with
+     defaultPrevented:false — the click arrived intact, on the wrong node.
+
+     Capture exists so pointermove keeps arriving when the pointer leaves the
+     rail mid-drag. There is no drag until the pointer has actually moved, so
+     there is nothing to capture for until then. */
+  const DRAG_SLOP = 8;
+  let startX = 0, startPos = 0, lastX = 0, lastT = 0, velocity = 0, moved = 0,
+      captured = false;
 
   rail.addEventListener("pointerdown", event => {
     if(event.button !== 0) return;
-    dragging = true; moved = 0; velocity = 0;
+    dragging = true; moved = 0; velocity = 0; captured = false;
     startX = lastX = event.clientX; startPos = pos; lastT = performance.now();
-    rail.setPointerCapture(event.pointerId);
-    rail.style.cursor = "grabbing";
   });
 
   rail.addEventListener("pointermove", event => {
     if(!dragging) return;
     const dx = event.clientX - startX;
     moved = Math.max(moved, Math.abs(dx));
+    if(!captured && moved > DRAG_SLOP){
+      /* Now it is a drag. Take capture, and only now show the grabbing cursor —
+         a plain click should never flash it. */
+      try{ rail.setPointerCapture(event.pointerId); captured = true; }catch(_e){}
+      rail.style.cursor = "grabbing";
+    }
     pos = target = startPos - dx / span;
     const now = performance.now(), dt = now - lastT;
     if(dt > 0){ velocity = (event.clientX - lastX) / dt; lastX = event.clientX; lastT = now; }
@@ -634,7 +655,10 @@
     if(!dragging) return;
     dragging = false;
     rail.style.cursor = "";
-    try{ rail.releasePointerCapture(event.pointerId); }catch(_e){}
+    if(captured){
+      try{ rail.releasePointerCapture(event.pointerId); }catch(_e){}
+      captured = false;
+    }
     /* A flick throws further than a drag: velocity is px/ms, so scale it into
        cards and let the glide settle onto a whole one. */
     const thrown = -velocity * 180 / span;
@@ -645,9 +669,10 @@
   rail.addEventListener("pointerup", release);
   rail.addEventListener("pointercancel", release);
 
-  /* A drag must not also open the card it started on. */
+  /* A drag must not also open the card it started on — same threshold as the
+     capture above, so the two can never disagree about what a gesture was. */
   rail.addEventListener("click", event => {
-    if(moved > 8){ event.preventDefault(); event.stopPropagation(); moved = 0; }
+    if(moved > DRAG_SLOP){ event.preventDefault(); event.stopPropagation(); moved = 0; }
   }, true);
 
   // ---- the pause mechanisms that replace the removed button --------------

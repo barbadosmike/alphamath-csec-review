@@ -2,7 +2,7 @@
 title: "AlphaMath — Sanitized Reviewer Demonstration"
 status: "pages-only; no evidence API is shipped"
 built_by: "tools/build-review-demo.mjs (Marion Sydney Enterprises workspace)"
-built_at: "2026-08-02"
+built_at: "2026-08-03"
 ---
 
 # AlphaMath — Sanitized Reviewer Demonstration
