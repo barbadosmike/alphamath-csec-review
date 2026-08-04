@@ -6791,7 +6791,9 @@ window.ALPHAMATH_TUTORIAL_BODMAS_SESSIONS = [
   var SUP={'\u00B2':'2','\u00B3':'3','\u00B9':'1','\u2070':'0','\u2074':'4','\u207F':'n'};
   var GREEK={'\u03B1':'\\alpha','\u03B2':'\\beta','\u03B3':'\\gamma','\u03B8':'\\theta',
              '\u03C0':'\\pi','\u03BB':'\\lambda','\u03BC':'\\mu','\u03C3':'\\sigma','\u0394':'\\Delta'};
-  function toTeX(s){var o='',i=0;while(i<s.length){var c=s[i];
+  function toTeX(s){
+    s=s.replace(/\\\\f\(([^,()]+),([^()]+)\)/g,'\\\\frac{$1}{$2}');
+    var o='',i=0;while(i<s.length){var c=s[i];
     if(SUP[c]){var r='';while(i<s.length&&SUP[s[i]]){r+=SUP[s[i]];i++;}o+='^{'+r+'}';continue;}
     if(GREEK[c]){o+=GREEK[c]+' ';i++;continue;}
     if(c==='\u2212'){o+='-';i++;continue;}
@@ -6814,6 +6816,9 @@ window.ALPHAMATH_TUTORIAL_BODMAS_SESSIONS = [
   function pass(){var d=0,s=0,f=0;
     document.querySelectorAll('.math-expression, .answer-math, .wex-math').forEach(function(el){
       if(el.dataset.mseKatex)return;
+      if(el.children.length){s++;return;}  /* has markup: .corr highlight,
+         <strong> on given figures -- textContent would destroy it. Leave the
+         page's own renderer to handle these, as it did before. */
       var raw=(el.dataset.mseOriginal||el.textContent).trim();
       if(!raw||prose(raw)){s++;return;}
       try{ el.innerHTML=katex.renderToString(toTeX(raw),
