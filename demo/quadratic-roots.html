@@ -1538,10 +1538,6 @@ textarea{min-height:88px;line-height:1.5}
   padding:0!important;border:0!important;height:1px!important;width:1px!important;
   overflow:hidden!important;white-space:nowrap!important}
 </style>
-<style>
-.mse-plus{font-size:.58em;vertical-align:super;line-height:0;color:#FFFFFF;
-  font-weight:700;margin-left:.06em;letter-spacing:0}
-</style>
 </head>
 <!-- Learner tutorial. Sessions 1–2 refresh A1.2.2 (the common gap);
      sessions 3–7 are new A1.2.6 material.
@@ -1555,7 +1551,7 @@ textarea{min-height:88px;line-height:1.5}
      redistributed. tools/build-review-demo.mjs excludes this page and its content
      file by name, and the FORBIDDEN scan would abort on the learner id below in any
      case — two independent guards. -->
-<body data-subject="add-maths" data-student-id="DEMO" data-content-global="ALPHAMATH<sup class="mse-plus">+</sup>_TUTORIAL_QUAD_RR" data-storage-topic="quadratics-range-and-roots" data-review-kind="tutorial" data-instrument-id="addmaths-quadratics-range-and-roots" data-syllabus-codes="A1.2.2,A1.2.6">
+<body data-subject="add-maths" data-student-id="DEMO" data-content-global="ALPHAMATH_TUTORIAL_QUAD_RR" data-storage-topic="quadratics-range-and-roots" data-review-kind="tutorial" data-instrument-id="addmaths-quadratics-range-and-roots" data-syllabus-codes="A1.2.2,A1.2.6">
   <a class="skip-link" href="#main">Skip to main content</a>
   <header class="site-head">
     <div class="head-inner">
@@ -5810,7 +5806,7 @@ window.ALPHAMATH_TUTORIAL_QUAD_RR_SESSIONS = [
     title: "Completing the square, and reading it correctly",
     short: "Complete",
     type: "Refresher · A1.2.2",
-    indices: [0, 1, 2, 3, 4],
+    indices: [0, 1, 2],
     objective: "Rebuild the completed-square form, including when the leading coefficient is not 1, and read the turning point off it with the right signs.",
     intro: `
       <div class="callout info">
@@ -5835,7 +5831,7 @@ window.ALPHAMATH_TUTORIAL_QUAD_RR_SESSIONS = [
     title: "The two flavours of “find the range”",
     short: "Range",
     type: "Refresher · A1.2.2 · worked examples + exam items",
-    indices: [5, 6, 7, 8, 9],
+    indices: [3, 4],
     objective: "Work the two standard shapes of range question — over the natural domain, and over a restricted domain — and tell them apart before choosing a method.",
     intro: `
       <div class="callout info">
@@ -6033,7 +6029,7 @@ window.ALPHAMATH_TUTORIAL_QUAD_RR_SESSIONS = [
     title: "The two results",
     short: "The two",
     type: "New material · A1.2.6",
-    indices: [10, 11, 12],
+    indices: [5, 6, 7],
     objective: "State the sum and product of the roots from the coefficients, confirm them against the actual roots, and see where they come from.",
     intro: `
       <div class="callout success">
@@ -6052,7 +6048,7 @@ window.ALPHAMATH_TUTORIAL_QUAD_RR_SESSIONS = [
     title: "Building an equation from its roots",
     short: "Build",
     type: "Guided practice",
-    indices: [13, 14],
+    indices: [8, 9],
     objective: "Run the relationship backwards: given the roots, write down a quadratic that has them.",
     intro: `
       <div class="callout info">
@@ -6064,7 +6060,7 @@ window.ALPHAMATH_TUTORIAL_QUAD_RR_SESSIONS = [
     title: "Expressions in α and β",
     short: "Express",
     type: "Guided practice",
-    indices: [15, 16, 17, 18],
+    indices: [10, 11, 12, 13],
     objective: "Evaluate symmetric expressions in the roots using only the sum and the product — and connect the result back to the discriminant.",
     intro: `
       <div class="callout info">
@@ -6077,7 +6073,7 @@ window.ALPHAMATH_TUTORIAL_QUAD_RR_SESSIONS = [
     title: "New equations from old roots",
     short: "Transform",
     type: "Guided practice",
-    indices: [19, 20, 21],
+    indices: [14, 15, 16],
     objective: "Given an equation with roots α and β, construct the equation whose roots are a stated transformation of them.",
     intro: `
       <div class="callout info">
@@ -6092,7 +6088,7 @@ window.ALPHAMATH_TUTORIAL_QUAD_RR_SESSIONS = [
     title: "Working backwards",
     short: "Backwards",
     type: "Tutor-reviewed bridge",
-    indices: [22, 23],
+    indices: [17, 18],
     objective: "Use the sum and product to recover an unknown coefficient, and recognise the structure a transformation leaves behind.",
     intro: `
       <div class="callout info">
@@ -6136,7 +6132,7 @@ window.ALPHAMATH_TUTORIAL_QUAD_RR_SESSIONS = [
       title:"Read the vertex",
       short:"Vertex",
       type:"Readiness bridge",
-      indices:[0,1,2],
+      indices: [0],
       objective:"Connect completed-square form to the turning point, minimum or maximum, and range.",
       intro:`
         <div class="callout info">
@@ -6155,7 +6151,7 @@ window.ALPHAMATH_TUTORIAL_QUAD_RR_SESSIONS = [
       title:"Complete the square accurately",
       short:"Complete",
       type:"Guided practice",
-      indices:[3,4,5,6],
+      indices: [1, 2, 3],
       objective:"Factor the leading coefficient when necessary, then read graph features without re-solving.",
       intro:`
         <div class="grid two">
@@ -6167,7 +6163,7 @@ window.ALPHAMATH_TUTORIAL_QUAD_RR_SESSIONS = [
       title:"Connect the discriminant",
       short:"Discriminant",
       type:"Guided connection",
-      indices:[7,8,9,10],
+      indices: [4, 5],
       objective:"Use the discriminant and completed-square form as two views of the same quadratic.",
       intro:`
         <div class="callout">
@@ -6178,7 +6174,7 @@ window.ALPHAMATH_TUTORIAL_QUAD_RR_SESSIONS = [
       title:"Sketch from structure",
       short:"Graph",
       type:"Independent practice",
-      indices:[11,12,13,14],
+      indices: [6, 7, 8, 9],
       objective:"Link turning point, axis, roots, and range in one coherent sketch.",
       intro:`
         <div class="callout warning">
@@ -6189,7 +6185,7 @@ window.ALPHAMATH_TUTORIAL_QUAD_RR_SESSIONS = [
       title:"Procedural fluency",
       short:"Fluency",
       type:"Optional timed practice",
-      indices:[15,16,17],
+      indices: [10, 11, 12],
       objective:"Build accurate completing-the-square and vertex-reading fluency before adding time pressure.",
       fluency:true,
       intro:`
@@ -6204,7 +6200,7 @@ window.ALPHAMATH_TUTORIAL_QUAD_RR_SESSIONS = [
       title:"Transfer checkpoint",
       short:"Transfer",
       type:"Tutor-reviewed bridge",
-      indices:[18,19],
+      indices: [13, 14],
       objective:"Transfer the connected method to root classification and a multi-feature quadratic.",
       intro:`
         <div class="callout warning">
