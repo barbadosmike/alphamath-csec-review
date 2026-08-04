@@ -6816,15 +6816,32 @@ window.ALPHAMATH_TUTORIAL_BODMAS_SESSIONS = [
   function pass(){var d=0,s=0,f=0;
     document.querySelectorAll('.math-expression, .answer-math, .wex-math').forEach(function(el){
       if(el.dataset.mseKatex)return;
-      if(el.children.length){s++;return;}  /* has markup: .corr highlight,
-         <strong> on given figures -- textContent would destroy it. Leave the
-         page's own renderer to handle these, as it did before. */
-      var raw=(el.dataset.mseOriginal||el.textContent).trim();
-      if(!raw||prose(raw)){s++;return;}
-      try{ el.innerHTML=katex.renderToString(toTeX(raw),
-             {throwOnError:true,displayMode:false,strict:false,output:'html'});
-           el.dataset.mseOriginal=raw; el.dataset.mseKatex='1'; d++;
-      }catch(e){f++;}});
+      var html=el.innerHTML;
+      /* The native stacked-fraction renderer and any unexpected structure stay
+         with the page's own renderer -- never flatten those. */
+      if(/role=["']math["']|inline-grid|<(?:svg|img|input|button|math-field)\b/i.test(html)){s++;return;}
+      /* .corr (correction term) and <strong> (figures GIVEN in the question) are
+         meaning, not decoration, so they are carried INTO the TeX rather than
+         dropped: colour + underline for a correction, bold for a given figure.
+         This keeps every expression in one renderer instead of splitting the
+         page between KaTeX and the fallback. */
+      var segs=html.split(/(<span[^>]*class=['"]corr['"][^>]*>[\s\S]*?<\/span>|<(?:strong|b)>[\s\S]*?<\/(?:strong|b)>)/i);
+      var tex='', m;
+      for(var si=0; si<segs.length; si++){
+        var p=segs[si]; if(!p) continue;
+        if((m=p.match(/^<span[^>]*class=['"]corr['"][^>]*>([\s\S]*)<\/span>$/i))){
+          tex+='\\underline{\\textcolor{#5B0962}{'+toTeX(m[1].replace(/<[^>]+>/g,''))+'}}';
+        } else if((m=p.match(/^<(?:strong|b)>([\s\S]*)<\/(?:strong|b)>$/i))){
+          tex+='\\mathbf{'+toTeX(m[1].replace(/<[^>]+>/g,''))+'}';
+        } else {
+          tex+=toTeX(p.replace(/<[^>]+>/g,''));
+        }
+      }
+      try{ el.innerHTML=katex.renderToString(tex,{throwOnError:true,displayMode:false,strict:false,output:'html'});
+           el.dataset.mseKatex='1'; d++; }catch(e){ f++; }
+      return;
+    });
+    
     window.__msePass={rendered:d,skippedProse:s,failed:f};return window.__msePass;}
   window.__msePassRun=pass; pass();
   new MutationObserver(function(){clearTimeout(window.__mseT);window.__mseT=setTimeout(pass,120);})
