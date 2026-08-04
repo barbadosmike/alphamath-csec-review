@@ -7030,6 +7030,12 @@ window.ALPHAMATH_TUTORIAL_QUAD_RR_SESSIONS = [
       /* The native stacked-fraction renderer and any unexpected structure stay
          with the page's own renderer -- never flatten those. */
       if(/role=["']math["']|inline-grid|<(?:svg|img|input|button|math-field)\b/i.test(html)){s++;return;}
+      /* PROSE GUARD -- restored. Sentences live inside these spans too ("3 is NOT
+         between 0 and 2"). TeX ignores spaces in math mode, so typesetting a
+         sentence collapses it to "3isNOTbetween0and2". Anything that reads as
+         prose is left exactly as the page wrote it. */
+      var plain=strip(html);
+      if(!plain.trim()||prose(plain)){s++;return;}
       /* .corr (correction term) and <strong> (figures GIVEN in the question) are
          meaning, not decoration, so they are carried INTO the TeX rather than
          dropped: colour + underline for a correction, bold for a given figure.
